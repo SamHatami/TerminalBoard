@@ -1,4 +1,4 @@
-﻿using SlateBoard.App.Enum;
+using SlateBoard.App.Enum;
 
 namespace SlateBoard.App.Interface;
 

@@ -1,4 +1,4 @@
-﻿using System.Windows.Documents;
+using System.Windows.Documents;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Interface;
 
