@@ -1,5 +1,7 @@
-﻿using Caliburn.Micro;
+﻿using System.Drawing;
+using Caliburn.Micro;
 using SlateBoard.App.Interface;
+using SlateBoard.App.SlateItems;
 
 namespace SlateBoard.App.ViewModels;
 
@@ -10,6 +12,7 @@ public class SlateViewModel : PropertyChangedBase, IMoveableItem
     public HashCode Id { get; set; }
     public int Width { get; set; }
 
+    public string Title;
     public int GridSize = 100;
 
     private double _x;
@@ -36,17 +39,28 @@ public class SlateViewModel : PropertyChangedBase, IMoveableItem
         }
     }
 
+    public List<IWire> Wires { get; set; } = new List<IWire>();
     public IEventAggregator Events { get; }
-    public IConnectionPoint[] ConnectionPoints { get; set; }
-    public IMoveableItem[]? Connectors { get; set; }
+
+    public List<INode> ConnectionPoints { get; set; } = new List<INode>();
+    public List<IMoveableItem> Connectors { get; set; } = new List<IMoveableItem>();
 
     public SlateViewModel(IEventAggregator events)
     {
         Events = events;
         Events.Subscribe(this);
+
+        TestInit();
     }
 
-    
+    private void TestInit()
+    {
+        Height = 80;
+        Width = 50;
+       
+        ConnectionPoints.Add( new NodeViewModel(0, 0, this, Events));
+    }
+
     public void Moved()
     {
     }
@@ -54,6 +68,11 @@ public class SlateViewModel : PropertyChangedBase, IMoveableItem
     public void Dropped()
     {
         throw new NotImplementedException();
+    }
+
+    public void AddWire(IWire wire)
+    {
+        Wires.Add(wire);
     }
 
     public void Connect()

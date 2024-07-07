@@ -17,20 +17,20 @@ namespace SlateBoard.App.Views
         public MainView()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded;
+            //Loaded += MainWindow_Loaded;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            DrawDottedGrid(MainCanvas);
-        }
+        //private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    DrawDottedGrid(MainCanvas);
+        //}
 
-        private void DrawDottedGrid(Canvas canvas)
-        {
-            GridVisualHost gridVisual = new GridVisualHost(canvas);
-            canvas.Children.Add(gridVisual);
-            Canvas.SetLeft(gridVisual, 0);
-            Canvas.SetTop(gridVisual, 0);
-        }
+        //private void DrawDottedGrid(Canvas canvas)
+        //{
+        //    GridVisualHost gridVisual = new GridVisualHost(canvas);
+        //    canvas.Children.Add(gridVisual);
+        //    Canvas.SetLeft(gridVisual, 0);
+        //    Canvas.SetTop(gridVisual, 0);
+        //}
     }
 }
