@@ -2,11 +2,13 @@
 
 namespace SlateBoard.App.Interface;
 
+/// <summary>
+/// Connecting slates by wire
+/// </summary>
 public interface IWire
 {
-    IConnectionPoint Start { get; set; }
-    IConnectionPoint End { get; set; }
-    HashCode Id { get; set; }
-
+    INode Start { get; set; }
+    INode End { get; set; }
     WireTypeEnum WireType { get; set; }
+    Guid Id { get; set; }
 }

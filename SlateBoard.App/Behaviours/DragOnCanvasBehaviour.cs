@@ -13,7 +13,7 @@ namespace SlateBoard.App.Behaviours;
 public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent>
 {
     private Point _itemStartPosition;
-    private Canvas _parentCanvas;
+    private Canvas _mainCanvas;
     
     private IMoveableItem _moveableItem;
     private IEventAggregator _events;
@@ -29,7 +29,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         AssociatedObject.MouseMove += OnMouseMove;
         AssociatedObject.MouseLeftButtonUp += OnMouseLeftButtonUp;
 
-        _parentCanvas = GetMainCanvas(AssociatedObject);
+        _mainCanvas = GetMainCanvas(AssociatedObject);
 
         SetDataContextAndEvents();
     }
@@ -54,7 +54,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
     {
         if (AssociatedObject.IsMouseCaptured)
         {
-            var mouseCurrentPosition = e.GetPosition(_parentCanvas);
+            var mouseCurrentPosition = e.GetPosition(_mainCanvas);
 
             var direction = mouseCurrentPosition - _itemStartPosition;
 

@@ -1,13 +1,16 @@
 ﻿using Caliburn.Micro;
 
 namespace SlateBoard.App.Interface;
-
+/// <summary>
+/// Interface for a dragable item. 
+/// </summary>
 public interface IMoveableItem
 {
     #region Properties
-
-    IConnectionPoint[] ConnectionPoints { get; set; }
-    IMoveableItem[] Connectors { get; set; }
+    
+    List<INode> ConnectionPoints { get; set; }
+    List<IMoveableItem> Connectors { get; set; }
+    List<IWire> Wires { get; set; }
     public IEventAggregator Events { get; }
     int Height { get; set; }
     HashCode Id { get; set; }
@@ -19,6 +22,7 @@ public interface IMoveableItem
 
     #region Methods
 
+    void AddWire(IWire wire);
     void Connect();
 
     void Dropped();
