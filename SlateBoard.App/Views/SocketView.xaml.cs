@@ -31,7 +31,11 @@ public partial class SocketView : UserControl
         if (_socketViewModel != null)
         {
             Point parentRelativeToCanvas = parent.TranslatePoint(default, canvas);
-            Point relativeLocationToCanvas = this.TranslatePoint(default, canvas);
+            Point relativeLocationToCanvas = Socket.TranslatePoint(default, canvas);
+
+            relativeLocationToCanvas.X += (Socket.Height / 2);
+            relativeLocationToCanvas.Y += (Socket.Height / 2);
+
 
             Vector v = Point.Subtract(relativeLocationToCanvas, parentRelativeToCanvas);
 

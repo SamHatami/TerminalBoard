@@ -45,7 +45,7 @@ namespace SlateBoard.App.Behaviours
             AssociatedObject.MouseLeftButtonDown += OnMouseLeftButtonDown;
             AssociatedObject.MouseMove += OnMouseMove;
             AssociatedObject.MouseLeftButtonUp += OnMouseLeftButtonUp;
-
+            
   
 
 
@@ -70,7 +70,7 @@ namespace SlateBoard.App.Behaviours
                 SetDataContextAndEvents();
            //Create a wire with a starting point as this point and end point as eventual connection point
 
-           Point relativeLocation = AssociatedObject.TranslatePoint(default, _mainCanvas);
+   
            var mouseCurrentPosition = e.GetPosition(_mainCanvas);
 
             
@@ -78,8 +78,8 @@ namespace SlateBoard.App.Behaviours
             {
                 Stroke = Brushes.Black,
                 StrokeThickness = 2,
-                X1 = relativeLocation.X,
-                Y1 = relativeLocation.Y,
+                X1 = _startSocket.X,
+                Y1 = _startSocket.Y,
                 X2 = mouseCurrentPosition.X,
                 Y2 = mouseCurrentPosition.Y,
             };

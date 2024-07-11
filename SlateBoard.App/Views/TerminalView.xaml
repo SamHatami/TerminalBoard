@@ -10,10 +10,23 @@
              d:DataContext="{d:DesignInstance Type=viewModels:TerminalViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="100" d:DesignWidth="120">
-<Canvas>
+<Border>
 
-
-    <Grid Width="{Binding Width}" Height="{Binding Height}" Background="DarkGray" Opacity="0.5">
+    <Border.Style>
+        <Style TargetType="Border">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="BorderBrush" Value="Orange"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Border.Style>
+        <Grid  Background="DarkGray" Opacity="0.5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -27,29 +40,29 @@
             </Grid.ColumnDefinitions>
 
             <!--TEMPORARY LISTVIEWS OF SOCKETS-->
-            <ListView Grid.Column="0" ItemsSource="{Binding InputSockets}" Background="LightGray" BorderThickness="0">
-                <ListView.ItemTemplate>
+            <ItemsControl Grid.Column="0" ItemsSource="{Binding InputSockets}" Background="LightGray" BorderThickness="0">
+                <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <ContentControl cm:View.Model="{Binding}"/>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-            <ListView Grid.Column="2" ItemsSource="{Binding OutputSockets}" Background="LightGray" BorderThickness="0">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">
-                            <b:Interaction.Behaviors>
-                                <behaviours:WireConnectionBehavior/>
-                            </b:Interaction.Behaviors>
-                        </ContentControl>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
+            <ItemsControl Grid.Column="2" ItemsSource="{Binding OutputSockets}" Background="LightGray" BorderThickness="0">
+                <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">
+                                <b:Interaction.Behaviors>
+                                    <behaviours:WireConnectionBehavior/>
+                                </b:Interaction.Behaviors>
+                            </ContentControl>
+                        </DataTemplate>
+                </ItemsControl.ItemTemplate>
 
-            </ListView>
+            </ItemsControl>
 
         </Grid>
         
     </Grid>
-</Canvas>
+</Border>
 </UserControl>

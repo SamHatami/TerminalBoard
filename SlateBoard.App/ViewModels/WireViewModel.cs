@@ -96,7 +96,7 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
 
 
         _endExtensionPoint.Y = EndPoint.Y;
-        _endExtensionPoint.X = EndPoint.X - 50;
+        _endExtensionPoint.X = EndPoint.X - 25;
         EndExtensionPoint = _endExtensionPoint;
     }
 
@@ -107,7 +107,7 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         StartPoint = _startPoint;
 
         _startExtensionPoint.Y = StartPoint.Y;
-        _startExtensionPoint.X = StartPoint.X + 100;
+        _startExtensionPoint.X = StartPoint.X + 25;
         StartExtensionPoint = _startExtensionPoint;
     }
     
