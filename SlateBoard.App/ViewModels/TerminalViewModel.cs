@@ -10,7 +10,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal
 {
     private readonly IEventAggregator _events;
     public int Height { get; set; }
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; }
     public int Width { get; set; }
 
     public string Title;
@@ -55,6 +55,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal
     {
         Events = events;
         Events.SubscribeOnBackgroundThread(this);
+        Id = Guid.NewGuid();
 
   
         TestInit();
@@ -65,11 +66,11 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal
         Height = 80;
         Width = 50;
        
-        InputSockets.Add(new SocketViewModel(0, 0, this, Events, SocketTypeEnum.Input){Label = "Input 1", Slate = this});
-        InputSockets.Add(new SocketViewModel(0, 0, this, Events, SocketTypeEnum.Input){ Label = "Input 2", Slate = this });
-        InputSockets.Add(new SocketViewModel(0, 0, this, Events, SocketTypeEnum.Input){Label = "Input 3", Slate = this });
-        OutputSockets.Add( new SocketViewModel(0, 0, this, Events, SocketTypeEnum.Output){Label = "Output 1", Slate = this });
-        OutputSockets.Add( new SocketViewModel(0, 0, this, Events, SocketTypeEnum.Output){Label = "Output 2", Slate = this });
+        InputSockets.Add(new SocketViewModel( this, Events, SocketTypeEnum.Input){Label = "Input 1", Slate = this});
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input){ Label = "Input 2", Slate = this });
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input){Label = "Input 3", Slate = this });
+        OutputSockets.Add( new SocketViewModel(this, Events, SocketTypeEnum.Output){Label = "Output 1", Slate = this });
+        OutputSockets.Add( new SocketViewModel(this, Events, SocketTypeEnum.Output){Label = "Output 2", Slate = this });
     }
 
     public void Moved()

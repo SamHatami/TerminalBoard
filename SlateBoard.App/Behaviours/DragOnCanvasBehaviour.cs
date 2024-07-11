@@ -48,9 +48,11 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if(_terminal == null)
+            return;
+
         var we = sender.GetType();
         var mouseCurrentPosition = e.GetPosition(_mainCanvas);
-
 
         dx = _terminal.X -  mouseCurrentPosition.X;
         dy = _terminal.Y - mouseCurrentPosition.Y;

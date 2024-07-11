@@ -12,31 +12,8 @@
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800"
         Background="DarkGray">
-    <Grid>
-        <Canvas x:Name="MainCanvas">
+  <Canvas x:Name="MainCanvas">
             <Button x:Name="Snap">Snap</Button>
-            <ItemsControl ItemsSource="{Binding MoveableItems}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding X, Mode=OneWay}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Y, Mode=OneWay}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
-                            <b:Interaction.Behaviors>
-                                <behaviours:DragOnCanvasBehavior />
-                            </b:Interaction.Behaviors>
-                        </ContentControl>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
             <ItemsControl ItemsSource="{Binding Wires}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -53,6 +30,27 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </Canvas>
-    </Grid>
+      <ItemsControl ItemsSource="{Binding MoveableItems}">
+          <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                  <Canvas />
+              </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemContainerStyle>
+              <Style>
+                  <Setter Property="Canvas.Left" Value="{Binding X, Mode=OneWay}" />
+                  <Setter Property="Canvas.Top" Value="{Binding Y, Mode=OneWay}" />
+              </Style>
+          </ItemsControl.ItemContainerStyle>
+          <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                  <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
+                      <b:Interaction.Behaviors>
+                          <behaviours:DragOnCanvasBehavior />
+                      </b:Interaction.Behaviors>
+                  </ContentControl>
+              </DataTemplate>
+          </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Canvas>
 </Window>

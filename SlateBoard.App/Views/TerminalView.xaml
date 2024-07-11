@@ -13,7 +13,7 @@
 <Canvas>
 
 
-    <Grid Width="{Binding Width}" Height="{Binding Height}" Background="DarkGray">
+    <Grid Width="{Binding Width}" Height="{Binding Height}" Background="DarkGray" Opacity="0.5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>

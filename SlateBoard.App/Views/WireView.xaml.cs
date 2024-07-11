@@ -23,6 +23,14 @@ namespace SlateBoard.App.ViewModels
         public WireView()
         {
             InitializeComponent();
+
+            WireGeometry.MouseLeftButtonDown += WireGeometryOnMouseLeftButtonDown; 
+
+        }
+
+        private void WireGeometryOnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var something = e.LeftButton;
         }
     }
 }

@@ -8,10 +8,8 @@ namespace SlateBoard.App.ViewModels;
 
 public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMovedEvent>
 {
-    public SocketViewModel(int x, int y, ITerminal parent, IEventAggregator events, SocketTypeEnum type)
+    public SocketViewModel(ITerminal parent, IEventAggregator events, SocketTypeEnum type)
     {
-        X = parent.Y;
-        Y = parent.X;
         Parent = parent;
         Events = events;
         Type = type;
@@ -29,7 +27,7 @@ public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMove
     private double _x;
     public double X
     {
-        get => _y;
+        get => _x;
         set
         {
             _x = value;

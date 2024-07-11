@@ -7,9 +7,41 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModels:WireViewModel }">
     <Canvas>
-        <Path Stroke="Black " StrokeThickness="1" x:Name="WirePath">
+        <Path Stroke="Black" StrokeThickness="1.5" x:Name="WireGeometry">
+            <Path.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" To="Orange" Duration="0:0:0.02"/>
+                            <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" To="3" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" To="Black" Duration="0:0:0.2"/>
+                            <DoubleAnimation Storyboard.TargetProperty="StrokeThickness" To="1" Duration="0:0:0.2"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Path.Triggers>
             <Path.Data>
-                <LineGeometry StartPoint="{Binding StartPoint}" EndPoint="{Binding EndPoint}" />
+                <PathGeometry>
+                    <PathGeometry.Figures>
+                        <PathFigureCollection>
+                            <PathFigure StartPoint="{Binding StartPoint}">
+                                <PathFigure.Segments>
+                                    <PathSegmentCollection>
+                                        <LineSegment Point="{Binding StartExtensionPoint}"/>
+                                        <LineSegment Point="{Binding EndExtensionPoint}"/>
+                                        <LineSegment Point="{Binding EndPoint}"/>
+                                    </PathSegmentCollection>
+                                </PathFigure.Segments>
+                            </PathFigure>
+                        </PathFigureCollection>
+                    </PathGeometry.Figures>
+                </PathGeometry>
             </Path.Data>
         </Path>
     </Canvas>

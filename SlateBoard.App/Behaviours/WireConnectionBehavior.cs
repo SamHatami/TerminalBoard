@@ -125,7 +125,8 @@ namespace SlateBoard.App.Behaviours
         {
             if (hit.VisualHit is FrameworkElement element)
             {
-                if (element.DataContext is ISocket { Type: SocketTypeEnum.Input } socket)
+                //add endsock if socket is an input and does not belong to the same terminal
+                if (element.DataContext is ISocket { Type: SocketTypeEnum.Input } socket && socket.Slate != _startSocket.Slate) 
                 {
                         _endSocket = socket;
 
