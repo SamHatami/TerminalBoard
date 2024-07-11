@@ -1,0 +1,55 @@
+<UserControl x:Class="SlateBoard.App.Views.TerminalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:SlateBoard.App.ViewModels"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviours="clr-namespace:SlateBoard.App.Behaviours"
+             xmlns:cm="http://caliburnmicro.com"
+             d:DataContext="{d:DesignInstance Type=viewModels:TerminalViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="120">
+<Canvas>
+
+
+    <Grid Width="{Binding Width}" Height="{Binding Height}" Background="DarkGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Row="1" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!--TEMPORARY LISTVIEWS OF SOCKETS-->
+            <ListView Grid.Column="0" ItemsSource="{Binding InputSockets}" Background="LightGray" BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl cm:View.Model="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ListView Grid.Column="2" ItemsSource="{Binding OutputSockets}" Background="LightGray" BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">
+                            <b:Interaction.Behaviors>
+                                <behaviours:WireConnectionBehavior/>
+                            </b:Interaction.Behaviors>
+                        </ContentControl>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+        </Grid>
+        
+    </Grid>
+</Canvas>
+</UserControl>

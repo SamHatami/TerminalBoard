@@ -1,19 +1,18 @@
-﻿using System.Security.Cryptography;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
 using SlateBoard.App.Interface;
-using SlateBoard.App.SlateItems;
 
 namespace SlateBoard.App.ViewModels;
 
 //TODO: Probably need a shellView as conductor
-public class MainViewModel : Screen, IHandle<CreateWireEvent>
+public class MainViewModel : Screen, IHandle<AddConnectionEvent>
 {
     private readonly IEventAggregator _events;
     private bool grid = false;
 
-    public BindableCollection<IMoveableItem> MoveableItems { get; set; }
+    public BindableCollection<ITerminal> MoveableItems { get; set; } 
+    public BindableCollection<IWire> Wires { get; set; } = [];
 
     public MainViewModel(IEventAggregator events)
     {
@@ -25,14 +24,14 @@ public class MainViewModel : Screen, IHandle<CreateWireEvent>
 
     private void TempInit()
     {
-        MoveableItems = new BindableCollection<IMoveableItem>();
-        MoveableItems.Add(new SlateViewModel(_events) { X = 50, Y = 50, Height = 80 , Width = 60});
-        MoveableItems.Add(new SlateViewModel(_events) { X = 120, Y = 30, Height = 60, Width = 60});
+        MoveableItems = new BindableCollection<ITerminal>();
+        MoveableItems.Add(new TerminalViewModel(_events) { X = 50, Y = 50, Height = 200, Width = 200 });
+        MoveableItems.Add(new TerminalViewModel(_events) { X = 120, Y = 30, Height = 200, Width = 200 });
     }
 
     public void AddItem() //Future arguments for type or just getting the type directly
     {
-        MoveableItems.Add(new SlateViewModel(_events));
+        MoveableItems.Add(new TerminalViewModel(_events));
     }
 
     public void Snap()
@@ -43,18 +42,26 @@ public class MainViewModel : Screen, IHandle<CreateWireEvent>
 
     public Task HandleAsync(CreateWireEvent message, CancellationToken cancellationToken)
     {
-        INode startPoint = message.Point;
+        //TODO: REPLACE BY ADDCONNECTIONEVENT
 
-        Wire wire = new Wire()
-        {
-            Start = startPoint
-        };
-
-        startPoint.Parent.AddWire(wire);
-
-        _events.PublishOnBackgroundThreadAsync(new SendWireEvent(wire), cancellationToken: cancellationToken);
+        var startPoint = message.Point;
 
         return Task.CompletedTask;
+    }
 
+    public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
+    {
+        var newWire = message.wire;
+
+        Wires.Add(newWire);
+
+        //Create connection between slates
+
+        newWire.InputTerminal.InputSocket.Add(newWire.StartSocket); //TODO: Handle with addconnector
+        newWire.InputTerminal.Connectors.Add(newWire.OutputTerminal);
+        newWire.OutputTerminal.Connectors.Add(newWire.InputTerminal);
+        newWire.OutputTerminal.Connectors.Add(newWire.OutputTerminal);
+
+        return Task.CompletedTask;
     }
 }

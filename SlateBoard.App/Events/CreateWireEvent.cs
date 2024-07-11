@@ -2,7 +2,7 @@
 
 namespace SlateBoard.App.Events;
 
-public class CreateWireEvent(INode point)
+public class CreateWireEvent(ISocket point)
 {
-    public INode Point = point;
+    public ISocket Point = point;
 }

@@ -45,10 +45,7 @@ namespace SlateBoard.App.Views
             {
                 if (child is Line line && LineExtension.GetWireId(child) == lineId)
                 {
-                    line.X1 = wire.Start.X;
-                    line.Y1 = wire.Start.Y;
-                    line.X2 = wire.End.X;
-                    line.Y2 = wire.End.Y;
+            
                 }
                 
             } 

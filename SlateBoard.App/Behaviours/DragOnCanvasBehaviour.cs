@@ -1,4 +1,5 @@
-﻿using System.Transactions;
+﻿using System.Security.Cryptography.Xml;
+using System.Transactions;
 using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using SlateBoard.App.Interface;
@@ -15,11 +16,13 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
     private Point _itemStartPosition;
     private Canvas _mainCanvas;
     
-    private IMoveableItem _moveableItem;
+    private ITerminal _terminal;
     private IEventAggregator _events;
     
     private bool _gridSnapping = false;
     private int _gridSize = 0;
+    private double dx = 0;
+    private double dy = 0;
 
     protected override void OnAttached()
     {
@@ -32,6 +35,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         _mainCanvas = GetMainCanvas(AssociatedObject);
 
         SetDataContextAndEvents();
+
     }
 
     protected override void OnDetaching()
@@ -44,7 +48,12 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        _itemStartPosition = new Point(_moveableItem.X-_moveableItem.Width, _moveableItem.Y-_moveableItem.Height);
+        var we = sender.GetType();
+        var mouseCurrentPosition = e.GetPosition(_mainCanvas);
+
+
+        dx = _terminal.X -  mouseCurrentPosition.X;
+        dy = _terminal.Y - mouseCurrentPosition.Y;
 
         AssociatedObject.CaptureMouse();
         e.Handled = true;
@@ -55,20 +64,14 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         if (AssociatedObject.IsMouseCaptured)
         {
             var mouseCurrentPosition = e.GetPosition(_mainCanvas);
+            var newPosX = mouseCurrentPosition.X + dx ; //Consider width and height of contentcontrol
+            var newPosY = mouseCurrentPosition.Y + dy ;
 
-            var direction = mouseCurrentPosition - _itemStartPosition;
-
-            var newLeft = _itemStartPosition.X + direction.X; //Consider width and height of contentcontrol
-            var newTop = _itemStartPosition.Y + direction.Y;
-
-            Canvas.SetLeft(AssociatedObject, direction.X);
-            Canvas.SetTop(AssociatedObject, direction.Y);
-
-            if (double.IsNaN(newLeft) || double.IsNaN(newTop))
+            if (double.IsNaN(newPosX) || double.IsNaN(newPosY))
                 return;
 
-            _moveableItem.X = _gridSnapping ? Math.Round(newLeft / _gridSize) * _gridSize: newLeft;
-            _moveableItem.Y = _gridSnapping ? Math.Round(newTop/ _gridSize) * _gridSize: newTop;
+            _terminal.X = _gridSnapping ? (int)Math.Round(newPosX / _gridSize) * _gridSize : (int)newPosX; //TODO: Not the best to cast to int, fix later
+            _terminal.Y = _gridSnapping ? (int)Math.Round(newPosY/ _gridSize) * _gridSize: (int)newPosY;
         }
     }
 
@@ -79,10 +82,10 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
 
     private void SetDataContextAndEvents()
     {
-        if (AssociatedObject is FrameworkElement { DataContext: IMoveableItem item })
+        if (AssociatedObject is FrameworkElement { DataContext: ITerminal item })
         {
-            _moveableItem = item;
-            _events = _moveableItem.Events;
+            _terminal = item;
+            _events = _terminal.Events;
             _events.SubscribeOnBackgroundThread(this);
         }
     }

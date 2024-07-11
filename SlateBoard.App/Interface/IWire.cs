@@ -1,3 +1,5 @@
+using System.Windows;
+using Caliburn.Micro;
 using SlateBoard.App.Enum;
 
 namespace SlateBoard.App.Interface;
@@ -7,8 +9,14 @@ namespace SlateBoard.App.Interface;
 /// </summary>
 public interface IWire
 {
-    INode Start { get; set; }
-    INode End { get; set; }
+    public Point StartPoint { get; set; }
+    public Point EndPoint { get; set; }
+    ISocket StartSocket { get; set; }
+    ISocket EndSocket { get; set; }
+
+    ITerminal InputTerminal { get; set; }
+    ITerminal OutputTerminal { get; set; }
     WireTypeEnum WireType { get; set; }
-    Guid Id { get; set; }
+
+    Guid Id { get; }
 }

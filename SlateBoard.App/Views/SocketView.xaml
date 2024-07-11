@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="SlateBoard.App.Views.SocketView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SlateBoard.App.Views"
+             xmlns:cm="http://caliburnmicro.com"
+             xmlns:viewModels="clr-namespace:SlateBoard.App.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance  viewModels:SocketViewModel}"
+             xmlns:extensions="clr-namespace:SlateBoard.App.Extensions"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviours="clr-namespace:SlateBoard.App.Behaviours">
+
+
+    <Grid cm:Message.Attach ="[Event Click] = [Action AddConnection()]">
+        <StackPanel Orientation="Horizontal" x:Name="SocketPanel" 
+                    extensions:StackPanelExtensions.ReverseChildren="{Binding Type}">
+            <Ellipse Height="10" Width="10" Fill="DarkRed"/>
+            <Label Content="{Binding Label}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

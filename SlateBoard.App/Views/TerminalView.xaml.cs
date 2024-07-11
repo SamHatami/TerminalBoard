@@ -5,9 +5,9 @@ namespace SlateBoard.App.Views;
 /// <summary>
 /// Interaction logic for SlateView.xaml
 /// </summary>
-public partial class SlateView : UserControl
+public partial class TerminalView: UserControl
 {
-    public SlateView()
+    public TerminalView()
     {
         InitializeComponent();
     }

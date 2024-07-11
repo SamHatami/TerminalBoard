@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SlateBoard.App.Views
+namespace SlateBoard.App.ViewModels
 {
     /// <summary>
-    /// Interaction logic for NodeView.xaml
+    /// Interaction logic for WireView.xaml
     /// </summary>
-    public partial class NodeView : UserControl
+    public partial class WireView : UserControl
     {
-        public NodeView()
+        public WireView()
         {
             InitializeComponent();
         }
