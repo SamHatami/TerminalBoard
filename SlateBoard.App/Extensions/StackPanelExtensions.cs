@@ -1,52 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SlateBoard.App.Enum;
 using System.Windows;
 using System.Windows.Controls;
-using SlateBoard.App.Enum;
 
-namespace SlateBoard.App.Extensions
+namespace SlateBoard.App.Extensions;
+
+internal class StackPanelExtensions
 {
-    internal class StackPanelExtensions
+    /// <summary>
+    /// Reorders into a mirroring order
+    /// </summary>
+    public static readonly DependencyProperty ReverseChildrenProperty =
+        DependencyProperty.RegisterAttached(
+            "ReverseChildren",
+            typeof(SocketTypeEnum),
+            typeof(StackPanelExtensions),
+            new PropertyMetadata(SocketTypeEnum.Input, OnReverseChildrenChanged));
+
+    public static SocketTypeEnum GetReverseChildren(DependencyObject obj)
     {
-        public static readonly DependencyProperty ReverseChildrenProperty =
-            DependencyProperty.RegisterAttached(
-                "ReverseChildren",
-                typeof(SocketTypeEnum),
-                typeof(StackPanelExtensions),
-                new PropertyMetadata(SocketTypeEnum.Input, OnReverseChildrenChanged));
+        return (SocketTypeEnum)obj.GetValue(ReverseChildrenProperty);
+    }
 
-        public static SocketTypeEnum GetReverseChildren(DependencyObject obj)
+    public static void SetReverseChildren(DependencyObject obj, SocketTypeEnum value)
+    {
+        obj.SetValue(ReverseChildrenProperty, value);
+    }
+
+    private static void OnReverseChildrenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is StackPanel stackPanel && e.NewValue is SocketTypeEnum type) ReverseChildren(stackPanel, type);
+    }
+
+    private static void ReverseChildren(StackPanel stackPanel, SocketTypeEnum type)
+    {
+        if (type == SocketTypeEnum.Output) //Reverse if its an output socket
         {
-            return (SocketTypeEnum)obj.GetValue(ReverseChildrenProperty);
-        }
+            var children = stackPanel.Children.Cast<UIElement>().ToList();
+            children.Reverse();
+            stackPanel.Children.Clear();
 
-        public static void SetReverseChildren(DependencyObject obj, SocketTypeEnum value)
-        {
-            obj.SetValue(ReverseChildrenProperty, value);
-        }
-
-        private static void OnReverseChildrenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is StackPanel stackPanel && e.NewValue is SocketTypeEnum type)
-            {
-                ReverseChildren(stackPanel, type);
-            }
-        }
-
-        private static void ReverseChildren(StackPanel stackPanel, SocketTypeEnum type)
-        {
-            if (type == SocketTypeEnum.Output) //Reverse if its an output socket
-            {
-                var children = stackPanel.Children.Cast<UIElement>().ToList();
-                children.Reverse();
-                stackPanel.Children.Clear();
-
-                foreach (var child in children) 
-                    stackPanel.Children.Add(child);
-            }
+            foreach (var child in children)
+                stackPanel.Children.Add(child);
         }
     }
 }

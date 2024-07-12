@@ -39,16 +39,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
         grid = !grid;
         _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
     }
-
-    public Task HandleAsync(CreateWireEvent message, CancellationToken cancellationToken)
-    {
-        //TODO: REPLACE BY ADDCONNECTIONEVENT
-
-        var startPoint = message.Point;
-
-        return Task.CompletedTask;
-    }
-
+    
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
     {
         var newWire = message.wire;
