@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Xml.Linq;
+using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.ViewModels;
 
@@ -19,9 +20,9 @@ public partial class SocketView : UserControl
         InitializeComponent();
 
         Loaded += SocketView_Loaded;
+           
 
     }
-
     private void SocketView_Loaded(object sender, RoutedEventArgs e)
     {
         _socketViewModel = DataContext as SocketViewModel;

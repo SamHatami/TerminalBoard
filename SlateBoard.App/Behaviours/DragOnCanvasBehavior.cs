@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using SlateBoard.App.Events;
+using System.ComponentModel;
 
 namespace SlateBoard.App.Behaviours;
 
@@ -35,9 +36,8 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         _mainCanvas = GetMainCanvas(AssociatedObject);
 
         SetDataContextAndEvents();
-
+    
     }
-
     protected override void OnDetaching()
     {
         base.OnDetaching();
