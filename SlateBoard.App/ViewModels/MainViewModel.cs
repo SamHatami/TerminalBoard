@@ -14,6 +14,17 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
     public BindableCollection<ITerminal> MoveableItems { get; set; } 
     public BindableCollection<IWire> Wires { get; set; } = [];
 
+    private IWire _selectedWire;
+    public IWire SelectedWire 
+    { 
+        get =>  _selectedWire;
+        set 
+        {
+            _selectedWire = value;
+            NotifyOfPropertyChange(nameof(SelectedWire));
+        }
+    }
+
     public MainViewModel(IEventAggregator events)
     {
         _events = events;
