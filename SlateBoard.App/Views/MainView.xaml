@@ -10,12 +10,13 @@
         xmlns:backgroundGrid="clr-namespace:SlateBoard.App.BackgroundGrid"
         d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainView" Height="450" Width="800">
-    <Canvas x:Name="MainCanvas" Background="#FF3A3A3A">
-        <b:Interaction.Behaviors>
-            <behaviours:CanvasPanZoomBehavior/>
-        </b:Interaction.Behaviors>
-        <Button x:Name="Snap">Snap</Button>
+        Title="MainView" Height="450" Width="800" TextOptions.TextRenderingMode="Aliased">
+    <Grid>
+        <Canvas x:Name="MainCanvas" Background="#FF3A3A3A">
+            <b:Interaction.Behaviors>
+                <behaviours:CanvasPanZoomBehavior/>
+            </b:Interaction.Behaviors>
+ 
             <ItemsControl ItemsSource="{Binding Wires}" x:Name="Wires">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -32,27 +33,39 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        <ItemsControl ItemsSource="{Binding MoveableItems}" x:Name="Terminals">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}"/>
-                    <Setter Property="Canvas.Top" Value="{Binding Y, Mode=TwoWay}" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
-                        <b:Interaction.Behaviors>
-                            <behaviours:DragOnCanvasBehavior />
-                        </b:Interaction.Behaviors>
-                    </ContentControl>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Canvas>
+            <ItemsControl ItemsSource="{Binding MoveableItems}" x:Name="Terminals">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
+                            <b:Interaction.Behaviors>
+                                <behaviours:DragOnCanvasBehavior />
+                            </b:Interaction.Behaviors>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Canvas>
+
+        <Canvas x:Name="ControlCanvas">
+            <StackPanel>
+                <Button x:Name="Snap" Content="SNAP" Margin="5"/>
+                <Button x:Name="Add" Content="ADD" Margin="5"/>
+                
+            </StackPanel>
+            
+        </Canvas>
+
+    </Grid>
+
 </Window>

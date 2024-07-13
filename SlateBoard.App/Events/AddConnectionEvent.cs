@@ -1,4 +1,4 @@
-﻿using SlateBoard.App.Interface;
+﻿using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.Events
 {

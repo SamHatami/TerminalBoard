@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SlateBoard.App.Interface;
+using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.ViewModels
 {

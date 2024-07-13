@@ -1,9 +1,9 @@
 ﻿using Caliburn.Micro;
 using SlateBoard.App.Enum;
-using SlateBoard.App.Interface;
 using System.Windows;
 using SlateBoard.App.Events;
 using System.Net.Sockets;
+using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.ViewModels;
 

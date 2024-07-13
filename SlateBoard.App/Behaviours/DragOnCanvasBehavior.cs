@@ -2,13 +2,13 @@
 using System.Transactions;
 using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
-using SlateBoard.App.Interface;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using SlateBoard.App.Events;
 using System.ComponentModel;
+using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.Behaviours;
 

@@ -1,7 +1,7 @@
 using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using SlateBoard.App.Enum;
-using SlateBoard.App.Interface;
+using SlateBoard.App.Interface.ViewModel;
 using SlateBoard.App.ViewModels;
 using System.Windows;
 using System.Windows.Controls;

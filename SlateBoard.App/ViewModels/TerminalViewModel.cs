@@ -2,11 +2,11 @@
 using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
-using SlateBoard.App.Interface;
+using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.ViewModels;
 
-public class TerminalViewModel : PropertyChangedBase, ITerminal
+public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZoomPanEvent>
 {
     private readonly IEventAggregator _events;
     public int Height { get; set; }
@@ -16,9 +16,9 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal
     public string Title;
     public int GridSize = 100;
 
-    private int _x;
+    private double _x;
 
-    public int X
+    public double X
     {
         get => _x;
         set
@@ -29,9 +29,9 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal
         }
     }
 
-    private int _y;
+    private double _y;
 
-    public int Y
+    public double Y
     {
         get => _y;
         set
@@ -92,5 +92,14 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal
         throw new NotImplementedException();
     }
 
+    public Task HandleAsync(CanvasZoomPanEvent message, CancellationToken cancellationToken)
+    {
+        var x = message.X;
+        var y = message.Y;
 
+        X += x; Y += y;
+
+        return Task.CompletedTask;
+
+    }
 }

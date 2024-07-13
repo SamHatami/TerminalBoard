@@ -2,7 +2,7 @@
 using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
-using SlateBoard.App.Interface;
+using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.ViewModels;
 

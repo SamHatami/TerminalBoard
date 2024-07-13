@@ -2,7 +2,7 @@ using System.Windows;
 using Caliburn.Micro;
 using SlateBoard.App.Enum;
 
-namespace SlateBoard.App.Interface;
+namespace SlateBoard.App.Interface.ViewModel;
 
 /// <summary>
 /// Connecting slates by wire

@@ -1,14 +1,14 @@
 ﻿using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
-using SlateBoard.App.Interface;
+using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.ViewModels;
 
 //TODO: Probably need a shellView as conductor
 public class MainViewModel : Screen, IHandle<AddConnectionEvent>
 {
-    private readonly IEventAggregator _events;
+    public IEventAggregator Events;
     private bool grid = false;
 
     public BindableCollection<ITerminal> MoveableItems { get; set; } 
@@ -27,8 +27,8 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
 
     public MainViewModel(IEventAggregator events)
     {
-        _events = events;
-        _events.SubscribeOnBackgroundThread(this);
+        Events = events;
+        Events.SubscribeOnBackgroundThread(this);
 
         TempInit();
     }
@@ -36,19 +36,19 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
     private void TempInit()
     {
         MoveableItems = new BindableCollection<ITerminal>();
-        MoveableItems.Add(new TerminalViewModel(_events) { X = 50, Y = 50, Height = 200, Width = 200 });
-        MoveableItems.Add(new TerminalViewModel(_events) { X = 120, Y = 30, Height = 200, Width = 200 });
+        MoveableItems.Add(new TerminalViewModel(Events) { X = 50, Y = 50, Height = 200, Width = 200 });
+        MoveableItems.Add(new TerminalViewModel(Events) { X = 120, Y = 30, Height = 200, Width = 200 });
     }
 
     public void AddItem() //Future arguments for type or just getting the type directly
     {
-        MoveableItems.Add(new TerminalViewModel(_events));
+        MoveableItems.Add(new TerminalViewModel(Events));
     }
 
     public void Snap()
     {
         grid = !grid;
-        _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
+        Events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
     }
     
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
