@@ -53,7 +53,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
     
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
     {
-        var newWire = message.wire;
+        var newWire = message.Wire;
 
         Wires.Add(newWire);
 

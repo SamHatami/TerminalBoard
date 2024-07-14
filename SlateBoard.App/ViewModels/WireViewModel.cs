@@ -62,6 +62,8 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
     public ITerminal InputTerminal { get; set; }
     public ITerminal OutputTerminal { get; set; }
     public WireTypeEnum WireType { get; set; }
+
+
     public Guid Id { get; set; } = Guid.NewGuid();
 
     private IEventAggregator _events;
@@ -110,7 +112,13 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         _startExtensionPoint.X = StartPoint.X + 25;
         StartExtensionPoint = _startExtensionPoint;
     }
-    
+
+
+    public void RemoveThis()
+    {
+        _events.PublishOnBackgroundThreadAsync(new RemoveConnectionEvent(this));
+    }
+
     public Task HandleAsync(SocketMovedEvent message, CancellationToken cancellationToken)
     {
         var socket = message.Socket;

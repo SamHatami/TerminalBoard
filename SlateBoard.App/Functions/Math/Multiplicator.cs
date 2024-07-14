@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SlateBoard.App.Functions.Math
+﻿namespace SlateBoard.App.Functions.Math
 {
     public class Multiplication
     {

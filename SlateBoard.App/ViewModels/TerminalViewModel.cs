@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
@@ -94,11 +95,12 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
 
     public Task HandleAsync(CanvasZoomPanEvent message, CancellationToken cancellationToken)
     {
-        var x = message.X;
-        var y = message.Y;
+        var dx = message.dX;
+        var dy = message.dY;
 
-        X += x; Y += y;
+        X += dx; Y += dy;
 
+        Trace.WriteLine("X: " +X + " Y: " + Y);
         return Task.CompletedTask;
 
     }

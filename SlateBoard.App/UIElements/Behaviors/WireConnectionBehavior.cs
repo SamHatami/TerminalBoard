@@ -1,15 +1,15 @@
-using Caliburn.Micro;
-using Microsoft.Xaml.Behaviors;
-using SlateBoard.App.Enum;
-using SlateBoard.App.Interface.ViewModel;
-using SlateBoard.App.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Caliburn.Micro;
+using Microsoft.Xaml.Behaviors;
+using SlateBoard.App.Enum;
+using SlateBoard.App.Interface.ViewModel;
+using SlateBoard.App.ViewModels;
 
-namespace SlateBoard.App.Behaviours;
+namespace SlateBoard.App.UIElements.Behaviors;
 
 internal class WireConnectionBehavior : Behavior<UIElement>
 {

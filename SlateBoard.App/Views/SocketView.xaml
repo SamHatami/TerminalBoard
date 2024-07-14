@@ -8,8 +8,7 @@
              xmlns:viewModels="clr-namespace:SlateBoard.App.ViewModels"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance  viewModels:SocketViewModel}"
              xmlns:extensions="clr-namespace:SlateBoard.App.Extensions"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:behaviours="clr-namespace:SlateBoard.App.Behaviours">
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
 
 
     <Border CornerRadius="3">

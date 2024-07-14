@@ -5,8 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:SlateBoard.App.ViewModels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:behaviours="clr-namespace:SlateBoard.App.Behaviours"
              xmlns:cm="http://caliburnmicro.com"
+             xmlns:behaviors="clr-namespace:SlateBoard.App.UIElements.Behaviors"
              d:DataContext="{d:DesignInstance Type=viewModels:TerminalViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="100" d:DesignWidth="120">
@@ -56,7 +56,7 @@
                         <DataTemplate>
                             <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">
                                 <b:Interaction.Behaviors>
-                                    <behaviours:WireConnectionBehavior/>
+                                    <behaviors:WireConnectionBehavior/>
                                 </b:Interaction.Behaviors>
                             </ContentControl>
                         </DataTemplate>

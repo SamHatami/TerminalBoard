@@ -11,12 +11,12 @@ namespace SlateBoard.App.Events
     {
         public CanvasZoomPanEvent(double x, double y)
         {
-            X = x;
-            Y = y;
+            dX = x;
+            dY = y;
         }
 
         public TransformGroup TransformGroup { get; }
-        public double X { get; }
-        public double Y { get; }
+        public double dX { get; }
+        public double dY { get; }
     }
 }

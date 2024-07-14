@@ -1,20 +1,20 @@
-using Caliburn.Micro;
-using Microsoft.Xaml.Behaviors;
-using SlateBoard.App.Events;
-using SlateBoard.App.Interface;
-using SlateBoard.App.ViewModels;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Caliburn.Micro;
+using Microsoft.Xaml.Behaviors;
+using SlateBoard.App.Events;
+using SlateBoard.App.ViewModels;
 
-namespace SlateBoard.App.Behaviours
+namespace SlateBoard.App.UIElements.Behaviors
 {
     public class CanvasPanZoomBehavior : Behavior<UIElement>
     {
         private Canvas? _mainCanvas;
         private IEventAggregator? _events;
-        private Point _eventPosition;
+        private Point _mouseStartPosition;
 
         private TransformGroup? _transformGroup;
         private ScaleTransform? _scaleTransform;
@@ -62,16 +62,16 @@ namespace SlateBoard.App.Behaviours
         private void OnCanvasMouseWheel(object sender, MouseWheelEventArgs e)
         {
 
-            //if (_mainCanvas.Children.Count > 0 && _mainCanvas.Children[0].RenderTransform != _transformGroup)
-            //{
-            //    foreach (UIElement element in _mainCanvas.Children)
-            //        element.RenderTransform = _transformGroup;
-            //}
+            if (_mainCanvas.Children.Count > 0 && _mainCanvas.Children[0].RenderTransform != _transformGroup)
+            {
+                foreach (UIElement element in _mainCanvas.Children)
+                    element.RenderTransform = _transformGroup;
+            }
 
-            //Point mousePosition = _transformGroup.Inverse.Transform(e.GetPosition(_mainCanvas));
-            //double zoomFactor = e.Delta > 0 ? 1.1 : 1 / 1.1;
+            Point mousePosition = _transformGroup.Inverse.Transform(e.GetPosition(_mainCanvas));
+            double zoomFactor = e.Delta > 0 ? 1.1 : 1 / 1.1;
 
-            //Zoom(mousePosition, zoomFactor);
+            Zoom(mousePosition, zoomFactor);
 
             e.Handled = true;
         }
@@ -109,6 +109,9 @@ namespace SlateBoard.App.Behaviours
             {
                 _mainCanvas.MouseDown -= OnCanvasMouseDown;
                 _mainCanvas.MouseMove -= OnCanvasMouseMove;
+                _mainCanvas.MouseUp -= OnCanvasMouseUp;
+                _mainCanvas.MouseWheel -= OnCanvasMouseWheel;
+                _mainCanvas.DataContextChanged -= OnDataContextChange;
             }
         }
 
@@ -116,7 +119,8 @@ namespace SlateBoard.App.Behaviours
         private void OnCanvasMouseDown(object sender, MouseButtonEventArgs mouseDownEvent)
         {
             if (mouseDownEvent.MiddleButton == MouseButtonState.Pressed)
-                _eventPosition = _transformGroup.Inverse.Transform(mouseDownEvent.GetPosition(_mainCanvas));
+                _mouseStartPosition = _transformGroup.Inverse.Transform(mouseDownEvent.GetPosition(_mainCanvas));
+
 
             mouseDownEvent.Handled = true;
         }
@@ -127,12 +131,14 @@ namespace SlateBoard.App.Behaviours
             {
                 Point currentMousePosition = _transformGroup.Inverse.Transform(mouseMoveEvent.GetPosition(_mainCanvas));
 
-                Vector distanceVector = currentMousePosition - _eventPosition;
+                Vector distanceVector = currentMousePosition - _mouseStartPosition;
 
-                //_translateTransform.X += distanceVector.X;
-                //_translateTransform.Y += distanceVector.Y;
+                distanceVector /= _scaleTransform.ScaleX;
+                _translateTransform.X += distanceVector.X;
+                _translateTransform.Y += distanceVector.Y;
 
                 _events.PublishOnBackgroundThreadAsync(new CanvasZoomPanEvent(distanceVector.X, distanceVector.Y));
+                Trace.WriteLine("dx: "+ distanceVector.X + " dy: " + distanceVector.Y.ToString());
 
             }
 

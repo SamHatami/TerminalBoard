@@ -1,16 +1,13 @@
-﻿using System.Security.Cryptography.Xml;
-using System.Transactions;
-using Caliburn.Micro;
-using Microsoft.Xaml.Behaviors;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Caliburn.Micro;
+using Microsoft.Xaml.Behaviors;
 using SlateBoard.App.Events;
-using System.ComponentModel;
 using SlateBoard.App.Interface.ViewModel;
 
-namespace SlateBoard.App.Behaviours;
+namespace SlateBoard.App.UIElements.Behaviors;
 
 public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent>
 {
@@ -52,10 +49,10 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
             return;
 
         var we = sender.GetType();
-        var mouseCurrentPosition = e.GetPosition(_mainCanvas);
+        var startPosition = e.GetPosition(_mainCanvas);
 
-        dx = _terminal.X -  mouseCurrentPosition.X;
-        dy = _terminal.Y - mouseCurrentPosition.Y;
+        dx = _terminal.X - startPosition.X;
+        dy = _terminal.Y - startPosition.Y;
 
         AssociatedObject.CaptureMouse();
         e.Handled = true;

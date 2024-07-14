@@ -18,5 +18,7 @@ public interface IWire
     ITerminal OutputTerminal { get; set; }
     WireTypeEnum WireType { get; set; }
 
+    void RemoveThis();
+
     Guid Id { get; }
 }
