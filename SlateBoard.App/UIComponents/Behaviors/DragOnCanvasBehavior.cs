@@ -6,8 +6,9 @@ using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using SlateBoard.App.Events;
 using SlateBoard.App.Interface.ViewModel;
+using SlateBoard.App.UIComponents.Helpers;
 
-namespace SlateBoard.App.UIElements.Behaviors;
+namespace SlateBoard.App.UIComponents.Behaviors;
 
 public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent>
 {
@@ -15,7 +16,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
     private Canvas _mainCanvas;
     
     private ITerminal _terminal;
-    private IEventAggregator _events;
+    private IEventAggregator? _events;
     
     private bool _gridSnapping = false;
     private int _gridSize = 0;
@@ -26,6 +27,8 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
     {
         base.OnAttached();
 
+        _events = BehaviorHelper.EventsAggregator;
+   
         AssociatedObject.MouseLeftButtonDown += OnMouseLeftButtonDown;
         AssociatedObject.MouseMove += OnMouseMove;
         AssociatedObject.MouseLeftButtonUp += OnMouseLeftButtonUp;
@@ -47,6 +50,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
     {
         if(_terminal == null)
             return;
+
 
         var we = sender.GetType();
         var startPosition = e.GetPosition(_mainCanvas);
@@ -72,6 +76,8 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
             _terminal.X = _gridSnapping ? (int)Math.Round(newPosX / _gridSize) * _gridSize : (int)newPosX; //TODO: Not the best to cast to int, fix later
             _terminal.Y = _gridSnapping ? (int)Math.Round(newPosY/ _gridSize) * _gridSize: (int)newPosY;
         }
+
+        e.Handled = true;
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -84,8 +90,6 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         if (AssociatedObject is FrameworkElement { DataContext: ITerminal item })
         {
             _terminal = item;
-            _events = _terminal.Events;
-            _events.SubscribeOnBackgroundThread(this);
         }
     }
 

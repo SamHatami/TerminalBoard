@@ -4,7 +4,7 @@ namespace SlateBoard.App.Interface.ViewModel;
 /// <summary>
 /// Interface for a dragable item. 
 /// </summary>
-public interface ITerminal
+public interface ITerminal: ISelectable
 {
     #region Properties
 

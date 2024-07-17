@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
+using SlateBoard.App.UIComponents.Helpers;
 using SlateBoard.App.ViewModels;
 
 namespace SlateBoard.App
@@ -27,6 +28,8 @@ namespace SlateBoard.App
             _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<IEventAggregator, EventAggregator>();
             _container.Singleton<MainViewModel>();
+
+            BehaviorHelper.EventsAggregator = _container.GetInstance<IEventAggregator>();
 
 
             foreach (var assembly in SelectAssemblies())

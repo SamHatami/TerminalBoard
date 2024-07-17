@@ -6,11 +6,11 @@ using SlateBoard.App.Interface.ViewModel;
 
 namespace SlateBoard.App.ViewModels;
 
-public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMovedEvent>
+public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMovedEvent>, IHandle<TerminalRemovedEvent>
 {
     public SocketViewModel(ITerminal parent, IEventAggregator events, SocketTypeEnum type)
     {
-        Parent = parent;
+        ParentTerminal = parent;
         Events = events;
         Type = type;
 
@@ -47,9 +47,8 @@ public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMove
     }
 
     public Guid Id { get;} = Guid.NewGuid(); 
-    public ITerminal Slate { get; set; }
     public SocketTypeEnum Type { get; set; }
-    public ITerminal Parent { get; set; }
+    public ITerminal ParentTerminal { get; set; }
     public IEventAggregator Events { get; set; }
 
     public void SetRelativeDistances(Vector v)
@@ -61,7 +60,7 @@ public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMove
 
     public Task HandleAsync(TerminalMovedEvent message, CancellationToken cancellationToken)
     {
-        if(message.TerminalViewModel == Parent)
+        if(message.TerminalViewModel == ParentTerminal)
         {
             _x = message.TerminalViewModel.X + relativeDistanceToParent_X;
             _y = message.TerminalViewModel.Y + relativeDistanceToParent_Y;
@@ -70,5 +69,12 @@ public class SocketViewModel: PropertyChangedBase, ISocket, IHandle<TerminalMove
         Events.PublishOnBackgroundThreadAsync(new SocketMovedEvent(this));
         return Task.CompletedTask;
         
+    }
+
+    public Task HandleAsync(TerminalRemovedEvent message, CancellationToken cancellationToken)
+    {
+        //if(message.Terminal != Parent)
+
+        return Task.CompletedTask;
     }
 }

@@ -1,14 +1,15 @@
 ﻿using Caliburn.Micro;
 using SlateBoard.App.Enum;
-using System.Windows;
 using SlateBoard.App.Events;
-using System.Net.Sockets;
 using SlateBoard.App.Interface.ViewModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace SlateBoard.App.ViewModels;
 
 public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEvent>
 {
+    public bool Selected { get; set; }
     private Point _startPoint;
 
     public Point StartPoint
@@ -33,7 +34,6 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         }
     }
 
-
     private Point _startExtensionPoint;
 
     public Point StartExtensionPoint
@@ -44,8 +44,8 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
             _startExtensionPoint = value;
             NotifyOfPropertyChange(nameof(StartExtensionPoint));
         }
-    }    
-    
+    }
+
     private Point _endExtensionPoint;
 
     public Point EndExtensionPoint
@@ -57,21 +57,31 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
             NotifyOfPropertyChange(nameof(EndExtensionPoint));
         }
     }
+
     public ISocket StartSocket { get; set; }
-    public ISocket  EndSocket { get; set; }
+    public ISocket EndSocket { get; set; }
     public ITerminal InputTerminal { get; set; }
     public ITerminal OutputTerminal { get; set; }
     public WireTypeEnum WireType { get; set; }
 
+    public void Delete(KeyEventArgs keyEvent)
+    {
+        if (Selected && keyEvent.Key == Key.Delete)
+            _events.PublishOnBackgroundThreadAsync(new RemoveConnectionEvent(this));
+    }
+
+    public void Select()
+    {
+        Selected = !Selected;
+    }
 
     public Guid Id { get; set; } = Guid.NewGuid();
 
     private IEventAggregator _events;
 
-
     public WireViewModel(ISocket startSocket, ISocket endSocket, IEventAggregator events)
     {
-;
+        ;
         _events = events;
         _events.Subscribe(this);
         SetStartSocket(startSocket);
@@ -96,7 +106,6 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         _endPoint.Y = socket.Y;
         EndPoint = _endPoint;
 
-
         _endExtensionPoint.Y = EndPoint.Y;
         _endExtensionPoint.X = EndPoint.X - 25;
         EndExtensionPoint = _endExtensionPoint;
@@ -113,12 +122,6 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         StartExtensionPoint = _startExtensionPoint;
     }
 
-
-    public void RemoveThis()
-    {
-        _events.PublishOnBackgroundThreadAsync(new RemoveConnectionEvent(this));
-    }
-
     public Task HandleAsync(SocketMovedEvent message, CancellationToken cancellationToken)
     {
         var socket = message.Socket;
@@ -133,7 +136,6 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         }
 
         SetEndPosition(socket);
-
 
         return Task.CompletedTask;
     }

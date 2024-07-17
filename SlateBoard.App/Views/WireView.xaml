@@ -4,10 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:SlateBoard.App.ViewModels"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModels:WireViewModel }">
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModels:WireViewModel}">
     <Canvas>
-        <Path Stroke="Black" StrokeThickness="2" x:Name="WireGeometry">
+        <Path Stroke="Black" StrokeThickness="2" x:Name="WireGeometry" >
             <Path.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>

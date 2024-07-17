@@ -9,7 +9,7 @@ using SlateBoard.App.Enum;
 using SlateBoard.App.Interface.ViewModel;
 using SlateBoard.App.ViewModels;
 
-namespace SlateBoard.App.UIElements.Behaviors;
+namespace SlateBoard.App.UIComponents.Behaviors;
 
 internal class WireConnectionBehavior : Behavior<UIElement>
 {
@@ -34,7 +34,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         AssociatedObject.MouseLeftButtonDown += OnMouseLeftButtonDown;
         AssociatedObject.MouseMove += OnMouseMove;
         AssociatedObject.MouseLeftButtonUp += OnMouseLeftButtonUp;
-
+        
         _mainCanvas = GetMainCanvas(AssociatedObject);
         SetDataContextAndEvents();
     }
@@ -86,7 +86,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
             //TODO: Move to WireValidation?
             //add endsock if socket is an input and does not belong to the same terminal
             if (element.DataContext is ISocket { Type: SocketTypeEnum.Input } socket &&
-                socket.Slate != _startSocket.Slate)
+                socket.ParentTerminal != _startSocket.ParentTerminal)
                 _endSocket = socket;
 
         return HitTestResultBehavior.Continue;
@@ -111,7 +111,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         }
 
         IWire wire = new WireViewModel(_startSocket, _endSocket, _startSocket.Events); //TODO meh
-        var mainViewModel = _mainCanvas.DataContext as MainViewModel;
+        var mainViewModel = _mainCanvas.DataContext as MainViewModel; //TODO do this with event instead of direct connection
         mainViewModel.Wires.Add(wire); //replace with a WireModel
         _mainCanvas.Children.Remove(_currentLine);
     }
@@ -121,7 +121,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         if (AssociatedObject is FrameworkElement { DataContext: ISocket item })
         {
             _startSocket = item;
-            _terminal = _startSocket.Slate;
+            _terminal = _startSocket.ParentTerminal;
             _events = _startSocket.Events;
             _events.SubscribeOnBackgroundThread(this);
         }
@@ -138,16 +138,4 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         return null;
     }
 
-    private static T FindParent<T>(DependencyObject child) where T : class
-    {
-        var parentObject = VisualTreeHelper.GetParent(child);
-
-        if (parentObject == null) return null;
-
-        var parent = parentObject as T;
-        if (parent != null)
-            return parent;
-        else
-            return FindParent<T>(parentObject);
-    }
 }

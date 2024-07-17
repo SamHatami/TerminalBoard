@@ -6,9 +6,10 @@ using System.Windows.Media;
 using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using SlateBoard.App.Events;
+using SlateBoard.App.UIComponents.Helpers;
 using SlateBoard.App.ViewModels;
 
-namespace SlateBoard.App.UIElements.Behaviors
+namespace SlateBoard.App.UIComponents.Behaviors
 {
     public class CanvasPanZoomBehavior : Behavior<UIElement>
     {
@@ -28,6 +29,8 @@ namespace SlateBoard.App.UIElements.Behaviors
         {
             base.OnAttached();
 
+            _events = BehaviorHelper.EventsAggregator;
+
             if (AssociatedObject is Canvas maincanvas)
             {
                 _mainCanvas = maincanvas;
@@ -35,7 +38,6 @@ namespace SlateBoard.App.UIElements.Behaviors
                 _mainCanvas.MouseMove += OnCanvasMouseMove;
                 _mainCanvas.MouseUp += OnCanvasMouseUp;
                 _mainCanvas.MouseWheel += OnCanvasMouseWheel;
-                _mainCanvas.DataContextChanged += OnDataContextChange;
           
             }
             else
@@ -48,16 +50,7 @@ namespace SlateBoard.App.UIElements.Behaviors
             _transformGroup.Children.Add(_translateTransform);
         }
 
-        private void OnDataContextChange(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            _mainViewModel = _mainCanvas.DataContext as MainViewModel;
-            if (_mainCanvas != null)
-            {
-                _events = _mainViewModel.Events;
-                _events.SubscribeOnBackgroundThread(this);
-            }
-  
-        }
+
 
         private void OnCanvasMouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -111,7 +104,6 @@ namespace SlateBoard.App.UIElements.Behaviors
                 _mainCanvas.MouseMove -= OnCanvasMouseMove;
                 _mainCanvas.MouseUp -= OnCanvasMouseUp;
                 _mainCanvas.MouseWheel -= OnCanvasMouseWheel;
-                _mainCanvas.DataContextChanged -= OnDataContextChange;
             }
         }
 

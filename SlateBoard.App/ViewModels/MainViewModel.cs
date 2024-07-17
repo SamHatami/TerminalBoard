@@ -3,25 +3,27 @@ using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
 using SlateBoard.App.Interface.ViewModel;
 
+
 namespace SlateBoard.App.ViewModels;
 
 //TODO: Probably need a shellView as conductor
-public class MainViewModel : Screen, IHandle<AddConnectionEvent>
+public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<RemoveConnectionEvent>, IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
 {
     public IEventAggregator Events;
     private bool grid = false;
 
-    public BindableCollection<ITerminal> MoveableItems { get; set; } 
+    public BindableCollection<ITerminal> Terminals { get; set; }
     public BindableCollection<IWire> Wires { get; set; } = [];
 
-    private IWire _selectedWire;
-    public IWire SelectedWire 
-    { 
-        get =>  _selectedWire;
-        set 
+    private ISelectable _selectedItem;
+
+    public ISelectable SelectedItem
+    {
+        get => _selectedItem;
+        set
         {
-            _selectedWire = value;
-            NotifyOfPropertyChange(nameof(SelectedWire));
+            _selectedItem = value;
+            NotifyOfPropertyChange(nameof(SelectedItem));
         }
     }
 
@@ -35,14 +37,14 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
 
     private void TempInit()
     {
-        MoveableItems = new BindableCollection<ITerminal>();
-        MoveableItems.Add(new TerminalViewModel(Events) { X = 50, Y = 50, Height = 200, Width = 200 });
-        MoveableItems.Add(new TerminalViewModel(Events) { X = 120, Y = 30, Height = 200, Width = 200 });
+        Terminals = new BindableCollection<ITerminal>();
+        Terminals.Add(new TerminalViewModel(Events) { X = 50, Y = 50, Height = 200, Width = 200 });
+        Terminals.Add(new TerminalViewModel(Events) { X = 120, Y = 30, Height = 200, Width = 200 });
     }
 
     public void AddItem() //Future arguments for type or just getting the type directly
     {
-        MoveableItems.Add(new TerminalViewModel(Events));
+        Terminals.Add(new TerminalViewModel(Events));
     }
 
     public void Snap()
@@ -50,7 +52,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
         grid = !grid;
         Events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
     }
-    
+
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
     {
         var newWire = message.Wire;
@@ -65,5 +67,59 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>
         newWire.OutputTerminal.Connectors.Add(newWire.OutputTerminal);
 
         return Task.CompletedTask;
+    }
+
+    public Task HandleAsync(RemoveConnectionEvent message, CancellationToken cancellationToken)
+    {
+        Wires.Remove(message.Wire);
+
+        return Task.CompletedTask;
+    }
+
+    public void RemoveItem(ISelectable item)
+    {
+        if (item is ITerminal terminal)
+        {
+            Terminals.Remove(terminal);
+            Events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(terminal));
+        } 
+        
+        if (item is IWire wire)
+        {
+            Wires.Remove(wire);
+            Events.PublishOnBackgroundThreadAsync(new WireRemovedEvent(wire));
+        }
+    }
+
+    public Task HandleAsync(SelectItemEvent message, CancellationToken cancellationToken)
+    {
+        ClearSelection();
+
+        message.Item.Selected = true;
+        SelectedItem = message.Item;
+
+        return Task.CompletedTask;
+    }
+
+    public Task HandleAsync(ClearSelectionEvent message, CancellationToken cancellationToken)
+    {
+
+        ClearSelection();
+
+        return Task.CompletedTask;
+    }
+
+    private void ClearSelection()
+    {
+        foreach (var wire in Wires)
+        {
+            wire.Selected = false;
+        }
+        foreach (var terminal in Terminals)
+        {
+            terminal.Selected = false;
+        }
+
+        SelectedItem = null;
     }
 }

@@ -10,7 +10,7 @@ public interface ISocket
     double X { get; set; }
     double Y { get; set; }
     Guid Id { get; }
-    ITerminal Slate { get; set; }
+    ITerminal ParentTerminal { get; set; }
     SocketTypeEnum Type { get; set; }
     IEventAggregator Events { get; set; }
 }

@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Drawing;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using SlateBoard.App.Enum;
 using SlateBoard.App.Events;
 using SlateBoard.App.Interface.ViewModel;
+using System.Diagnostics;
 
 namespace SlateBoard.App.ViewModels;
 
@@ -16,6 +15,18 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
 
     public string Title;
     public int GridSize = 100;
+
+    private bool _selected;
+
+    public bool Selected
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            NotifyOfPropertyChange(nameof(Selected));
+        }
+    }
 
     private double _x;
 
@@ -46,11 +57,11 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
     public List<IWire> Wires { get; set; } = new List<IWire>();
     public IEventAggregator Events { get; }
 
-    public BindableCollection<ISocket> InputSockets { get; set; } = new BindableCollection<ISocket>();
-    public BindableCollection<ISocket> OutputSockets { get; set; } = new BindableCollection<ISocket>();
-    public List<ISocket> InputSocket { get; set; } 
+    public BindableCollection<ISocket> InputSockets { get; set; } = [];
+    public BindableCollection<ISocket> OutputSockets { get; set; } = [];
+    public List<ISocket> InputSocket { get; set; }
     public List<ISocket> OutputSocket { get; set; }
-    public List<ITerminal> Connectors { get; set; } = new List<ITerminal>();
+    public List<ITerminal> Connectors { get; set; } = [];
 
     public TerminalViewModel(IEventAggregator events)
     {
@@ -58,7 +69,6 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
         Events.SubscribeOnBackgroundThread(this);
         Id = Guid.NewGuid();
 
-  
         TestInit();
     }
 
@@ -66,12 +76,12 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
     {
         Height = 80;
         Width = 50;
-       
-        InputSockets.Add(new SocketViewModel( this, Events, SocketTypeEnum.Input){Label = "Input 1", Slate = this});
-        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input){ Label = "Input 2", Slate = this });
-        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input){Label = "Input 3", Slate = this });
-        OutputSockets.Add( new SocketViewModel(this, Events, SocketTypeEnum.Output){Label = "Output 1", Slate = this });
-        OutputSockets.Add( new SocketViewModel(this, Events, SocketTypeEnum.Output){Label = "Output 2", Slate = this });
+
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input) { Label = "Input 1", ParentTerminal = this });
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input) { Label = "Input 2", ParentTerminal = this });
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input) { Label = "Input 3", ParentTerminal = this });
+        OutputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Output) { Label = "Output 1", ParentTerminal = this });
+        OutputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Output) { Label = "Output 2", ParentTerminal = this });
     }
 
     public void Moved()
@@ -100,8 +110,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
 
         X += dx; Y += dy;
 
-        Trace.WriteLine("X: " +X + " Y: " + Y);
+        Trace.WriteLine("X: " + X + " Y: " + Y);
         return Task.CompletedTask;
-
     }
 }

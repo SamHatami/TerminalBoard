@@ -1,4 +1,6 @@
+using System.DirectoryServices;
 using System.Windows;
+using System.Windows.Input;
 using Caliburn.Micro;
 using SlateBoard.App.Enum;
 
@@ -7,7 +9,7 @@ namespace SlateBoard.App.Interface.ViewModel;
 /// <summary>
 /// Connecting slates by wire
 /// </summary>
-public interface IWire
+public interface IWire:ISelectable
 {
     public Point StartPoint { get; set; }
     public Point EndPoint { get; set; }
@@ -17,8 +19,6 @@ public interface IWire
     ITerminal InputTerminal { get; set; }
     ITerminal OutputTerminal { get; set; }
     WireTypeEnum WireType { get; set; }
-
-    void RemoveThis();
 
     Guid Id { get; }
 }
