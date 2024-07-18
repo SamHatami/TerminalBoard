@@ -7,6 +7,7 @@ using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Interface.ViewModel;
+using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
@@ -18,22 +19,21 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     private Canvas _mainCanvas;
     private Line _currentLine;
 
-    private Point _linePoint1;
     private ISocket? _startSocket;
     private ISocket? _endSocket;
     private ITerminal? _terminal;
-    private IWire _wire;
-
-    private bool _isDragging;
-
-
+    
     protected override void OnAttached()
     {
         base.OnAttached();
 
-        AssociatedObject.MouseLeftButtonDown += OnMouseLeftButtonDown;
-        AssociatedObject.MouseMove += OnMouseMove;
-        AssociatedObject.MouseLeftButtonUp += OnMouseLeftButtonUp;
+        _events = BehaviorHelper.EventsAggregator;
+        _events.SubscribeOnBackgroundThread(this);
+
+        AssociatedObject.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+        AssociatedObject.PreviewMouseMove += OnMouseMove;
+        AssociatedObject.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
+     
 
         _mainCanvas = GetMainCanvas(AssociatedObject);
         SetDataContextAndEvents();
@@ -42,9 +42,10 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     protected override void OnDetaching()
     {
         base.OnDetaching();
-        AssociatedObject.MouseLeftButtonDown -= OnMouseLeftButtonDown;
-        AssociatedObject.MouseMove -= OnMouseMove;
-        AssociatedObject.MouseLeftButtonUp -= OnMouseLeftButtonUp;
+        AssociatedObject.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
+        AssociatedObject.PreviewMouseMove -= OnMouseMove;
+        AssociatedObject.PreviewMouseLeftButtonUp -= OnMouseLeftButtonUp;
+
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -111,6 +112,8 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         }
 
         IWire wire = new WireViewModel(_startSocket, _endSocket, _startSocket.Events); //TODO meh
+        _startSocket.Wires.Add(wire); //TODO use event after validation
+        _endSocket.Wires.Add(wire); //TODO use event after validation
         var mainViewModel = _mainCanvas.DataContext as MainViewModel; //TODO do this with event instead of direct connection
         mainViewModel.Wires.Add(wire); //replace with a WireModel
         _mainCanvas.Children.Remove(_currentLine);
@@ -122,12 +125,11 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         {
             _startSocket = item;
             _terminal = _startSocket.ParentTerminal;
-            _events = _startSocket.Events;
-            _events.SubscribeOnBackgroundThread(this);
+
         }
     }
 
-    private Canvas GetMainCanvas(DependencyObject? element)
+    private static Canvas GetMainCanvas(DependencyObject? element)
     {
         while (element != null)
         {

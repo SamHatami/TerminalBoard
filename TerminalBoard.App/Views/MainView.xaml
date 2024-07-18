@@ -10,28 +10,20 @@
         d:DataContext="{d:DesignInstance Type=viewModels1:MainViewModel}"
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800" TextOptions.TextRenderingMode="Aliased">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="KeyDown">
+            <cal:ActionMessage MethodName="RemoveItem">
+                <cal:Parameter Value="$executionContext"/>
+            </cal:ActionMessage>
+
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <Grid>
         <Canvas x:Name="MainCanvas" Background="#FF3A3A3A">
             <b:Interaction.Behaviors>
                 <behaviors1:CanvasPanZoomBehavior/>
                 <behaviors1:ClearSelectionBehavior/>
             </b:Interaction.Behaviors>
-            <ItemsControl ItemsSource="{Binding Wires}" x:Name="Wires">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
-                            <b:Interaction.Behaviors>
-                                <behaviors1:SelectionBehavior/>
-                            </b:Interaction.Behaviors>
-                        </ContentControl>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
             <ItemsControl ItemsSource="{Binding Terminals}" x:Name="Terminals">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -55,12 +47,28 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Wires}" x:Name="Wires">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
+                            <b:Interaction.Behaviors>
+                                <behaviors1:SelectionBehavior/>
+                            </b:Interaction.Behaviors>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Canvas>
 
         <Canvas x:Name="ControlCanvas">
             <StackPanel>
                 <Button x:Name="Snap" Content="SNAP" Margin="5"/>
-                <Button x:Name="Add" Content="ADD" Margin="5"/>
+                <Button x:Name="AddTerminal" Content="ADD" Margin="5"/>
                 
             </StackPanel>
             

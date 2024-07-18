@@ -8,9 +8,18 @@ using TerminalBoard.App.Interface.ViewModel;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEvent>
+public class WireViewModel : PropertyChangedBase, IWire, IHandle<SelectItemEvent>
 {
-    public bool Selected { get; set; }
+    private bool _selected;
+    public bool Selected
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            NotifyOfPropertyChange(nameof(Selected));
+        }
+    }
     private Point _startPoint;
 
     public Point StartPoint
@@ -59,8 +68,8 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         }
     }
 
-    public ISocket StartSocket { get; set; }
-    public ISocket EndSocket { get; set; }
+    public ISocket? StartSocket { get; set; }
+    public ISocket? EndSocket { get; set; }
     public ITerminal InputTerminal { get; set; }
     public ITerminal OutputTerminal { get; set; }
     public WireTypeEnum WireType { get; set; }
@@ -70,21 +79,15 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         if (Selected && keyEvent.Key == Key.Delete)
             _events.PublishOnBackgroundThreadAsync(new RemoveConnectionEvent(this));
     }
-
-    public void Select()
-    {
-        Selected = !Selected;
-    }
-
+    
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    private IEventAggregator _events;
+    private readonly IEventAggregator _events;
 
     public WireViewModel(ISocket startSocket, ISocket endSocket, IEventAggregator events)
     {
-        ;
         _events = events;
-        _events.Subscribe(this);
+        _events.SubscribeOnBackgroundThread(this);
         SetStartSocket(startSocket);
         SetEndSocket(endSocket);
     }
@@ -123,21 +126,22 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SocketMovedEven
         StartExtensionPoint = _startExtensionPoint;
     }
 
-    public Task HandleAsync(SocketMovedEvent message, CancellationToken cancellationToken)
+    public void UpdatePosition(ISocket socket)
     {
-        var socket = message.Socket;
-
         if (socket.Id != StartSocket.Id && socket.Id != EndSocket.Id)
-            return Task.CompletedTask;
+            return;
 
         if (StartSocket != null && socket.Id == StartSocket.Id)
-        {
             SetStartPosition(socket);
-            return Task.CompletedTask;
-        }
 
-        SetEndPosition(socket);
+        if (EndSocket != null && socket.Id == EndSocket.Id)
+            SetEndPosition(socket);
+    }
 
+    public Task HandleAsync(SelectItemEvent message, CancellationToken cancellationToken)
+    {
+        if(message.Item != this) 
+            Selected = false;
         return Task.CompletedTask;
     }
 }

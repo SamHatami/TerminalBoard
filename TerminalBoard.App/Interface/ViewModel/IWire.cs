@@ -20,5 +20,6 @@ public interface IWire : ISelectable
     ITerminal OutputTerminal { get; set; }
     WireTypeEnum WireType { get; set; }
 
+    void UpdatePosition(ISocket socket);
     Guid Id { get; }
 }

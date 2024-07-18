@@ -7,7 +7,7 @@ using TerminalBoard.App.Interface.ViewModel;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZoomPanEvent>
+public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZoomPanEvent>, IHandle<SelectItemEvent>
 {
     private readonly IEventAggregator _events;
     public int Height { get; set; }
@@ -38,7 +38,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
         {
             _x = value;
             NotifyOfPropertyChange(nameof(X));
-            Events.PublishOnBackgroundThreadAsync(new TerminalMovedEvent(this));
+            NotifyWiresOfNewPosition();
         }
     }
 
@@ -51,17 +51,17 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
         {
             _y = value;
             NotifyOfPropertyChange(nameof(Y));
-            Events.PublishOnBackgroundThreadAsync(new TerminalMovedEvent(this));
+            NotifyWiresOfNewPosition();
         }
     }
 
-    public List<IWire> Wires { get; set; } = new List<IWire>();
+    public List<IWire> Wires { get; set; } = new();
     public IEventAggregator Events { get; }
 
     public BindableCollection<ISocket> InputSockets { get; set; } = [];
     public BindableCollection<ISocket> OutputSockets { get; set; } = [];
-    public List<ISocket> InputSocket { get; set; }
-    public List<ISocket> OutputSocket { get; set; }
+    public List<ISocket> InputSocket { get; set; } = [];
+    public List<ISocket> OutputSocket { get; set; } = [];
     public List<ITerminal> Connectors { get; set; } = [];
 
     public TerminalViewModel(IEventAggregator events)
@@ -73,16 +73,30 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
         TestInit();
     }
 
+    private void NotifyWiresOfNewPosition()
+    {
+        foreach (var socket in InputSockets)
+            socket.UpdatePosition();
+
+        foreach (var socket in OutputSockets)
+            socket.UpdatePosition();
+    }
+
     private void TestInit()
     {
         Height = 80;
         Width = 50;
 
-        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input) { Label = "Input 1", ParentTerminal = this });
-        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input) { Label = "Input 2", ParentTerminal = this });
-        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input) { Label = "Input 3", ParentTerminal = this });
-        OutputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Output) { Label = "Output 1", ParentTerminal = this });
-        OutputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Output) { Label = "Output 2", ParentTerminal = this });
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input)
+            { Label = "Input 1", ParentTerminal = this });
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input)
+            { Label = "Input 2", ParentTerminal = this });
+        InputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Input)
+            { Label = "Input 3", ParentTerminal = this });
+        OutputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Output)
+            { Label = "Output 1", ParentTerminal = this });
+        OutputSockets.Add(new SocketViewModel(this, Events, SocketTypeEnum.Output)
+            { Label = "Output 2", ParentTerminal = this });
     }
 
     public void Moved()
@@ -109,9 +123,17 @@ public class TerminalViewModel : PropertyChangedBase, ITerminal, IHandle<CanvasZ
         var dx = message.dX;
         var dy = message.dY;
 
-        X += dx; Y += dy;
+        X += dx;
+        Y += dy;
 
         Trace.WriteLine("X: " + X + " Y: " + Y);
+        return Task.CompletedTask;
+    }
+
+    public Task HandleAsync(SelectItemEvent message, CancellationToken cancellationToken)
+    {
+        if (message.Item != this)
+            Selected = false;
         return Task.CompletedTask;
     }
 }

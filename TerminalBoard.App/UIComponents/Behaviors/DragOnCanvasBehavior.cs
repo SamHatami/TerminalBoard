@@ -12,22 +12,22 @@ namespace TerminalBoard.App.UIComponents.Behaviors;
 
 public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent>
 {
-    private Point _itemStartPosition;
     private Canvas _mainCanvas;
 
     private ITerminal _terminal;
     private IEventAggregator? _events;
 
     private bool _gridSnapping = false;
-    private int _gridSize = 0;
-    private double dx = 0;
-    private double dy = 0;
+    private int _gridSize;
+    private double _dx;
+    private double _dy;
 
     protected override void OnAttached()
     {
         base.OnAttached();
 
         _events = BehaviorHelper.EventsAggregator;
+        _events.SubscribeOnBackgroundThread(this);
 
         AssociatedObject.MouseLeftButtonDown += OnMouseLeftButtonDown;
         AssociatedObject.MouseMove += OnMouseMove;
@@ -55,8 +55,8 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         var we = sender.GetType();
         var startPosition = e.GetPosition(_mainCanvas);
 
-        dx = _terminal.X - startPosition.X;
-        dy = _terminal.Y - startPosition.Y;
+        _dx = _terminal.X - startPosition.X;
+        _dy = _terminal.Y - startPosition.Y;
 
         AssociatedObject.CaptureMouse();
         e.Handled = true;
@@ -67,8 +67,8 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         if (AssociatedObject.IsMouseCaptured)
         {
             var mouseCurrentPosition = e.GetPosition(_mainCanvas);
-            var newPosX = mouseCurrentPosition.X + dx; //Consider width and height of contentcontrol
-            var newPosY = mouseCurrentPosition.Y + dy;
+            var newPosX = mouseCurrentPosition.X + _dx; //Consider width and height of contentcontrol
+            var newPosY = mouseCurrentPosition.Y + _dy;
 
             if (double.IsNaN(newPosX) || double.IsNaN(newPosY))
                 return;

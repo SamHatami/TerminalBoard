@@ -6,19 +6,26 @@ using TerminalBoard.App.Interface.ViewModel;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalMovedEvent>, IHandle<TerminalRemovedEvent>
+public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalRemovedEvent>
 {
     public SocketViewModel(ITerminal parent, IEventAggregator events, SocketTypeEnum type)
     {
         ParentTerminal = parent;
         Events = events;
         Type = type;
-
-
-
         Events.SubscribeOnBackgroundThread(this);
     }
-
+    
+    private bool _isConnected;
+    public bool IsConnected
+    {
+        get => _isConnected;
+        set
+        {
+            _isConnected = value;
+            NotifyOfPropertyChange(nameof(IsConnected));
+        }
+    }
     public string Label { get; set; }
 
     private double relativeDistanceToParent_X; //From Code behind in View
@@ -32,10 +39,13 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalMov
         {
             _x = value;
             NotifyOfPropertyChange(nameof(X));
+            NotifyWires();
         }
     }
 
     private double _y;
+ 
+
     public double Y
     {
         get => _y;
@@ -43,13 +53,30 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalMov
         {
             _y = value;
             NotifyOfPropertyChange(nameof(Y));
+            NotifyWires();
         }
     }
 
     public Guid Id { get; } = Guid.NewGuid();
+    public List<IWire> Wires { get; set; } = [];
     public SocketTypeEnum Type { get; set; }
     public ITerminal ParentTerminal { get; set; }
     public IEventAggregator Events { get; set; }
+    public void UpdatePosition()
+    {
+        _x = ParentTerminal.X + relativeDistanceToParent_X;
+        _y = ParentTerminal.Y + relativeDistanceToParent_Y;
+
+        NotifyWires();
+    }
+
+    private void NotifyWires()
+    {
+        foreach (var wire in Wires)
+        {
+            wire.UpdatePosition(this);
+        }
+    }
 
     public void SetRelativeDistances(Vector v)
     {
@@ -58,18 +85,18 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalMov
     }
 
 
-    public Task HandleAsync(TerminalMovedEvent message, CancellationToken cancellationToken)
-    {
-        if (message.TerminalViewModel == ParentTerminal)
-        {
-            _x = message.TerminalViewModel.X + relativeDistanceToParent_X;
-            _y = message.TerminalViewModel.Y + relativeDistanceToParent_Y;
-        }
+    //public Task HandleAsync(TerminalMovedEvent message, CancellationToken cancellationToken)
+    //{
+    //    if (message.TerminalViewModel == ParentTerminal)
+    //    {
+    //        _x = message.TerminalViewModel.X + relativeDistanceToParent_X;
+    //        _y = message.TerminalViewModel.Y + relativeDistanceToParent_Y;
+    //    }
 
-        Events.PublishOnBackgroundThreadAsync(new SocketMovedEvent(this));
-        return Task.CompletedTask;
+    //    Events.PublishOnBackgroundThreadAsync(new SocketMovedEvent(this));
+    //    return Task.CompletedTask;
 
-    }
+    //}
 
     public Task HandleAsync(TerminalRemovedEvent message, CancellationToken cancellationToken)
     {
@@ -77,4 +104,6 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalMov
 
         return Task.CompletedTask;
     }
+
+    
 }

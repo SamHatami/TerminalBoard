@@ -16,8 +16,6 @@ namespace TerminalBoard.App.UIComponents.Behaviors
         private MainViewModel? _mainViewModel;
         private Canvas? _mainCanvas;
         private IEventAggregator? _events;
-        private ISelectable _item;
-
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -28,27 +26,15 @@ namespace TerminalBoard.App.UIComponents.Behaviors
             {
                 _mainCanvas = canvas;
                 _mainCanvas.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-                _mainCanvas.PreviewMouseLeftButtonUp += OnMouseButtonUp;
-                _mainCanvas.KeyUp += OnKeyUp;
             }
         }
 
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        protected override void OnDetaching()
         {
-            if (e.Key == Key.Delete)
-                _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(_item));
+            base.OnDetaching();
 
-            e.Handled = false;
+            _mainCanvas.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
 
-        }
-
-        private void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (_item == null) return;
-
-            _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(_item));
-
-            e.Handled = false;
         }
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

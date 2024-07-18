@@ -14,7 +14,7 @@ namespace TerminalBoard.App.UIComponents.Behaviors
         private IWire? _wireViewModel;
         private ITerminal _terminalViewModel;
         private IEventAggregator? _events;
-        private readonly ISelectable? _item;
+        private ISelectable? _item;
 
         protected override void OnAttached()
         {
@@ -35,7 +35,7 @@ namespace TerminalBoard.App.UIComponents.Behaviors
         private void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (_item == null) return;
-
+            _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(_item));
             e.Handled = false;
         }
 
@@ -57,6 +57,7 @@ namespace TerminalBoard.App.UIComponents.Behaviors
             {
 
                 selectable.Selected = true;
+                _item = selectable;
                 _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(selectable));
             }
 
