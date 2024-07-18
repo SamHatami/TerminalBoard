@@ -1,1 +1,3 @@
-# SlateBoard
+# Terminal Board - Node Editor
+
+
