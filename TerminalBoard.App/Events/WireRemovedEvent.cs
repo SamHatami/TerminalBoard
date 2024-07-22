@@ -1,10 +1,9 @@
-﻿using TerminalBoard.App.Interface.ViewModel;
+﻿using IWire = TerminalBoard.App.Interfaces.ViewModels.IWire;
 
-namespace TerminalBoard.App.Events
+namespace TerminalBoard.App.Events;
+
+public class WireRemovedEvent(IWire wire)
+
 {
-    public class WireRemovedEvent(IWire wire)
-
-    {
-        public IWire Wire { get; } = wire;
-    }
+    public IWire Wire { get; } = wire;
 }

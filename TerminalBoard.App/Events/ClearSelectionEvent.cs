@@ -1,6 +1,5 @@
-﻿namespace TerminalBoard.App.Events
+﻿namespace TerminalBoard.App.Events;
+
+public class ClearSelectionEvent()
 {
-    public class ClearSelectionEvent()
-    {
-    }
 }

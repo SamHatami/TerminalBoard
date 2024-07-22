@@ -1,10 +1,7 @@
-using System.DirectoryServices;
 using System.Windows;
-using System.Windows.Input;
-using Caliburn.Micro;
 using TerminalBoard.App.Enum;
 
-namespace TerminalBoard.App.Interface.ViewModel;
+namespace TerminalBoard.App.Interfaces.ViewModels;
 
 /// <summary>
 /// Connecting slates by wire
@@ -13,13 +10,14 @@ public interface IWire : ISelectable
 {
     public Point StartPoint { get; set; }
     public Point EndPoint { get; set; }
-    ISocket StartSocket { get; set; }
-    ISocket EndSocket { get; set; }
+    ISocketViewModel StartSocketViewModel { get; set; }
+    ISocketViewModel EndSocketViewModel { get; set; }
 
     ITerminal InputTerminal { get; set; }
     ITerminal OutputTerminal { get; set; }
     WireTypeEnum WireType { get; set; }
 
-    void UpdatePosition(ISocket socket);
+    void UpdatePosition(ISocketViewModel socketViewModel);
+
     Guid Id { get; }
 }

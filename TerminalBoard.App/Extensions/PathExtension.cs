@@ -1,6 +1,5 @@
-﻿namespace TerminalBoard.App.Extensions
+﻿namespace TerminalBoard.App.Extensions;
+
+public class PathExtension
 {
-    public class PathExtension
-    {
-    }
 }

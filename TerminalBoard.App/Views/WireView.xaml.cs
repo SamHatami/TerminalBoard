@@ -1,24 +1,22 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace TerminalBoard.App.Views
+namespace TerminalBoard.App.Views;
+
+/// <summary>
+/// Interaction logic for WireView.xaml
+/// </summary>
+public partial class WireView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for WireView.xaml
-    /// </summary>
-    public partial class WireView : UserControl
+    public WireView()
     {
-        public WireView()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            WireGeometry.MouseLeftButtonDown += WireGeometryOnMouseLeftButtonDown; 
+        WireGeometry.MouseLeftButtonDown += WireGeometryOnMouseLeftButtonDown;
+    }
 
-        }
-
-        private void WireGeometryOnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var something = e.LeftButton;
-        }
+    private void WireGeometryOnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var something = e.LeftButton;
     }
 }

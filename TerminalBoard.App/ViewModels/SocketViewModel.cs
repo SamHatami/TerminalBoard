@@ -1,22 +1,29 @@
-﻿using System.Windows;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
+using System.Windows;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
-using TerminalBoard.App.Interface.ViewModel;
+using TerminalBoard.App.Interfaces.ViewModels;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalRemovedEvent>
+public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<TerminalRemovedEvent>
 {
-    public SocketViewModel(ITerminal parent, IEventAggregator events, SocketTypeEnum type)
-    {
-        ParentTerminal = parent;
-        Events = events;
-        Type = type;
-        Events.SubscribeOnBackgroundThread(this);
-    }
-    
+    #region Fields
+
     private bool _isConnected;
+    
+    private double _relativeDistanceToParentX; //From Code behind in View
+
+    private double _relativeDistanceToParentY; //From Code behind in View
+
+    #endregion Fields
+
+    #region Properties
+
+    public IEventAggregator Events { get; set; }
+
+    public Guid Id { get; } = Guid.NewGuid();
+
     public bool IsConnected
     {
         get => _isConnected;
@@ -28,9 +35,11 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalRem
     }
     public string Label { get; set; }
 
-    private double relativeDistanceToParent_X; //From Code behind in View
-    private double relativeDistanceToParent_Y; //From Code Behind in View
+    public ITerminalViewModel ParentViewModel { get; set; }
 
+    public SocketTypeEnum Type { get; set; }
+
+    public List<IWire> Wires { get; set; } = [];
     private double _x;
     public double X
     {
@@ -44,8 +53,6 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalRem
     }
 
     private double _y;
- 
-
     public double Y
     {
         get => _y;
@@ -57,46 +64,21 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalRem
         }
     }
 
-    public Guid Id { get; } = Guid.NewGuid();
-    public List<IWire> Wires { get; set; } = [];
-    public SocketTypeEnum Type { get; set; }
-    public ITerminal ParentTerminal { get; set; }
-    public IEventAggregator Events { get; set; }
-    public void UpdatePosition()
-    {
-        _x = ParentTerminal.X + relativeDistanceToParent_X;
-        _y = ParentTerminal.Y + relativeDistanceToParent_Y;
+    #endregion Properties
 
-        NotifyWires();
+    #region Constructors
+
+    public SocketViewModel(ITerminalViewModel parent, IEventAggregator events, SocketTypeEnum type)
+    {
+        ParentViewModel = parent;
+        Events = events;
+        Type = type;
+        Events.SubscribeOnBackgroundThread(this);
     }
 
-    private void NotifyWires()
-    {
-        foreach (var wire in Wires)
-        {
-            wire.UpdatePosition(this);
-        }
-    }
+    #endregion Constructors
 
-    public void SetRelativeDistances(Vector v)
-    {
-        relativeDistanceToParent_X = v.X;
-        relativeDistanceToParent_Y = v.Y;
-    }
-
-
-    //public Task HandleAsync(TerminalMovedEvent message, CancellationToken cancellationToken)
-    //{
-    //    if (message.TerminalViewModel == ParentTerminal)
-    //    {
-    //        _x = message.TerminalViewModel.X + relativeDistanceToParent_X;
-    //        _y = message.TerminalViewModel.Y + relativeDistanceToParent_Y;
-    //    }
-
-    //    Events.PublishOnBackgroundThreadAsync(new SocketMovedEvent(this));
-    //    return Task.CompletedTask;
-
-    //}
+    #region Methods
 
     public Task HandleAsync(TerminalRemovedEvent message, CancellationToken cancellationToken)
     {
@@ -105,5 +87,26 @@ public class SocketViewModel : PropertyChangedBase, ISocket, IHandle<TerminalRem
         return Task.CompletedTask;
     }
 
-    
+    public void SetRelativeDistances(Vector v)
+    {
+        _relativeDistanceToParentX = v.X;
+        _relativeDistanceToParentY = v.Y;
+    }
+
+
+
+    public void UpdatePosition()
+    {
+        _x = ParentViewModel.CanvasPositionX + _relativeDistanceToParentX;
+        _y = ParentViewModel.CanvasPositionY + _relativeDistanceToParentY;
+
+        NotifyWires();
+    }
+
+    private void NotifyWires()
+    {
+        foreach (var wire in Wires) wire.UpdatePosition(this);
+    }
+
+    #endregion Methods
 }

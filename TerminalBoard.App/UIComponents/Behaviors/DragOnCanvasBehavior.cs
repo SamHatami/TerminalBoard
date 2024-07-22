@@ -1,12 +1,12 @@
-﻿using System.Windows;
+﻿using Caliburn.Micro;
+using Microsoft.Xaml.Behaviors;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Caliburn.Micro;
-using Microsoft.Xaml.Behaviors;
 using TerminalBoard.App.Events;
-using TerminalBoard.App.Interface.ViewModel;
 using TerminalBoard.App.UIComponents.Helpers;
+using ITerminalViewModel = TerminalBoard.App.Interfaces.ViewModels.ITerminalViewModel;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
@@ -14,7 +14,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
 {
     private Canvas _mainCanvas;
 
-    private ITerminal _terminal;
+    private ITerminalViewModel _terminal;
     private IEventAggregator? _events;
 
     private bool _gridSnapping = false;
@@ -36,8 +36,8 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         _mainCanvas = GetMainCanvas(AssociatedObject);
 
         SetDataContextAndEvents();
-
     }
+
     protected override void OnDetaching()
     {
         base.OnDetaching();
@@ -51,12 +51,11 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         if (_terminal == null)
             return;
 
-
         var we = sender.GetType();
         var startPosition = e.GetPosition(_mainCanvas);
 
-        _dx = _terminal.X - startPosition.X;
-        _dy = _terminal.Y - startPosition.Y;
+        _dx = _terminal.CanvasPositionX - startPosition.X;
+        _dy = _terminal.CanvasPositionY - startPosition.Y;
 
         AssociatedObject.CaptureMouse();
         e.Handled = true;
@@ -73,8 +72,11 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
             if (double.IsNaN(newPosX) || double.IsNaN(newPosY))
                 return;
 
-            _terminal.X = _gridSnapping ? (int)Math.Round(newPosX / _gridSize) * _gridSize : (int)newPosX; //TODO: Not the best to cast to int, fix later
-            _terminal.Y = _gridSnapping ? (int)Math.Round(newPosY / _gridSize) * _gridSize : (int)newPosY;
+            _terminal.CanvasPositionX =
+                _gridSnapping
+                    ? (int)Math.Round(newPosX / _gridSize) * _gridSize
+                    : (int)newPosX; //TODO: Not the best to cast to int, fix later
+            _terminal.CanvasPositionY = _gridSnapping ? (int)Math.Round(newPosY / _gridSize) * _gridSize : (int)newPosY;
         }
 
         e.Handled = true;
@@ -87,10 +89,7 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
 
     private void SetDataContextAndEvents()
     {
-        if (AssociatedObject is FrameworkElement { DataContext: ITerminal item })
-        {
-            _terminal = item;
-        }
+        if (AssociatedObject is FrameworkElement { DataContext: ITerminalViewModel item }) _terminal = item;
     }
 
     private Canvas GetMainCanvas(DependencyObject? element)
@@ -112,4 +111,3 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
         return Task.CompletedTask;
     }
 }
-

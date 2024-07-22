@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TerminalBoard.App.Enum;
 
-namespace TerminalBoard.App.Enum
+public enum GridTypeEnum
 {
-    public enum GridTypeEnum
-    {
-        Lines,
-        Dots
-    }
+    Lines,
+    Dots
 }

@@ -1,10 +1,9 @@
-﻿using System.Windows;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using TerminalBoard.App.Enum;
 
-namespace TerminalBoard.App.Interface.ViewModel;
+namespace TerminalBoard.App.Interfaces.ViewModels;
 
-public interface ISocket
+public interface ISocketViewModel
 {
     bool IsConnected { get; }
     string Label { get; set; }
@@ -13,7 +12,7 @@ public interface ISocket
     Guid Id { get; }
 
     List<IWire> Wires { get; set; }
-    ITerminal ParentTerminal { get; set; }
+    ITerminalViewModel ParentViewModel { get; set; }
     SocketTypeEnum Type { get; set; }
     IEventAggregator Events { get; set; }
 

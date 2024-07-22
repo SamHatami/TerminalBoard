@@ -1,9 +1,8 @@
-﻿using TerminalBoard.App.Interface.ViewModel;
+﻿using ITerminalViewModel = TerminalBoard.App.Interfaces.ViewModels.ITerminalViewModel;
 
-namespace TerminalBoard.App.Events
+namespace TerminalBoard.App.Events;
+
+public class TerminalRemovedEvent(ITerminalViewModel terminal)
 {
-    public class TerminalRemovedEvent(ITerminal terminal)
-    {
-        public ITerminal Terminal { get; } = terminal;
-    }
+    public ITerminalViewModel Terminal { get; } = terminal;
 }

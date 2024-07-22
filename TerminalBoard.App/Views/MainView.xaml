@@ -13,16 +13,15 @@
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="KeyDown">
             <cal:ActionMessage MethodName="RemoveItem">
-                <cal:Parameter Value="$executionContext"/>
+                <cal:Parameter Value="$executionContext" />
             </cal:ActionMessage>
-
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Grid>
         <Canvas x:Name="MainCanvas" Background="#FF3A3A3A">
             <b:Interaction.Behaviors>
-                <behaviors1:CanvasPanZoomBehavior/>
-                <behaviors1:ClearSelectionBehavior/>
+                <behaviors1:CanvasPanZoomBehavior />
+                <behaviors1:ClearSelectionBehavior />
             </b:Interaction.Behaviors>
             <ItemsControl ItemsSource="{Binding Terminals}" x:Name="Terminals">
                 <ItemsControl.ItemsPanel>
@@ -32,8 +31,8 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
                     <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="Canvas.Left" Value="{Binding CanvasPositionX}" />
+                        <Setter Property="Canvas.Top" Value="{Binding CanvasPositionY}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
                 <ItemsControl.ItemTemplate>
@@ -41,7 +40,7 @@
                         <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
                             <b:Interaction.Behaviors>
                                 <behaviors1:DragOnCanvasBehavior />
-                                <behaviors1:SelectionBehavior/>
+                                <behaviors1:SelectionBehavior />
                             </b:Interaction.Behaviors>
                         </ContentControl>
                     </DataTemplate>
@@ -57,7 +56,7 @@
                     <DataTemplate>
                         <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
                             <b:Interaction.Behaviors>
-                                <behaviors1:SelectionBehavior/>
+                                <behaviors1:SelectionBehavior />
                             </b:Interaction.Behaviors>
                         </ContentControl>
                     </DataTemplate>
@@ -67,13 +66,10 @@
 
         <Canvas x:Name="ControlCanvas">
             <StackPanel>
-                <Button x:Name="Snap" Content="SNAP" Margin="5"/>
-                <Button x:Name="AddTerminal" Content="ADD" Margin="5"/>
-                
+                <Button x:Name="Snap" Content="SNAP" Margin="5" />
+                <Button x:Name="AddTerminal" Content="ADD" Margin="5" />
+                <Button x:Name="AddFloatThingy" Content="Add float" cal:Message.Attach="AddFloatTerminal()"/>
             </StackPanel>
-            
         </Canvas>
-
     </Grid>
-
 </Window>

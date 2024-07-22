@@ -1,9 +1,8 @@
-﻿using TerminalBoard.App.Interface.ViewModel;
+﻿using ISelectable = TerminalBoard.App.Interfaces.ViewModels.ISelectable;
 
-namespace TerminalBoard.App.Events
+namespace TerminalBoard.App.Events;
+
+public class SelectItemEvent(ISelectable item)
 {
-    public class SelectItemEvent(ISelectable item)
-    {
-        public ISelectable Item { get; set; } = item;
-    }
+    public ISelectable Item { get; set; } = item;
 }

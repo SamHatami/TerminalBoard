@@ -1,4 +1,4 @@
-﻿using TerminalBoard.App.Enum;
+﻿using GridTypeEnum = TerminalBoard.App.Enum.GridTypeEnum;
 
 namespace TerminalBoard.App.Events;
 

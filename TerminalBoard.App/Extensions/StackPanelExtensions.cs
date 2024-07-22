@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using TerminalBoard.App.Enum;
+using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
 
 namespace TerminalBoard.App.Extensions;
 
@@ -33,7 +33,7 @@ internal class StackPanelExtensions
 
     private static void ReverseChildren(StackPanel stackPanel, SocketTypeEnum type)
     {
-        if (type == SocketTypeEnum.Output) //Reverse if its an output socket
+        if (type == SocketTypeEnum.Output) //Reverse if its an output socketViewModel
         {
             var children = stackPanel.Children.Cast<UIElement>().ToList();
             children.Reverse();

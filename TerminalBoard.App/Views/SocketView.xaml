@@ -1,29 +1,31 @@
 ﻿<UserControl x:Class="TerminalBoard.App.Views.SocketView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cm="http://caliburnmicro.com"
              xmlns:viewModels="clr-namespace:TerminalBoard.App.ViewModels"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance  viewModels:SocketViewModel}"
              xmlns:extensions="clr-namespace:TerminalBoard.App.Extensions"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
-
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
 
     <Border CornerRadius="3">
-        <StackPanel Orientation="Horizontal" x:Name="SocketPanel" 
+        <StackPanel Orientation="Horizontal" x:Name="SocketPanel"
                     extensions:StackPanelExtensions.ReverseChildren="{Binding Type}">
             <Ellipse x:Name="Socket" Height="10" Width="10" Fill="LightGray">
                 <Ellipse.Style>
                     <Style TargetType="Ellipse">
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Stroke" Value="Orange"/>
-                                <Setter Property="StrokeThickness" Value="3"/>
+                                <Setter Property="Stroke" Value="Orange" />
+                                <Setter Property="StrokeThickness" Value="3" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="False">
-                                <Setter Property="Stroke" Value="DarkGray"/>
-                                <Setter Property="StrokeThickness" Value="3"/>
+                                <Setter Property="Stroke" Value="DarkGray" />
+                                <Setter Property="StrokeThickness" Value="3" />
                             </Trigger>
                             <DataTrigger Binding="{Binding IsConnected}">
                                 <Setter Property="Fill" Value="Green"></Setter>
@@ -35,16 +37,15 @@
                                     <Condition Property="IsMouseOver" Value="True" />
                                 </MultiTrigger.Conditions>
                                 <MultiTrigger.Setters>
-                                    <Setter Property="Stroke" Value="Orange"/>
-                                    <Setter Property="StrokeThickness" Value="2"/>
+                                    <Setter Property="Stroke" Value="Orange" />
+                                    <Setter Property="StrokeThickness" Value="2" />
                                 </MultiTrigger.Setters>
                             </MultiTrigger>
                         </Style.Triggers>
                     </Style>
-
                 </Ellipse.Style>
             </Ellipse>
-            <Label Content="{Binding Label}" IsHitTestVisible="False"/>
+            <Label Content="{Binding Label}" IsHitTestVisible="False" />
         </StackPanel>
     </Border>
 </UserControl>

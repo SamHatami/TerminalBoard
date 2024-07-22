@@ -11,65 +11,87 @@
                               d:DataContext="{d:DesignInstance Type=viewModels:TerminalViewModel}"
                               mc:Ignorable="d"
                               d:DesignHeight="100" d:DesignWidth="120" IsSelected="{Binding Selected}">
-        <Border x:Name="ContentBorder" Background="LightGray">
-            <Border.Effect>
-                <DropShadowEffect Opacity="0.25" ShadowDepth="3"/>
-            </Border.Effect>
-            <Border.Style>
-                <Style TargetType="Border">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Border x:Name="ContentBorder" Background="LightGray">
+        <Border.Effect>
+            <DropShadowEffect Opacity="0.25" ShadowDepth="3" />
+        </Border.Effect>
+        <Border.Style>
+            <Style TargetType="Border">
                 <Setter Property="CornerRadius" Value="5,0,5,0" />
-                    <Setter Property="BorderThickness" Value="3" />
-                    <Setter Property="Padding" Value="3" />
-                    <Setter Property="BorderBrush" Value="DarkGray" />
-                    <Style.Triggers>
+                <Setter Property="BorderThickness" Value="3" />
+                <Setter Property="Padding" Value="3" />
+                <Setter Property="BorderBrush" Value="DarkGray" />
+                <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="BorderBrush" Value="DarkOrange" />
-                        </Trigger>
-                        <DataTrigger Binding="{Binding Selected}" Value="True">
-                            <Setter Property="BorderBrush" Value="LightSkyBlue" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <Grid Opacity="1" x:Name="ContentGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Border Background="DarkGray" CornerRadius="5,0,0,0">
-                    <Label Content="{Binding Selected}" />
-                </Border>
+                    </Trigger>
+                    <DataTrigger Binding="{Binding Selected}" Value="True">
+                        <Setter Property="BorderBrush" Value="LightSkyBlue" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <Grid Opacity="1" x:Name="ContentGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border Background="DarkGray" CornerRadius="5,0,0,0">
+                <Label Content="{Binding Terminal.Label}" />
+            </Border>
 
-
-                <Grid Row="1" Background="LightGray" x:Name="SocketGrid">
+            <Grid Row="1" Background="LightGray" x:Name="SocketGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="InputValueGrid"
+                      Visibility="{Binding GetInputValue, Converter={StaticResource BooleanToVisibilityConverter}}"
+                      Height="20">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition MinWidth="40" MaxWidth="40" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <TextBox >
+                        <TextBox.Text>
+                            <Binding Path="InputValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
 
-                    <ItemsControl x:Name="InputSockets" Grid.Column="0" ItemsSource="{Binding InputSockets}"
-                              BorderThickness="0">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ContentControl cm:View.Model="{Binding}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <ItemsControl x:Name="OutputSockets" Grid.Column="2" ItemsSource="{Binding OutputSockets}"
-                              BorderThickness="0">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">
-                                    <b:Interaction.Behaviors>
-                                        <behaviors:WireConnectionBehavior />
-                                    </b:Interaction.Behaviors>
-                                </ContentControl>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <StackPanel Grid.Column="1">
+                        <Button Content="U" Height="10" />
+                        <Button Content="D" Height="10" />
+                    </StackPanel>
                 </Grid>
+
+                <ItemsControl x:Name="InputSockets" Grid.Column="0" ItemsSource="{Binding InputSockets}"
+                              BorderThickness="0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl cm:View.Model="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <ItemsControl x:Name="OutputSockets" Grid.Column="2" ItemsSource="{Binding OutputSockets}"
+                              BorderThickness="0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">
+                                <b:Interaction.Behaviors>
+                                    <behaviors:WireConnectionBehavior />
+                                </b:Interaction.Behaviors>
+                            </ContentControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
-        </Border>
+        </Grid>
+    </Border>
 </uiComponents:TerminalControl>

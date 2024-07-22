@@ -11,14 +11,14 @@ namespace TerminalBoard.App.Views;
 public partial class SocketView : UserControl
 {
     private SocketViewModel _socketViewModel;
+
     public SocketView()
     {
         InitializeComponent();
 
         Loaded += SocketView_Loaded;
-           
-
     }
+
     private void SocketView_Loaded(object sender, RoutedEventArgs e)
     {
         _socketViewModel = DataContext as SocketViewModel;
@@ -27,14 +27,13 @@ public partial class SocketView : UserControl
 
         if (_socketViewModel != null)
         {
-            Point parentRelativeToCanvas = parent.TranslatePoint(default, canvas);
-            Point relativeLocationToCanvas = Socket.TranslatePoint(default, canvas);
+            var parentRelativeToCanvas = parent.TranslatePoint(default, canvas);
+            var relativeLocationToCanvas = Socket.TranslatePoint(default, canvas);
 
-            relativeLocationToCanvas.X += (Socket.Height / 2);
-            relativeLocationToCanvas.Y += (Socket.Height / 2);
+            relativeLocationToCanvas.X += Socket.Height / 2;
+            relativeLocationToCanvas.Y += Socket.Height / 2;
 
-
-            Vector v = Point.Subtract(relativeLocationToCanvas, parentRelativeToCanvas);
+            var v = Point.Subtract(relativeLocationToCanvas, parentRelativeToCanvas);
 
             _socketViewModel.X = relativeLocationToCanvas.X;
             _socketViewModel.Y = relativeLocationToCanvas.Y;
@@ -48,7 +47,6 @@ public partial class SocketView : UserControl
         {
             if (element is Canvas { Name: "MainCanvas" } canvas) return canvas;
             element = VisualTreeHelper.GetParent(element);
-
         }
 
         return null;
@@ -58,13 +56,10 @@ public partial class SocketView : UserControl
     {
         while (socketView != null)
         {
-            if (socketView is TerminalView  terminal) return  terminal;
+            if (socketView is TerminalView terminal) return terminal;
             socketView = VisualTreeHelper.GetParent(socketView);
         }
 
         return null;
     }
-
-
-
 }

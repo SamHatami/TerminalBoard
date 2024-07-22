@@ -1,11 +1,9 @@
-﻿using System.Windows.Input;
-using Caliburn.Micro;
-using TerminalBoard.App.Events;
-using TerminalBoard.App.ViewModels;
+﻿using Caliburn.Micro;
+using System.Windows.Input;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
-using TerminalBoard.App.Interface.ViewModel;
-using System.Windows.Controls.Primitives;
+using TerminalBoard.App.Interfaces.ViewModels;
+using TerminalBoard.App.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 
@@ -13,10 +11,11 @@ namespace TerminalBoard.App.ViewModels;
 public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<RemoveConnectionEvent>,
     IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
 {
-    public IEventAggregator Events;
+
+    private IEventAggregator _events;
     private bool grid = false;
 
-    public BindableCollection<ITerminal> Terminals { get; set; }
+    public BindableCollection<ITerminalViewModel> Terminals { get; set; }
     public BindableCollection<IWire> Wires { get; set; } = [];
 
     private ISelectable? _selectedItem;
@@ -33,31 +32,37 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
     public MainViewModel(IEventAggregator events)
     {
-        Events = events;
-        Events.SubscribeOnBackgroundThread(this);
+        _events = events;
+        _events.SubscribeOnBackgroundThread(this);
 
         TempInit();
     }
 
     private void TempInit()
     {
-        Terminals = new BindableCollection<ITerminal>();
-
-        Terminals.Add(new TerminalViewModel(Events) { X = 50, Y = 50, Height = 200, Width = 200 });
-        Terminals.Add(new TerminalViewModel(Events) { X = 120, Y = 30, Height = 200, Width = 200 });
+        Terminals = new BindableCollection<ITerminalViewModel>();
     }
-
-
 
     public void Snap()
     {
         grid = !grid;
-        Events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
+        _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
     }
 
     public void AddTerminal() //Future arguments for type or just getting the type directly
     {
-        Terminals.Add(new TerminalViewModel(Events) { X = 50, Y = 50, Height = 200, Width = 200 });
+        //TODO: Add terminalcreator
+    }
+
+    public void AddFloatTerminal()
+    {
+        var floatTerminal = new FloatOutputTerminal();
+        var terminalViewModel = new TerminalViewModel(_events, floatTerminal){CanvasPositionY = 50, CanvasPositionX = 50};
+        Terminals.Add(terminalViewModel);
+    }
+
+    public void futureAddTerminal(string functionName) //Future arguments for type or just getting the type directly
+    {
     }
 
     public void RemoveItem(ActionExecutionContext context)
@@ -75,7 +80,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
         if (selectedTerminal != null)
         {
             Terminals.Remove(selectedTerminal);
-            Events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(selectedTerminal));
+            _events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(selectedTerminal));
         }
     }
 
@@ -85,7 +90,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
         if (selectedWire != null)
         {
             Wires.Remove(selectedWire);
-            Events.PublishOnBackgroundThreadAsync(new WireRemovedEvent(selectedWire));
+            _events.PublishOnBackgroundThreadAsync(new WireRemovedEvent(selectedWire));
         }
     }
 
@@ -95,12 +100,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
         Wires.Add(newWire);
 
-        //Create connection between slates
-
-        newWire.InputTerminal.InputSocket.Add(newWire.StartSocket); //TODO: Handle with addconnector
-        newWire.InputTerminal.Connectors.Add(newWire.OutputTerminal);
-        newWire.OutputTerminal.Connectors.Add(newWire.InputTerminal);
-        newWire.OutputTerminal.Connectors.Add(newWire.OutputTerminal);
+        //Todo: add connectors in terminalviewmodels
 
         return Task.CompletedTask;
     }
@@ -137,13 +137,10 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
             var selected = Wires.Single(w => w.Selected);
             selected.Selected = false;
         }
-        if(Terminals.Any(t => t.Selected))
-        {
+
+        if (Terminals.Any(t => t.Selected))
             foreach (var terminal in Terminals)
-            {
                 terminal.Selected = false;
-            }
-        }
 
         SelectedItem = null;
     }

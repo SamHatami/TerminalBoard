@@ -1,14 +1,16 @@
+using Caliburn.Micro;
+using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Caliburn.Micro;
-using Microsoft.Xaml.Behaviors;
-using TerminalBoard.App.Enum;
-using TerminalBoard.App.Interface.ViewModel;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
+using ISocketViewModel = TerminalBoard.App.Interfaces.ViewModels.ISocketViewModel;
+using ITerminalViewModel = TerminalBoard.App.Interfaces.ViewModels.ITerminalViewModel;
+using IWire = TerminalBoard.App.Interfaces.ViewModels.IWire;
+using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
@@ -19,10 +21,10 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     private Canvas _mainCanvas;
     private Line _currentLine;
 
-    private ISocket? _startSocket;
-    private ISocket? _endSocket;
-    private ITerminal? _terminal;
-    
+    private ISocketViewModel? _startSocket;
+    private ISocketViewModel? _endSocket;
+    private ITerminalViewModel? _terminal;
+
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -33,7 +35,6 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         AssociatedObject.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
         AssociatedObject.PreviewMouseMove += OnMouseMove;
         AssociatedObject.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
-     
 
         _mainCanvas = GetMainCanvas(AssociatedObject);
         SetDataContextAndEvents();
@@ -45,7 +46,6 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         AssociatedObject.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
         AssociatedObject.PreviewMouseMove -= OnMouseMove;
         AssociatedObject.PreviewMouseLeftButtonUp -= OnMouseLeftButtonUp;
-
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -85,9 +85,9 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         if (hit.VisualHit is FrameworkElement element)
 
             //TODO: Move to WireValidation?
-            //add endsock if socket is an input and does not belong to the same terminal
-            if (element.DataContext is ISocket { Type: SocketTypeEnum.Input } socket &&
-                socket.ParentTerminal != _startSocket.ParentTerminal)
+            //add endsock if socketViewModel is an input and does not belong to the same terminal
+            if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input } socket &&
+                socket.ParentViewModel != _startSocket.ParentViewModel)
                 _endSocket = socket;
 
         return HitTestResultBehavior.Continue;
@@ -102,8 +102,6 @@ internal class WireConnectionBehavior : Behavior<UIElement>
             AssociatedObject.ReleaseMouseCapture();
         }
 
-
-
         //TODO: Create WireValidation, that will do all the checks and sends out events instead of this below
         if (_endSocket == null)
         {
@@ -114,18 +112,18 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         IWire wire = new WireViewModel(_startSocket, _endSocket, _startSocket.Events); //TODO meh
         _startSocket.Wires.Add(wire); //TODO use event after validation
         _endSocket.Wires.Add(wire); //TODO use event after validation
-        var mainViewModel = _mainCanvas.DataContext as MainViewModel; //TODO do this with event instead of direct connection
+        var mainViewModel =
+            _mainCanvas.DataContext as MainViewModel; //TODO do this with event instead of direct connection
         mainViewModel.Wires.Add(wire); //replace with a WireModel
         _mainCanvas.Children.Remove(_currentLine);
     }
 
     private void SetDataContextAndEvents()
     {
-        if (AssociatedObject is FrameworkElement { DataContext: ISocket item })
+        if (AssociatedObject is FrameworkElement { DataContext: ISocketViewModel item })
         {
             _startSocket = item;
-            _terminal = _startSocket.ParentTerminal;
-
+            _terminal = _startSocket.ParentViewModel;
         }
     }
 
@@ -139,5 +137,4 @@ internal class WireConnectionBehavior : Behavior<UIElement>
 
         return null;
     }
-
 }

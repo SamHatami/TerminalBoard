@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TerminalBoard.App.Interface.ViewModel;
+﻿using TerminalBoard.App.Interfaces;
+using TerminalBoard.App.Interfaces.ViewModels;
 
-namespace TerminalBoard.App.ViewModels
+namespace TerminalBoard.App.ViewModels;
+
+public class Connection
 {
-    public class Connection
-    {
-        public ISocket InputSocket { get; set; }
-        public ISocket OutputSocket { get; set; }
+    public ISocketViewModel InputSocketViewModel { get; set; }
+    public ISocketViewModel OutputSocketViewModel { get; set; }
 
-        public ITerminal InputTerminal { get; set; }
-        public ITerminal OutputTerminal { get; set; }
-
-    }
+    public ITerminal InputTerminal { get; set; }
+    public ITerminal OutputTerminal { get; set; }
 }

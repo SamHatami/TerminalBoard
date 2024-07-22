@@ -1,47 +1,42 @@
-﻿using System.Windows;
+﻿using Caliburn.Micro;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Caliburn.Micro;
-using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
+using GridTypeEnum = TerminalBoard.App.Enum.GridTypeEnum;
 
-namespace TerminalBoard.App.BackgroundGrid
+namespace TerminalBoard.App.BackgroundGrid;
+
+public class GridVisual : DrawingVisual, IHandle<GridChangeEvent>
 {
-    public class GridVisual : DrawingVisual, IHandle<GridChangeEvent>
+    private int _gridSize = 25;
+    private GridTypeEnum _gridType;
+    private double _dotRadius;
+    private Canvas _canvas;
+
+    public GridVisual(Canvas canvas)
     {
-        private int _gridSize = 25;
-        private GridTypeEnum _gridType;
-        private double _dotRadius;
-        private Canvas _canvas;
+        _canvas = canvas;
+        DrawGrid(500, 500);
+    }
 
-        public GridVisual(Canvas canvas)
+    public void DrawGrid(double canvasHeight, double canvasWidth)
+    {
+        var dottedPen = new Pen(Brushes.Red, 0.5);
+        dottedPen.DashStyle = new DashStyle(new double[] { 25, 25 }, 0);
+        dottedPen.Freeze();
+
+        using (var dc = RenderOpen())
         {
-            _canvas = canvas;
-            DrawGrid(500, 500);
+            for (double x = 0; x < 800; x += _gridSize)
+                dc.DrawLine(dottedPen, new Point(x, 0), new Point(x, canvasHeight));
+            for (double y = 0; y < 450; y += _gridSize)
+                dc.DrawLine(dottedPen, new Point(0, y), new Point(canvasWidth, y));
         }
+    }
 
-        public void DrawGrid(double canvasHeight, double canvasWidth)
-        {
-            Pen dottedPen = new Pen(Brushes.Red, 0.5);
-            dottedPen.DashStyle = new DashStyle(new double[] { 25, 25 }, 0);
-            dottedPen.Freeze();
-
-            using (DrawingContext dc = RenderOpen())
-            {
-                for (double x = 0; x < 800; x += _gridSize)
-                {
-                    dc.DrawLine(dottedPen, new Point(x, 0), new Point(x, canvasHeight));
-                }
-                for (double y = 0; y < 450; y += _gridSize)
-                {
-                    dc.DrawLine(dottedPen, new Point(0, y), new Point(canvasWidth, y));
-                }
-            }
-        }
-
-        public Task HandleAsync(GridChangeEvent message, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+    public Task HandleAsync(GridChangeEvent message, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
