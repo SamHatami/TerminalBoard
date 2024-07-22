@@ -2,14 +2,9 @@
 
 namespace TerminalBoard.App.Functions;
 
-public class NumericValue<TValue> where TValue : INumber<TValue>
+public class NumericValue<TValue>(TValue value, string label)
+    where TValue : INumber<TValue>
 {
-    public string Label { get; set; }
-    public TValue Value { get; set; }
-
-    public NumericValue(TValue value, string label)
-    {
-        Value = value;
-        Label = label;
-    }
+    public string Label { get; set; } = label;
+    public TValue Value { get; set; } = value;
 }

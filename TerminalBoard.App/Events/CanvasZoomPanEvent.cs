@@ -1,16 +1,7 @@
-﻿using System.Windows.Media;
+﻿namespace TerminalBoard.App.Events;
 
-namespace TerminalBoard.App.Events;
-
-public class CanvasZoomPanEvent
+public class CanvasZoomPanEvent(double x, double y)
 {
-    public CanvasZoomPanEvent(double x, double y)
-    {
-        dX = x;
-        dY = y;
-    }
-
-    public TransformGroup TransformGroup { get; }
-    public double dX { get; }
-    public double dY { get; }
+    public double Dx { get; } = x;
+    public double Dy { get; } = y;
 }

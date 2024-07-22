@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
-using FunctionFactory = TerminalBoard.App.Functions.FunctionFactory;
-using ITerminal = TerminalBoard.App.Interfaces.ITerminal;
+using TerminalBoard.App.Functions;
+using TerminalBoard.App.Interfaces;
 
 namespace TerminalBoard.App.Terminals;
 
@@ -10,7 +10,7 @@ public static class TerminalCreator
     {
         var function = FunctionFactory.CreateFunction(name);
 
-        var terminal = new FloatOutputTerminal();
+        var terminal = new FloatValueTerminal();
 
         return terminal;
     }

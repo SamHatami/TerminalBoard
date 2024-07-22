@@ -1,7 +1,7 @@
 ﻿namespace TerminalBoard.App.Interfaces;
 
 /// <summary>
-/// Interface for a dragable item.
+/// Interface for a Terminal which contains inputs and outputs.
 /// </summary>
 public interface ITerminal
 {
@@ -11,8 +11,6 @@ public interface ITerminal
     List<ISocket> InputSockets { get; }
     List<ISocket> OutputSockets { get; }
     List<ITerminal> Connectors { get; set; }
-
-    bool RequireInputValue { get; }
     Guid Id { get; }
 
     #endregion Properties

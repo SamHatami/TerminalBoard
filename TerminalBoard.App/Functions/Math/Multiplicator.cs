@@ -3,12 +3,20 @@ using TerminalBoard.App.Interfaces.Functions;
 
 namespace TerminalBoard.App.Functions.Math;
 
-public class Multiplication<T> where T : INumber<T>, IFunction
+public class Multiplication<T> : IEvaluationFunction<T> where T : INumber<T>
 {
-    public string Name => "Multiply";
+    public string Label { get; } = "Multiply";
+    public List<Input<T>> Inputs { get; } = [];
+    public List<Output<T>> Outputs { get; } = [];
 
-    public T Evaluate(T a, T b) //This is the output
+    public void SetInputValues(Input<T>[] inputs)
     {
-        return a * b;
+        Inputs[0].Value = inputs[0].Value;
+        Inputs[1].Value = inputs[1].Value;
+    }
+
+    public void Evaluate() //This is the output
+    {
+        Outputs[0].Value = Inputs[0].Value * Inputs[1].Value;
     }
 }

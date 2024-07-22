@@ -5,15 +5,15 @@ using System.Windows.Media;
 
 namespace TerminalBoard.App.BackgroundGrid;
 
-public class GridVisualHost : FrameworkElement
+public class GridVisualHost(Canvas canvas) : FrameworkElement
 {
-    private GridVisual _gridVisual;
+    private readonly GridVisual _gridVisual = new(canvas);
 
     public static readonly DependencyProperty CanvasWidthProperty =
-        DependencyProperty.Register("CanvasWidth", typeof(double), typeof(GridVisualHost), new PropertyMetadata(800.0));
+        DependencyProperty.Register(nameof(CanvasWidth), typeof(double), typeof(GridVisualHost), new PropertyMetadata(800.0));
 
     public static readonly DependencyProperty CanvasHeightProperty =
-        DependencyProperty.Register("CanvasHeight", typeof(double), typeof(GridVisualHost),
+        DependencyProperty.Register(nameof(CanvasHeight), typeof(double), typeof(GridVisualHost),
             new PropertyMetadata(450.0));
 
     public static readonly DependencyProperty MouseLeftButtonDownHandlerProperty =
@@ -30,11 +30,6 @@ public class GridVisualHost : FrameworkElement
     {
         get => (double)GetValue(CanvasHeightProperty);
         set => SetValue(CanvasHeightProperty, value);
-    }
-
-    public GridVisualHost(Canvas canvas)
-    {
-        _gridVisual = new GridVisual(canvas);
     }
 
     private void UpdateGrid()

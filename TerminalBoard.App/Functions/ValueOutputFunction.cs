@@ -21,8 +21,11 @@ public class ValueOutputFunction<T> : PropertyChangedBase,IValueFunction<T> wher
         }
     }
 
-    public void SetValue(T value)
+    public void SetValue(T? value)
     {
-        Output = value;
+        if(value == null)
+            return;
+
+        _output = value;
     }
 }

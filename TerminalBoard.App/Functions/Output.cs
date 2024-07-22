@@ -1,15 +1,8 @@
 ﻿namespace TerminalBoard.App.Functions;
 
-public class Output
+public class Output<T>(T value, string name, Type type)
 {
-    public Type Type { get; set; }
-    public object Value { get; }
-    public string Name { get; }
-
-    public Output(object value, string name, Type type)
-    {
-        Value = value;
-        Name = name;
-        Type = type;
-    }
+    public Type Type { get; set; } = type;
+    public T Value { get; set; } = value;
+    public string Name { get; } = name;
 }

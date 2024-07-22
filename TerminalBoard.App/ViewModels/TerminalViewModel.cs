@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Globalization;
+using Caliburn.Micro;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
 using TerminalBoard.App.Interfaces;
@@ -53,7 +54,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
     }
 
     public int Width { get; set; }
-    public List<IWire> Wires { get; set; } = new();
+    public List<IWire> Wires { get; set; } = [];
 
     public double CanvasPositionX //kind of anti-pattern.
     {
@@ -128,9 +129,25 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
         if (Terminal.RequireInputValue && Terminal is IValueTerminal<float> floatValueTerminal)
         {
             GetInputValue = true;
-            InputValue = floatValueTerminal.Function.Output.ToString();
+            InputValue = floatValueTerminal.Function.Output.ToString("0.0",CultureInfo.CurrentCulture);
         }
 
+
+    }
+
+    public void AdjustNumeric(string no)
+    {
+        
+        switch (no)
+        {
+            case "+":
+                
+                break;
+            case "-":
+                
+                break;
+
+        }
 
     }
 
@@ -167,8 +184,8 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     public Task HandleAsync(CanvasZoomPanEvent message, CancellationToken cancellationToken)
     {
-        var dx = message.dX;
-        var dy = message.dY;
+        var dx = message.Dx;
+        var dy = message.Dy;
 
         CanvasPositionX += dx;
         CanvasPositionY += dy;

@@ -4,20 +4,21 @@ using TerminalBoard.App.Interfaces.Functions;
 
 namespace TerminalBoard.App.Terminals;
 
-public class FloatOutputTerminal: IValueTerminal<float>
+public class FloatValueTerminal: IValueTerminal<float>
 {
     public string Label { get; }
     public List<ISocket> InputSockets { get; } = [];
     public List<ISocket> OutputSockets { get; } = [];
-    public List<ITerminal> Connectors { get; set; }
+    public List<ITerminal> Connectors { get; set; } = [];
     public bool RequireInputValue { get; } = true;
     public Guid Id { get; }
     public IValueFunction<float> Function { get; }
     
-    public FloatOutputTerminal()
+    public FloatValueTerminal()
     {
         Function = new Functions.ValueOutputFunction<float>();
         Label = Function.Label;
+        Id = Guid.NewGuid();
         Initialize();
         
     }

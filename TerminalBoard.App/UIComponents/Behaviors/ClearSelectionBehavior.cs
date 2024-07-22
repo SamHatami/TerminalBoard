@@ -12,7 +12,6 @@ namespace TerminalBoard.App.UIComponents.Behaviors;
 
 public class ClearSelectionBehavior : Behavior<UIElement>
 {
-    private MainViewModel? _mainViewModel;
     private Canvas? _mainCanvas;
     private IEventAggregator? _events;
 
@@ -32,6 +31,8 @@ public class ClearSelectionBehavior : Behavior<UIElement>
     protected override void OnDetaching()
     {
         base.OnDetaching();
+        
+        if(_mainCanvas == null) return;
 
         _mainCanvas.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
     }

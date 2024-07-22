@@ -22,8 +22,10 @@ public class GridVisual : DrawingVisual, IHandle<GridChangeEvent>
 
     public void DrawGrid(double canvasHeight, double canvasWidth)
     {
-        var dottedPen = new Pen(Brushes.Red, 0.5);
-        dottedPen.DashStyle = new DashStyle(new double[] { 25, 25 }, 0);
+        var dottedPen = new Pen(Brushes.Red, 0.5)
+        {
+            DashStyle = new DashStyle(new double[] { 25, 25 }, 0)
+        };
         dottedPen.Freeze();
 
         using (var dc = RenderOpen())

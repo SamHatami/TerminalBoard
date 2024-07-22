@@ -1,13 +1,13 @@
 using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TerminalBoard.App.Events;
 using TerminalBoard.App.UIComponents.Helpers;
-using TerminalBoard.App.ViewModels;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
@@ -20,10 +20,9 @@ public class CanvasPanZoomBehavior : Behavior<UIElement>
     private TransformGroup? _transformGroup;
     private ScaleTransform? _scaleTransform;
     private TranslateTransform? _translateTransform;
-    private MainViewModel? _mainViewModel;
 
-    private double maxScale = 1.5;
-    private double minScale = 0.8;
+    private readonly double _maxScale = 1.5;
+    private readonly double _minScale = 0.8;
 
     protected override void OnAttached()
     {
@@ -53,6 +52,8 @@ public class CanvasPanZoomBehavior : Behavior<UIElement>
 
     private void OnCanvasMouseWheel(object sender, MouseWheelEventArgs e)
     {
+        if(_mainCanvas == null ) return;
+
         if (_mainCanvas.Children.Count > 0 && _mainCanvas.Children[0].RenderTransform != _transformGroup)
             foreach (UIElement element in _mainCanvas.Children)
                 element.RenderTransform = _transformGroup;
@@ -70,11 +71,11 @@ public class CanvasPanZoomBehavior : Behavior<UIElement>
         _scaleTransform.CenterX = mousePosition.X;
         _scaleTransform.CenterY = mousePosition.Y;
 
-        var _newScaleX = _scaleTransform.ScaleX * zoomFactor;
-        var _newScaleY = _scaleTransform.ScaleY * zoomFactor;
+        var newScaleX = _scaleTransform.ScaleX * zoomFactor;
+        var newScaleY = _scaleTransform.ScaleY * zoomFactor;
 
-        _scaleTransform.ScaleX = Math.Clamp(_newScaleX, 0.8, 1.3);
-        _scaleTransform.ScaleY = Math.Clamp(_newScaleY, 0.8, 1.3);
+        _scaleTransform.ScaleX = Math.Clamp(newScaleX, 0.8, 1.3);
+        _scaleTransform.ScaleY = Math.Clamp(newScaleY, 0.8, 1.3);
     }
 
     private void OnCanvasMouseUp(object sender, MouseButtonEventArgs e)
@@ -118,7 +119,7 @@ public class CanvasPanZoomBehavior : Behavior<UIElement>
             _translateTransform.Y += distanceVector.Y;
 
             _events.PublishOnBackgroundThreadAsync(new CanvasZoomPanEvent(distanceVector.X, distanceVector.Y));
-            Trace.WriteLine("dx: " + distanceVector.X + " dy: " + distanceVector.Y.ToString());
+            Trace.WriteLine("dx: " + distanceVector.X + " dy: " + distanceVector.Y.ToString(CultureInfo.CurrentCulture));
         }
 
         mouseMoveEvent.Handled = true;

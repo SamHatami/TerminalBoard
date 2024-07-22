@@ -33,7 +33,7 @@ internal class StackPanelExtensions
 
     private static void ReverseChildren(StackPanel stackPanel, SocketTypeEnum type)
     {
-        if (type == SocketTypeEnum.Output) //Reverse if its an output socketViewModel
+        if (type == SocketTypeEnum.Output) //Reverse if it's an output socketViewModel
         {
             var children = stackPanel.Children.Cast<UIElement>().ToList();
             children.Reverse();

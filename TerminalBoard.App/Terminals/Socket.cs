@@ -3,22 +3,8 @@ using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
 
 namespace TerminalBoard.App.Terminals;
 
-public class Socket : ISocket
+public class Socket(SocketTypeEnum type, string name) : ISocket
 {
-    #region Properties
-
-    public string Name { get; }
-    public SocketTypeEnum Type { get; }
-
-    #endregion Properties
-
-    #region Constructors
-
-    public Socket(SocketTypeEnum type, string name)
-    {
-        Type = type;
-        Name = name;
-    }
-
-    #endregion Constructors
+    public string Name { get; } = name;
+    public SocketTypeEnum Type { get; } = type;
 }

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
+using TerminalBoard.App.Functions.Math;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.Terminals;
 
@@ -12,8 +13,8 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
     IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
 {
 
-    private IEventAggregator _events;
-    private bool grid = false;
+    private readonly IEventAggregator _events;
+    private bool _grid = false;
 
     public BindableCollection<ITerminalViewModel> Terminals { get; set; }
     public BindableCollection<IWire> Wires { get; set; } = [];
@@ -40,13 +41,13 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
     private void TempInit()
     {
-        Terminals = new BindableCollection<ITerminalViewModel>();
+        Terminals = [];
     }
 
     public void Snap()
     {
-        grid = !grid;
-        _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(grid, 15, GridTypeEnum.Dots));
+        _grid = !_grid;
+        _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(_grid, 15, GridTypeEnum.Dots));
     }
 
     public void AddTerminal() //Future arguments for type or just getting the type directly
@@ -56,12 +57,17 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
     public void AddFloatTerminal()
     {
-        var floatTerminal = new FloatOutputTerminal();
+        var floatTerminal = new FloatValueTerminal();
         var terminalViewModel = new TerminalViewModel(_events, floatTerminal){CanvasPositionY = 50, CanvasPositionX = 50};
         Terminals.Add(terminalViewModel);
     }
 
-    public void futureAddTerminal(string functionName) //Future arguments for type or just getting the type directly
+    public void AddMultiplyTerminal()
+    {
+        var multiplier = new Multiplication<float>();
+    }
+
+    public void FutureAddTerminal(string functionName) //Future arguments for type or just getting the type directly
     {
     }
 
