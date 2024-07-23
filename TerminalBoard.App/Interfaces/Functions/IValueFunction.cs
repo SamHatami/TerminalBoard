@@ -1,7 +1,7 @@
 ﻿namespace TerminalBoard.App.Interfaces.Functions;
 
-public interface IValueFunction<T> : IFunction
+public interface IValueFunction : IFunction
 {
-    void SetValue(T? value);
-    public T? Output { get; set; }
+    void SetValue(IValue value);
+    public IValue Output { get; set; }
 }

@@ -6,14 +6,14 @@ using System.Windows.Media;
 using TerminalBoard.App.Events;
 using TerminalBoard.App.UIComponents.Helpers;
 using ISelectable = TerminalBoard.App.Interfaces.ViewModels.ISelectable;
-using ITerminal = TerminalBoard.App.Interfaces.ITerminal;
-using IWire = TerminalBoard.App.Interfaces.ViewModels.IWire;
+using ITerminal = TerminalBoard.App.Interfaces.Terminals.ITerminal;
+using IWireViewModel = TerminalBoard.App.Interfaces.ViewModels.IWireViewModel;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
 public class SelectionBehavior : Behavior<UIElement>
 {
-    private IWire? _wireViewModel;
+    private IWireViewModel? _wireViewModel;
     private ITerminal _terminalViewModel;
     private IEventAggregator? _events;
     private ISelectable? _item;

@@ -1,12 +1,13 @@
 using System.Windows;
 using TerminalBoard.App.Enum;
+using TerminalBoard.App.Interfaces.Terminals;
 
 namespace TerminalBoard.App.Interfaces.ViewModels;
 
 /// <summary>
 /// Connecting slates by wire
 /// </summary>
-public interface IWire : ISelectable
+public interface IWireViewModel : ISelectable
 {
     public Point StartPoint { get; set; }
     public Point EndPoint { get; set; }
@@ -16,6 +17,8 @@ public interface IWire : ISelectable
     ITerminal InputTerminal { get; set; }
     ITerminal OutputTerminal { get; set; }
     WireTypeEnum WireType { get; set; }
+
+    IWire WireConnection { get; set; }
 
     void UpdatePosition(ISocketViewModel socketViewModel);
 

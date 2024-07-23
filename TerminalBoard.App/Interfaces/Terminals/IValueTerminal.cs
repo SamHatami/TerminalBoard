@@ -1,10 +1,10 @@
 ﻿using TerminalBoard.App.Interfaces.Functions;
 
-namespace TerminalBoard.App.Interfaces;
+namespace TerminalBoard.App.Interfaces.Terminals;
 
-public interface IValueTerminal<T> : ITerminal
+public interface IValueTerminal : ITerminal
 {
-    IValueFunction<T> Function { get; }
+    IValueFunction Function { get; }
     bool RequireInputValue { get; }
 
 

@@ -2,6 +2,7 @@
 using System.Windows;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
+using TerminalBoard.App.Interfaces.Terminals;
 using TerminalBoard.App.Interfaces.ViewModels;
 
 namespace TerminalBoard.App.ViewModels;
@@ -20,6 +21,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
 
     #region Properties
 
+    public ISocket Socket { get; }
     public IEventAggregator Events { get; set; }
 
     public Guid Id { get; } = Guid.NewGuid();
@@ -39,7 +41,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
 
     public SocketTypeEnum Type { get; set; }
 
-    public List<IWire> Wires { get; set; } = [];
+    public List<IWireViewModel> Wires { get; set; } = [];
     private double _x;
     public double X
     {
@@ -68,11 +70,12 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
 
     #region Constructors
 
-    public SocketViewModel(ITerminalViewModel parent, IEventAggregator events, SocketTypeEnum type)
+    public SocketViewModel(ITerminalViewModel parent, IEventAggregator events, SocketTypeEnum type, ISocket socket)
     {
         ParentViewModel = parent;
         Events = events;
         Type = type;
+        Socket = socket;
         Events.SubscribeOnBackgroundThread(this);
     }
 

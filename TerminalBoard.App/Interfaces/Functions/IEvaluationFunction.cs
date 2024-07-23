@@ -2,12 +2,12 @@
 
 namespace TerminalBoard.App.Interfaces.Functions;
 
-public interface IEvaluationFunction<T> : IFunction
+public interface IEvaluationFunction : IFunction
 {
-    List<Input<T>> Inputs { get; }
-    List<Output<T>> Outputs { get; }
+    List<IValue> Inputs { get; set; }
+    List<IValue> Outputs { get; }
 
-    void SetInputValues(Input<T>[] inputs);
+    void SetInputValue(IValue value, Guid socketId);
 
     void Evaluate();
 }

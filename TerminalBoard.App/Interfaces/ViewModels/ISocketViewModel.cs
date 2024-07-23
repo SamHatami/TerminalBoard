@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using TerminalBoard.App.Enum;
+using TerminalBoard.App.Interfaces.Terminals;
 
 namespace TerminalBoard.App.Interfaces.ViewModels;
 
@@ -11,10 +12,12 @@ public interface ISocketViewModel
     double Y { get; set; }
     Guid Id { get; }
 
-    List<IWire> Wires { get; set; }
-    ITerminalViewModel ParentViewModel { get; set; }
-    SocketTypeEnum Type { get; set; }
-    IEventAggregator Events { get; set; }
+    List<IWireViewModel> Wires { get; set; }
+    ITerminalViewModel ParentViewModel { get; }
+    SocketTypeEnum Type { get; }
+    
+    ISocket Socket { get; }
+    IEventAggregator Events { get; }
 
     void UpdatePosition();
 }

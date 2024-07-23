@@ -2,22 +2,28 @@
 using System.Windows.Input;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
+using TerminalBoard.App.Functions;
 using TerminalBoard.App.Functions.Math;
+using TerminalBoard.App.Interfaces.Terminals;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.Terminals;
+using TerminalBoard.App.Views;
 
 namespace TerminalBoard.App.ViewModels;
 
 //TODO: Probably need a shellView as conductor
+
+/// <summary>
+/// THe Main ViewModel for the board that holds all other viewModels and handles several major events.
+/// </summary>
 public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<RemoveConnectionEvent>,
     IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
 {
-
     private readonly IEventAggregator _events;
     private bool _grid = false;
 
-    public BindableCollection<ITerminalViewModel> Terminals { get; set; }
-    public BindableCollection<IWire> Wires { get; set; } = [];
+    public BindableCollection<ITerminalViewModel> TerminalViewModels { get; set; }
+    public BindableCollection<IWireViewModel> WireViewModels { get; set; } = [];
 
     private ISelectable? _selectedItem;
 
@@ -41,7 +47,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
     private void TempInit()
     {
-        Terminals = [];
+        TerminalViewModels = [];
     }
 
     public void Snap()
@@ -58,13 +64,23 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
     public void AddFloatTerminal()
     {
         var floatTerminal = new FloatValueTerminal();
-        var terminalViewModel = new TerminalViewModel(_events, floatTerminal){CanvasPositionY = 50, CanvasPositionX = 50};
-        Terminals.Add(terminalViewModel);
+        var terminalViewModel = new TerminalViewModel(_events, floatTerminal)
+            { CanvasPositionY = 50, CanvasPositionX = 50 };
+        TerminalViewModels.Add(terminalViewModel);
     }
 
     public void AddMultiplyTerminal()
     {
-        var multiplier = new Multiplication<float>();
+        var multiplier = new Multiplication();
+        var evaluationTerminal = new EvaluationTerminal(multiplier);
+        var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal);
+        TerminalViewModels.Add(terminalViewModel);
+    }
+
+    public void AddOutputTerminal()
+    {
+        var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal());
+        TerminalViewModels.Add(terminalViewModel);
     }
 
     public void FutureAddTerminal(string functionName) //Future arguments for type or just getting the type directly
@@ -82,20 +98,20 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
     private void RemoveSelectedTerminal()
     {
-        var selectedTerminal = Terminals.SingleOrDefault(t => t.Selected);
+        var selectedTerminal = TerminalViewModels.SingleOrDefault(t => t.Selected);
         if (selectedTerminal != null)
         {
-            Terminals.Remove(selectedTerminal);
+            TerminalViewModels.Remove(selectedTerminal);
             _events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(selectedTerminal));
         }
     }
 
     private void RemoveSelectedWire()
     {
-        var selectedWire = Wires.SingleOrDefault(w => w.Selected);
+        var selectedWire = WireViewModels.SingleOrDefault(w => w.Selected);
         if (selectedWire != null)
         {
-            Wires.Remove(selectedWire);
+            WireViewModels.Remove(selectedWire);
             _events.PublishOnBackgroundThreadAsync(new WireRemovedEvent(selectedWire));
         }
     }
@@ -104,16 +120,26 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
     {
         var newWire = message.Wire;
 
-        Wires.Add(newWire);
+        WireViewModels.Add(newWire);
 
-        //Todo: add connectors in terminalviewmodels
+        WireConnection newConnection = new WireConnection(newWire.StartSocketViewModel.Socket,
+            newWire.EndSocketViewModel.Socket, new FloatValue(0, "", Guid.NewGuid()));
+
+        newWire.InputTerminal.Connections.Add(newConnection);
+        newWire.OutputTerminal.Connections.Add(newConnection);
 
         return Task.CompletedTask;
     }
 
     public Task HandleAsync(RemoveConnectionEvent message, CancellationToken cancellationToken)
     {
-        Wires.Remove(message.Wire);
+        var wire = message.Wire;
+        WireViewModels.Remove(message.Wire);
+
+        var wireModel = wire.InputTerminal.Connections.SingleOrDefault(c => c.Id == wire.WireConnection.Id);
+        wire.InputTerminal.Connections.Remove(wireModel);
+        wire.OutputTerminal.Connections.Remove(wireModel);
+
 
         return Task.CompletedTask;
     }
@@ -138,14 +164,14 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
     private void ClearSelection()
     {
-        if (Wires.Any(w => w.Selected))
+        if (WireViewModels.Any(w => w.Selected))
         {
-            var selected = Wires.Single(w => w.Selected);
+            var selected = WireViewModels.Single(w => w.Selected);
             selected.Selected = false;
         }
 
-        if (Terminals.Any(t => t.Selected))
-            foreach (var terminal in Terminals)
+        if (TerminalViewModels.Any(t => t.Selected))
+            foreach (var terminal in TerminalViewModels)
                 terminal.Selected = false;
 
         SelectedItem = null;

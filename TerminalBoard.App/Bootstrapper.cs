@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using System.Windows;
+using TerminalBoard.App.Terminals;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 
@@ -28,6 +29,7 @@ public class Bootstrapper : BootstrapperBase
         _container.Singleton<MainViewModel>();
 
         BehaviorHelper.EventsAggregator = _container.GetInstance<IEventAggregator>();
+        TerminalHelper.EventsAggregator = _container.GetInstance<IEventAggregator>();
 
         foreach (var assembly in SelectAssemblies())
             assembly.GetTypes()

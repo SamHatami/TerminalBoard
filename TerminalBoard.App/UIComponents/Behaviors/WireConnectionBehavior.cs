@@ -5,11 +5,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using TerminalBoard.App.Events;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 using ISocketViewModel = TerminalBoard.App.Interfaces.ViewModels.ISocketViewModel;
 using ITerminalViewModel = TerminalBoard.App.Interfaces.ViewModels.ITerminalViewModel;
-using IWire = TerminalBoard.App.Interfaces.ViewModels.IWire;
+using IWireViewModel = TerminalBoard.App.Interfaces.ViewModels.IWireViewModel;
 using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
@@ -21,16 +22,19 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     private Canvas _mainCanvas;
     private Line _currentLine;
 
-    private ISocketViewModel? _startSocket;
-    private ISocketViewModel? _endSocket;
+    private ISocketViewModel? _startSocketViewModel;
+    private ISocketViewModel? _endSocketViewModel;
     private ITerminalViewModel? _terminal;
 
     protected override void OnAttached()
     {
         base.OnAttached();
 
-        _events = BehaviorHelper.EventsAggregator;
-        _events.SubscribeOnBackgroundThread(this);
+        if(BehaviorHelper.EventsAggregator != null)
+        {
+            _events = BehaviorHelper.EventsAggregator;
+            _events.SubscribeOnBackgroundThread(this);
+        }
 
         AssociatedObject.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
         AssociatedObject.PreviewMouseMove += OnMouseMove;
@@ -59,8 +63,8 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         {
             Stroke = Brushes.Black,
             StrokeThickness = 2,
-            X1 = _startSocket.X,
-            Y1 = _startSocket.Y,
+            X1 = _startSocketViewModel.X,
+            Y1 = _startSocketViewModel.Y,
             X2 = mouseCurrentPosition.X,
             Y2 = mouseCurrentPosition.Y
         };
@@ -87,8 +91,8 @@ internal class WireConnectionBehavior : Behavior<UIElement>
             //TODO: Move to WireValidation?
             //add endsock if socketViewModel is an input and does not belong to the same terminal
             if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input } socket &&
-                socket.ParentViewModel != _startSocket.ParentViewModel)
-                _endSocket = socket;
+                socket.ParentViewModel != _startSocketViewModel.ParentViewModel)
+                _endSocketViewModel = socket;
 
         return HitTestResultBehavior.Continue;
     }
@@ -103,18 +107,17 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         }
 
         //TODO: Create WireValidation, that will do all the checks and sends out events instead of this below
-        if (_endSocket == null)
+        if (_endSocketViewModel == null)
         {
             _mainCanvas.Children.Remove(_currentLine);
             return;
         }
 
-        IWire wire = new WireViewModel(_startSocket, _endSocket, _startSocket.Events); //TODO meh
-        _startSocket.Wires.Add(wire); //TODO use event after validation
-        _endSocket.Wires.Add(wire); //TODO use event after validation
-        var mainViewModel =
-            _mainCanvas.DataContext as MainViewModel; //TODO do this with event instead of direct connection
-        mainViewModel.Wires.Add(wire); //replace with a WireModel
+        IWireViewModel wire = new WireViewModel(_startSocketViewModel, _endSocketViewModel, _startSocketViewModel.Events); //TODO meh
+        _startSocketViewModel.Wires.Add(wire); //TODO use event after validation
+        _endSocketViewModel.Wires.Add(wire); //TODO use event after validation
+        _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(wire));
+
         _mainCanvas.Children.Remove(_currentLine);
     }
 
@@ -122,8 +125,8 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     {
         if (AssociatedObject is FrameworkElement { DataContext: ISocketViewModel item })
         {
-            _startSocket = item;
-            _terminal = _startSocket.ParentViewModel;
+            _startSocketViewModel = item;
+            _terminal = _startSocketViewModel.ParentViewModel;
         }
     }
 

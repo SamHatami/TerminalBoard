@@ -2,9 +2,11 @@
 using Caliburn.Micro;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
-using TerminalBoard.App.Interfaces;
+using TerminalBoard.App.Functions;
 using TerminalBoard.App.Interfaces.Functions;
+using TerminalBoard.App.Interfaces.Terminals;
 using TerminalBoard.App.Interfaces.ViewModels;
+using TerminalBoard.App.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 
@@ -23,16 +25,16 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
     #region Properties
 
     public ITerminal Terminal { get; }
-    public List<ITerminal> Connectors { get; set; } = [];
     public int Height { get; set; }
     public Guid Id { get; }
-    public BindableCollection<ISocketViewModel> InputSockets { get; set; } = [];
-    public BindableCollection<ISocketViewModel> OutputSockets { get; set; } = [];
+    public BindableCollection<ISocketViewModel> InputSocketsViewModels { get; set; } = [];
+    public BindableCollection<ISocketViewModel> OutputSocketViewModels { get; set; } = [];
 
     public bool GetInputValue { get; private set; }
+    public bool ShowFinalOutput { get; private set; }
 
     private string _inputValue;
-    public string InputValue
+    public string InputValue 
     {
         get => _inputValue;
         set
@@ -40,6 +42,17 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
             _inputValue = value;
             NotifyOfPropertyChange(nameof(InputValue));
             SetInputValue(InputValue);
+        }
+    }
+
+    private string _outputValue;
+    public string OutputValue
+    {
+        get => _outputValue;
+        set
+        {
+            _outputValue = value;
+            NotifyOfPropertyChange(nameof(OutputValue));
         }
     }
 
@@ -54,7 +67,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
     }
 
     public int Width { get; set; }
-    public List<IWire> Wires { get; set; } = [];
+    public List<IWireViewModel> Wires { get; set; } = [];
 
     public double CanvasPositionX //kind of anti-pattern.
     {
@@ -100,36 +113,46 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
     {
         Height = 80;
         Width = 50;
+        InputValue = String.Empty;
 
         if(Terminal.InputSockets != null)
         {
-            foreach (var input in Terminal.InputSockets)
+            foreach (var inputSocket in Terminal.InputSockets)
             {
-                var socket = new SocketViewModel(this, _events, SocketTypeEnum.Input)
+                var socket = new SocketViewModel(this, _events, SocketTypeEnum.Input, inputSocket)
                 {
-                    Label = input.Name
+                    Label = inputSocket.Name
                 };
-                InputSockets.Add(socket);
+                InputSocketsViewModels.Add(socket);
             }
         }
 
         if(Terminal.OutputSockets != null)
         {
-            foreach (var output in Terminal.OutputSockets)
+            foreach (var outputSocket in Terminal.OutputSockets)
             {
-                var socket = new SocketViewModel(this, _events, SocketTypeEnum.Output)
+                var socket = new SocketViewModel(this, _events, SocketTypeEnum.Output, outputSocket)
                 {
-                    Label = output.Name
+                    Label = outputSocket.Name
                 };
 
-                OutputSockets.Add(socket);
+                OutputSocketViewModels.Add(socket);
             }
         }
 
-        if (Terminal.RequireInputValue && Terminal is IValueTerminal<float> floatValueTerminal)
+        if (Terminal is IValueTerminal floatValueTerminal)
         {
             GetInputValue = true;
-            InputValue = floatValueTerminal.Function.Output.ToString("0.0",CultureInfo.CurrentCulture);
+            if(floatValueTerminal.Function.Output is FloatValue floatValue)
+                InputValue = floatValue.Value.ToString("0.0", CultureInfo.CurrentCulture);
+        }
+
+
+        if (Terminal is IOutputTerminal outputTerminal)
+        {
+            ShowFinalOutput = true;
+            if(outputTerminal.Output != null)
+                OutputValue = outputTerminal.Output.ValueObject.ToString();
         }
 
 
@@ -153,34 +176,21 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     public void SetInputValue(string value)
     {
-        if(Terminal is IValueTerminal<float> floatValueTerminal && float.TryParse(value, out float floatValue))
-            floatValueTerminal.Function.SetValue(floatValue);
-        NotifyConnectors();
-
+        if(Terminal is IValueTerminal floatValueTerminal && float.TryParse(value, out float floatValue))
+            floatValueTerminal.UpdateInput(OutputSocketViewModels[0].Socket, new FloatValue(floatValue,"", OutputSocketViewModels[0].Socket.Id)); //TODO: Should not talk to the function directly
+            
     }
-
-    private void NotifyConnectors()
+    
+    public void Update()
     {
-        foreach (var connectedTerminal in Connectors)
-        {
-            //TODO: Notify all connectors that something was changed here.
-        }
+
     }
 
-    public void AddWire(IWire wire)
+    public void AddWire(IWireViewModel wire)
     {
         Wires.Add(wire);
     }
 
-    public void Connect()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Dropped()
-    {
-        throw new NotImplementedException();
-    }
 
     public Task HandleAsync(CanvasZoomPanEvent message, CancellationToken cancellationToken)
     {
@@ -212,10 +222,10 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     private void NotifyWiresOfNewPosition()
     {
-        foreach (var socket in InputSockets)
+        foreach (var socket in InputSocketsViewModels)
             socket.UpdatePosition();
 
-        foreach (var socket in OutputSockets)
+        foreach (var socket in OutputSocketViewModels)
             socket.UpdatePosition();
     }
 

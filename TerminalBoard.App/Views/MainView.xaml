@@ -23,7 +23,7 @@
                 <behaviors1:CanvasPanZoomBehavior />
                 <behaviors1:ClearSelectionBehavior />
             </b:Interaction.Behaviors>
-            <ItemsControl ItemsSource="{Binding Terminals}" x:Name="Terminals">
+            <ItemsControl ItemsSource="{Binding TerminalViewModels}" x:Name="Terminals">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas />
@@ -46,7 +46,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <ItemsControl ItemsSource="{Binding Wires}" x:Name="Wires">
+            <ItemsControl ItemsSource="{Binding WireViewModels}" x:Name="Wires">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas />
@@ -68,7 +68,9 @@
             <StackPanel>
                 <Button x:Name="Snap" Content="SNAP" Margin="5" />
                 <Button x:Name="AddTerminal" Content="ADD" Margin="5" />
-                <Button x:Name="AddFloatThingy" Content="Add float" cal:Message.Attach="AddFloatTerminal()"/>
+                <Button x:Name="Float" Content="Float" cal:Message.Attach="AddFloatTerminal()"/>
+                <Button x:Name="Multiply" Content="Multiplier" cal:Message.Attach="AddMultiplyTerminal()"/>
+                <Button x:Name="Output" Content="Output" cal:Message.Attach="AddOutputTerminal()"/>
             </StackPanel>
         </Canvas>
     </Grid>

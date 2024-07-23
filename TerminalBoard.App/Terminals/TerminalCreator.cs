@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using TerminalBoard.App.Functions;
-using TerminalBoard.App.Interfaces;
+using TerminalBoard.App.Interfaces.Terminals;
 
 namespace TerminalBoard.App.Terminals;
 

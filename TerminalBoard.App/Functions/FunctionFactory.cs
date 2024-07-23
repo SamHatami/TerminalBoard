@@ -8,8 +8,8 @@ public static class FunctionFactory
     {
         switch (name)
         {
-            case "Float": return new ValueOutputFunction<float>();
-            case "Int": return new ValueOutputFunction<int>();
+            case "Float": return new ValueOutputFunction();
+            case "Int": return new ValueOutputFunction();
         }
 
         return null;

@@ -3,12 +3,12 @@ using System.Windows;
 using System.Windows.Input;
 using TerminalBoard.App.Enum;
 using TerminalBoard.App.Events;
-using TerminalBoard.App.Interfaces;
+using TerminalBoard.App.Interfaces.Terminals;
 using TerminalBoard.App.Interfaces.ViewModels;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class WireViewModel : PropertyChangedBase, IWire, IHandle<SelectItemEvent>
+public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<SelectItemEvent>
 {
     private bool _selected;
 
@@ -75,6 +75,7 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SelectItemEvent
     public ITerminal InputTerminal { get; set; }
     public ITerminal OutputTerminal { get; set; }
     public WireTypeEnum WireType { get; set; }
+    public IWire WireConnection { get; set; }
 
     public void Delete(KeyEventArgs keyEvent)
     {
@@ -93,6 +94,14 @@ public class WireViewModel : PropertyChangedBase, IWire, IHandle<SelectItemEvent
         _events.SubscribeOnBackgroundThread(this);
         SetStartSocket(startSocketViewModel);
         SetEndSocket(endSocketViewModel);
+        SetParentTerminals(startSocketViewModel, endSocketViewModel);
+
+    }
+
+    private void SetParentTerminals(ISocketViewModel start, ISocketViewModel end)
+    {
+        InputTerminal = start.ParentViewModel.Terminal;
+        OutputTerminal = end.ParentViewModel.Terminal;
     }
 
     public void SetStartSocket(ISocketViewModel socketViewModel)

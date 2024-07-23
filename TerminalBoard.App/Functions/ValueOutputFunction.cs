@@ -1,31 +1,31 @@
 ﻿using System.Numerics;
-using Caliburn.Micro;
 using TerminalBoard.App.Interfaces.Functions;
+using Action = System.Action;
 
 namespace TerminalBoard.App.Functions;
 
-public class ValueOutputFunction<T> : PropertyChangedBase,IValueFunction<T> where T : INumber<T>
+public class ValueOutputFunction : IValueFunction
 {
     public string Label { get; } = "Float";
     public bool RequireValueInput { get; } = true;
 
-    private T? _output;
+    private IValue _output;
 
-    public T? Output
+    public IValue Output
     {
         get => _output;
         set
         {
             _output = value;
-            NotifyOfPropertyChange(nameof(Output));
         }
     }
 
-    public void SetValue(T? value)
+    public void SetValue(IValue value)
     {
-        if(value == null)
+        if (value == null)
             return;
 
         _output = value;
     }
+
 }

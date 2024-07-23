@@ -1,4 +1,4 @@
-﻿using IWire = TerminalBoard.App.Interfaces.ViewModels.IWire;
+﻿using IWireViewModel = TerminalBoard.App.Interfaces.ViewModels.IWireViewModel;
 
 namespace TerminalBoard.App.Events;
 
@@ -6,12 +6,12 @@ public class ConnectionEvents
 {
 }
 
-public class AddConnectionEvent(IWire wire)
+public class AddConnectionEvent(IWireViewModel wire)
 {
-    public IWire Wire = wire;
+    public IWireViewModel Wire = wire;
 }
 
-public class RemoveConnectionEvent(IWire wire)
+public class RemoveConnectionEvent(IWireViewModel wire)
 {
-    public IWire Wire = wire;
+    public IWireViewModel Wire = wire;
 }

@@ -1,10 +1,13 @@
-﻿using ISocket = TerminalBoard.App.Interfaces.ISocket;
-using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
+﻿using TerminalBoard.App.Enum;
+using TerminalBoard.App.Interfaces.Functions;
+using TerminalBoard.App.Interfaces.Terminals;
 
 namespace TerminalBoard.App.Terminals;
 
-public class Socket(SocketTypeEnum type, string name) : ISocket
+public class Socket(SocketTypeEnum socketType, string name, ITerminal parentTerminal) : ISocket
 {
+    public SocketTypeEnum SocketType { get; } = socketType;
+    public ITerminal ParentTerminal { get; } = parentTerminal;
     public string Name { get; } = name;
-    public SocketTypeEnum Type { get; } = type;
+    public Guid Id { get; } = Guid.NewGuid();
 }

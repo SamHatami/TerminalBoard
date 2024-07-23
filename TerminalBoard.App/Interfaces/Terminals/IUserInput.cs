@@ -1,4 +1,4 @@
-﻿namespace TerminalBoard.App.Interfaces;
+﻿namespace TerminalBoard.App.Interfaces.Terminals;
 
 public interface IUserInput
 {

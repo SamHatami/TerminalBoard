@@ -1,4 +1,4 @@
-﻿using TerminalBoard.App.Interfaces;
+﻿using TerminalBoard.App.Interfaces.Terminals;
 using TerminalBoard.App.Interfaces.ViewModels;
 
 namespace TerminalBoard.App.ViewModels;

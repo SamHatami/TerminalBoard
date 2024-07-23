@@ -1,7 +1,10 @@
-﻿namespace TerminalBoard.App.Interfaces;
+﻿using Caliburn.Micro;
+using TerminalBoard.App.Interfaces.Functions;
+
+namespace TerminalBoard.App.Interfaces.Terminals;
 
 /// <summary>
-/// Interface for a Terminal which contains inputs and outputs.
+/// Base interface for a Terminal which contains inputs and outputs.
 /// </summary>
 public interface ITerminal
 {
@@ -10,10 +13,11 @@ public interface ITerminal
     string Label { get; }
     List<ISocket> InputSockets { get; }
     List<ISocket> OutputSockets { get; }
-    List<ITerminal> Connectors { get; set; }
+    List<IWire> Connections { get; set; }
+    
+    void UpdateInput(ISocket socket, IValue newValue);
     Guid Id { get; }
 
     #endregion Properties
 
-    //TODO: Future wire connections
 }

@@ -71,8 +71,14 @@
                             <Button Content="-" Height="10" Padding="0,-5.5,0,0"/>
                         </StackPanel>
                     </Grid>
+                    <Grid x:Name="OutputValueGrid"
+                          Visibility="{Binding ShowFinalOutput, Converter={StaticResource BooleanToVisibilityConverter}}"
+                          Height="20">
+     
+                        <Label Content="{Binding OutputValue}"></Label>
+                        </Grid>
 
-                    <ItemsControl x:Name="InputSockets" Grid.Column="0" ItemsSource="{Binding InputSockets}"
+                    <ItemsControl x:Name="InputSockets" Grid.Column="0" ItemsSource="{Binding InputSocketsViewModels}"
                               BorderThickness="0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -81,7 +87,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <ItemsControl x:Name="OutputSockets" Grid.Column="2" ItemsSource="{Binding OutputSockets}"
+                    <ItemsControl x:Name="OutputSockets" Grid.Column="1" ItemsSource="{Binding OutputSocketViewModels}"
                               BorderThickness="0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -96,6 +102,7 @@
                 </Grid>
             </Grid>
         </Border>
+
         <Border x:Name="BorderHighlights" BorderThickness="2,2,0,0" BorderBrush="GhostWhite" Opacity="0.7" CornerRadius="3,0,0,0" Margin="3"/>
 
     </Grid>

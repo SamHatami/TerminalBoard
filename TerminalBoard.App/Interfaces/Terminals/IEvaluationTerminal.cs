@@ -1,9 +1,12 @@
 ﻿using TerminalBoard.App.Interfaces.Functions;
 
-namespace TerminalBoard.App.Interfaces;
+namespace TerminalBoard.App.Interfaces.Terminals;
 
-public interface IEvaluationTerminal<T> : ITerminal
+public interface IEvaluationTerminal : ITerminal
 {
-    IEvaluationFunction<T> EvaluationFunction { get; }
+    IEvaluationFunction EvaluationFunction { get; }
+    void NotifyConnectors();
+    void SetFunctionInputs(List<IValue> inputs);
+
 
 }
