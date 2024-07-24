@@ -100,7 +100,13 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
         var selectedTerminal = TerminalViewModels.SingleOrDefault(t => t.Selected);
         if (selectedTerminal != null)
         {
+            foreach (var wire in selectedTerminal.WireViewModels)
+            {
+                WireViewModels.Remove(wire);
+            }
+
             TerminalViewModels.Remove(selectedTerminal);
+
             _events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(selectedTerminal));
         }
     }
@@ -129,6 +135,9 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
         TerminalViewModels.SingleOrDefault(T => T.Terminal == newWire.InputTerminal).WireViewModels.Add(newWire);
         TerminalViewModels.SingleOrDefault(T => T.Terminal == newWire.OutputTerminal).WireViewModels.Add(newWire);
+
+
+        //TODO: Some type of refresh on the values from the connected wires
 
         return Task.CompletedTask;
     }

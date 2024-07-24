@@ -9,6 +9,7 @@
                               xmlns:behaviors="clr-namespace:TerminalBoard.App.UIComponents.Behaviors"
                               xmlns:validations="clr-namespace:TerminalBoard.App.UIComponents.ValidationRules"
                               xmlns:viewModels="clr-namespace:TerminalBoard.App.ViewModels"
+                              xmlns:cal="http://www.caliburnproject.org"
                               d:DataContext="{d:DesignInstance Type=viewModels:TerminalViewModel}"
                               mc:Ignorable="d"
                               d:DesignHeight="100" d:DesignWidth="120" IsSelected="{Binding Selected}">
@@ -59,7 +60,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBox >
                             <TextBox.Text>
-                                <Binding Path="InputValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="InputValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" NotifyOnSourceUpdated="True">
                                     <Binding.ValidationRules>
                                         <validations:TextBoxNumericValidationRule/>
                                     </Binding.ValidationRules>
@@ -67,8 +68,8 @@
                             </TextBox.Text>
                         </TextBox>
                         <StackPanel Grid.Column="1">
-                            <Button Content="+" Height="10" Padding="0,-5.5,0,0" />
-                            <Button Content="-" Height="10" Padding="0,-5.5,0,0"/>
+                            <Button Content="+" Height="10" Padding="0,-5.5,0,0 " cal:Message.Attach="AdjustNumeric('add')"/>
+                            <Button Content="-" Height="10" Padding="0,-5.5,0,0" cal:Message.Attach="AdjustNumeric('subtract')"/>
                         </StackPanel>
                     </Grid>
 

@@ -160,14 +160,20 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     public void AdjustNumeric(string no)
     {
-        
+        //TODO: Should be controlled by some ValueService? None the less, conversion should be done here.
         switch (no)
         {
-            case "+":
-                
+            case "add":
+                var addValue = Convert.ToSingle(InputValue, CultureInfo.CurrentCulture) + 0.1f;
+                InputValue = addValue.ToString("0.0", CultureInfo.CurrentCulture);
+
+                SetInputValue(addValue.ToString());
                 break;
-            case "-":
-                
+            case "subtract":
+                if(Convert.ToSingle(InputValue, CultureInfo.CurrentCulture) == 0.1f) break;
+                var removeValue = Convert.ToSingle(InputValue, CultureInfo.CurrentCulture) - 0.1f;
+                InputValue = removeValue.ToString("0.0", CultureInfo.CurrentCulture);
+                SetInputValue(removeValue.ToString());
                 break;
 
         }
