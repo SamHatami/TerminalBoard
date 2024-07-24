@@ -95,7 +95,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     #region Constructors
 
-    public TerminalViewModel(IEventAggregator events, ITerminal terminal)
+    public TerminalViewModel(IEventAggregator events, ITerminal terminal) //TODO: Handle all communication with the terminal through a TerminalService?
     {
         _events = events;
         Terminal = terminal;

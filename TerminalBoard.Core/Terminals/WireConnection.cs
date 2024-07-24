@@ -30,7 +30,6 @@ public class WireConnection : IWire
 
     private void TransferData(IValue value)
     {
-
         EndSocket.ParentTerminal.UpdateInput(EndSocket,value);
     }
 }

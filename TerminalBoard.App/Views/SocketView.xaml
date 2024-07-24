@@ -26,17 +26,6 @@
                             <DataTrigger Binding="{Binding IsConnected}">
                                 <Setter Property="Fill" Value="Green"/>
                             </DataTrigger>
-
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseCaptured" Value="True" />
-                                    <Condition Property="IsMouseOver" Value="True" />
-                                </MultiTrigger.Conditions>
-                                <MultiTrigger.Setters>
-                                    <Setter Property="Stroke" Value="Orange" />
-                                    <Setter Property="StrokeThickness" Value="2" />
-                                </MultiTrigger.Setters>
-                            </MultiTrigger>
                         </Style.Triggers>
                     </Style>
                 </Ellipse.Style>

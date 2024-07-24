@@ -9,7 +9,7 @@ namespace TerminalBoard.Core.Terminals;
 
 public class SimpleOutputTerminal : IOutputTerminal
 {
-    public string Label { get; } = "Output";
+    public string Label { get; } = "Result";
     public List<ISocket> InputSockets { get; } = [];
     public List<ISocket> OutputSockets { get; } = [];
     public List<IWire> Connections { get; set; } = [];
