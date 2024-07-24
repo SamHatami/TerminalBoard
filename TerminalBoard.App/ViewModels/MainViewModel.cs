@@ -1,13 +1,12 @@
 ﻿using Caliburn.Micro;
 using System.Windows.Input;
-using TerminalBoard.App.Enum;
-using TerminalBoard.App.Events;
-using TerminalBoard.App.Functions;
-using TerminalBoard.App.Functions.Math;
-using TerminalBoard.App.Interfaces.Terminals;
+using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
-using TerminalBoard.App.Terminals;
 using TerminalBoard.App.Views;
+using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Functions;
+using TerminalBoard.Core.Functions.Math;
+using TerminalBoard.Core.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 
@@ -127,6 +126,9 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
 
         newWire.InputTerminal.Connections.Add(newConnection);
         newWire.OutputTerminal.Connections.Add(newConnection);
+
+        TerminalViewModels.SingleOrDefault(T => T.Terminal == newWire.InputTerminal).WireViewModels.Add(newWire);
+        TerminalViewModels.SingleOrDefault(T => T.Terminal == newWire.OutputTerminal).WireViewModels.Add(newWire);
 
         return Task.CompletedTask;
     }

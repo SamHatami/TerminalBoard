@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
+using TerminalBoard.Core.Enum;
 
 namespace TerminalBoard.App.Extensions;
 

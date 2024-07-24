@@ -1,10 +1,10 @@
 ﻿using Caliburn.Micro;
 using System.Windows;
 using System.Windows.Input;
-using TerminalBoard.App.Enum;
-using TerminalBoard.App.Events;
-using TerminalBoard.App.Interfaces.Terminals;
+using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
+using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 

@@ -5,13 +5,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using TerminalBoard.App.Events;
+using TerminalBoard.App.Events.UIEvents;
+using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
-using ISocketViewModel = TerminalBoard.App.Interfaces.ViewModels.ISocketViewModel;
-using ITerminalViewModel = TerminalBoard.App.Interfaces.ViewModels.ITerminalViewModel;
-using IWireViewModel = TerminalBoard.App.Interfaces.ViewModels.IWireViewModel;
-using SocketTypeEnum = TerminalBoard.App.Enum.SocketTypeEnum;
+using TerminalBoard.Core.Enum;
+
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
@@ -90,7 +89,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
 
             //TODO: Move to WireValidation?
             //add endsock if socketViewModel is an input and does not belong to the same terminal
-            if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input } socket &&
+            if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input} socket &&
                 socket.ParentViewModel != _startSocketViewModel.ParentViewModel)
                 _endSocketViewModel = socket;
 

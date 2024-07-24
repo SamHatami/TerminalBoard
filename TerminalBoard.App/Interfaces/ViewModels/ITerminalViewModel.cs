@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using TerminalBoard.App.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.App.Interfaces.ViewModels;
 
@@ -10,7 +10,7 @@ public interface ITerminalViewModel : ISelectable
     ITerminal Terminal { get; }
     BindableCollection<ISocketViewModel> InputSocketsViewModels { get; set; }
     BindableCollection<ISocketViewModel> OutputSocketViewModels { get; set; }
-    List<IWireViewModel> Wires { get; set; }
+    List<IWireViewModel> WireViewModels { get; set; }
     int Height { get; set; }
     int Width { get; set; }
     double CanvasPositionX { get; set; }
@@ -21,7 +21,7 @@ public interface ITerminalViewModel : ISelectable
 
     #region Methods
 
-    void AddWire(IWireViewModel wire);
+    void AddWireViewModel(IWireViewModel wire);
     void SetInputValue(string value); //if terminal is an IValueTerminal
 
     #endregion Methods

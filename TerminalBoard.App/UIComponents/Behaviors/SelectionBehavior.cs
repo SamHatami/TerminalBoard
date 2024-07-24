@@ -4,10 +4,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using TerminalBoard.App.Events;
+using TerminalBoard.App.Events.UIEvents;
+using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
-using ISelectable = TerminalBoard.App.Interfaces.ViewModels.ISelectable;
-using ITerminal = TerminalBoard.App.Interfaces.Terminals.ITerminal;
-using IWireViewModel = TerminalBoard.App.Interfaces.ViewModels.IWireViewModel;
+using TerminalBoard.Core.Interfaces.Terminals;
+
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 

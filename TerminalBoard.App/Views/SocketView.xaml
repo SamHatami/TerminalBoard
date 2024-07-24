@@ -8,10 +8,6 @@
              mc:Ignorable="d" d:DataContext="{d:DesignInstance  viewModels:SocketViewModel}"
              xmlns:extensions="clr-namespace:TerminalBoard.App.Extensions"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </UserControl.Resources>
-
     <Border CornerRadius="3">
         <StackPanel Orientation="Horizontal" x:Name="SocketPanel"
                     extensions:StackPanelExtensions.ReverseChildren="{Binding Type}">
@@ -28,7 +24,7 @@
                                 <Setter Property="StrokeThickness" Value="3" />
                             </Trigger>
                             <DataTrigger Binding="{Binding IsConnected}">
-                                <Setter Property="Fill" Value="Green"></Setter>
+                                <Setter Property="Fill" Value="Green"/>
                             </DataTrigger>
 
                             <MultiTrigger>

@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TerminalBoard.App.Events;
-using GridTypeEnum = TerminalBoard.App.Enum.GridTypeEnum;
+using TerminalBoard.App.Events.UIEvents;
+using TerminalBoard.Core.Enum;
 
 namespace TerminalBoard.App.BackgroundGrid;
 

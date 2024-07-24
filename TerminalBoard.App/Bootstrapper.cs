@@ -1,8 +1,8 @@
 ﻿using Caliburn.Micro;
 using System.Windows;
-using TerminalBoard.App.Terminals;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
+using TerminalBoard.Core.Terminals;
 
 namespace TerminalBoard.App;
 

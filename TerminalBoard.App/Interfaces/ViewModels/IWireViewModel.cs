@@ -1,6 +1,7 @@
 using System.Windows;
-using TerminalBoard.App.Enum;
-using TerminalBoard.App.Interfaces.Terminals;
+using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Interfaces.Terminals;
+
 
 namespace TerminalBoard.App.Interfaces.ViewModels;
 

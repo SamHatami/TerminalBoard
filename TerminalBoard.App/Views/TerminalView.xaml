@@ -71,12 +71,14 @@
                             <Button Content="-" Height="10" Padding="0,-5.5,0,0"/>
                         </StackPanel>
                     </Grid>
-                    <Grid x:Name="OutputValueGrid"
+
+                    <Grid Grid.Column="1" x:Name="OutputValueGrid"
                           Visibility="{Binding ShowFinalOutput, Converter={StaticResource BooleanToVisibilityConverter}}"
-                          Height="20">
-     
-                        <Label Content="{Binding OutputValue}"></Label>
-                        </Grid>
+                          Height="30" VerticalAlignment="Center">
+
+                        <TextBlock Text="{Binding OutputValue, NotifyOnSourceUpdated=True}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+
 
                     <ItemsControl x:Name="InputSockets" Grid.Column="0" ItemsSource="{Binding InputSocketsViewModels}"
                               BorderThickness="0">

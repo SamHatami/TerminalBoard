@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TerminalBoard.App.Events;
+using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 
