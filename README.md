@@ -1,4 +1,4 @@
-Just because there is to much chaos in the garden of my mind: 
+Just because there is too much chaos in the garden of my mind: 
 A venture in how a node editor could be built using WPF.  
 ## Dependencies / NuGet
 
@@ -13,12 +13,9 @@ Testing
 Clone and Restore NuGet packages if neede etc. Solution created in Visual Studio 2022.
 ## Project Structure
 
-* *TerminalBoard.Core*  
-	 Includes all base interfaces, classes and events that are independent of WPF
-* *TerminalBoard.App* 
-	 is the WPF project that includes all UI stuff. The Idea is to seperate general UI classes this to a WPF Class library when I get to a state of managable chaos.
-* *TerminalBoard.Test* 
-		Testing using xUnit and FluentAssertions. At the moment just a few minor tests to anchor my sanity to something.
+* *TerminalBoard.Core* - Includes all base interfaces, classes and events that are independent of WPF
+* *TerminalBoard.App* - The main WPF project that includes all UI stuff. For future notes: All the base classes will be seperated into a WPF class project, but for now it's all in the same project until I get to a state of managable chaos.
+* *TerminalBoard.Test* - Using xUnit and FluentAssertions. At the moment just a few minor tests to anchor my sanity to something.
 ## Terminology
 Why not call it something else? Inspiration taken from the electrical world.
 
@@ -30,7 +27,7 @@ Why not call it something else? Inspiration taken from the electrical world.
 
 BoardViewModel (Main View Model)
 - Recieves a few services to create other view models.
-- Hndles major events using the Caliburns EventAggregator. 
+- Handles major events using the Caliburns EventAggregator. 
 - Handles some UI events aswell.
 
 ### Base interfaces for viewmodels
@@ -55,13 +52,14 @@ IFunction
 - IValueFunction single - IValue output
 - IEvaluationFunction - multiple value input/outputs (ISockets). Has the ability to evaluate the inputs according to some type of implementation. (Yeh, so a function...)
 
-ISocket - interface of generic type, since it can hold different type of values.
+ISocket 
 - SocketBase - abstract ISocket 
 - Floatsocket 
 - IntSocket
 - VectorSocket
 -  More types of sockets depending on which API that is implementing this (?). 
-- At the moment these are not of generic type. Perhaps they should be or atleast that would be nice.
+
+At the moment these are not of generic type. I would like them to be generics at least, but how that would play into the bigger picture is still a bit unclear to me at this moment.
 
 IWire 
 -  Keeps track of
@@ -74,4 +72,4 @@ IValues are my short coming instead of using an generic type, more to come on th
 ## I see your board
 A picture of how the terminalboard looks like right now
 
-![Simple Terminal Board](Pics/BaseUITerminalBoard.PNG?raw=true)
+![Simple Terminal Board](/Pics/BaseUITerminalBoard.png)
