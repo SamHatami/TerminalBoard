@@ -1,5 +1,6 @@
-﻿using TerminalBoard.Core.Interfaces.Terminals;
-using TerminalBoard.Core.Terminals;
+﻿using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Wires;
 
 namespace TerminalBoard.Core.Services;
 
@@ -10,9 +11,9 @@ public class TerminalService
     {
     }
 
-    private ITerminal CreateTerminal()
+    private ITerminal CreateTerminal(TerminalType terminalType)
     {
-        TerminalCreator.New()
+        return null;
     }
 
     public void UpdateTerminal()

@@ -2,7 +2,7 @@
 {
     public interface IValue
     {   
-        object ValueObject { get; set; }
+        object ValueObject { get; set; } //Generics?
         string Name { get; }
         Guid Id { get; }
     }
