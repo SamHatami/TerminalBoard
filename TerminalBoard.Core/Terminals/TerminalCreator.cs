@@ -6,7 +6,7 @@ namespace TerminalBoard.Core.Terminals;
 
 public static class TerminalCreator
 {
-    public static ITerminal New(string name, IEventAggregator eventAggregator) //switch name to some enum
+    public static ITerminal New(string name) //switch name to some enum
     {
         var function = FunctionFactory.CreateFunction(name);
 

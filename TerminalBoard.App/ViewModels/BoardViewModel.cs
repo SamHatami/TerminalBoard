@@ -7,6 +7,7 @@ using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Functions;
 using TerminalBoard.Core.Functions.Math;
 using TerminalBoard.Core.Terminals;
+using TerminalBoard.Core.Wires;
 
 namespace TerminalBoard.App.ViewModels;
 
@@ -15,7 +16,7 @@ namespace TerminalBoard.App.ViewModels;
 /// <summary>
 /// THe Main ViewModel for the board that holds all other viewModels and handles several major events.
 /// </summary>
-public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<RemoveConnectionEvent>,
+public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<RemoveConnectionEvent>,
     IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
 {
     private readonly IEventAggregator _events;
@@ -36,7 +37,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
         }
     }
 
-    public MainViewModel(IEventAggregator events)
+    public BoardViewModel(IEventAggregator events)
     {
         _events = events;
         _events.SubscribeOnBackgroundThread(this);
@@ -64,7 +65,7 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
     {
         var floatTerminal = new FloatValueTerminal();
         var terminalViewModel = new TerminalViewModel(_events, floatTerminal)
-            { CanvasPositionY = 50, CanvasPositionX = 50 };
+            { CanvasPositionY = 100, CanvasPositionX = 100 };
         TerminalViewModels.Add(terminalViewModel);
     }
 
@@ -72,13 +73,14 @@ public class MainViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remove
     {
         var multiplier = new Multiplication();
         var evaluationTerminal = new EvaluationTerminal(multiplier);
-        var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal);
+        var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal) { CanvasPositionY = 100, CanvasPositionX = 100 }; ;
+
         TerminalViewModels.Add(terminalViewModel);
     }
 
     public void AddOutputTerminal()
     {
-        var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal());
+        var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal()) { CanvasPositionY = 100, CanvasPositionX = 100 }; ;
         TerminalViewModels.Add(terminalViewModel);
     }
 

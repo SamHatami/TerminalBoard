@@ -1,7 +1,7 @@
 ﻿using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
 
-namespace TerminalBoard.Core.Terminals;
+namespace TerminalBoard.Core.Wires;
 
 public class WireConnection : IWire
 {
@@ -14,11 +14,11 @@ public class WireConnection : IWire
         get => _value;
         set
         {
-       
-                _value = value;
-                TransferData(_value);
+
+            _value = value;
+            TransferData(_value);
         }
-    } 
+    }
     public Guid Id { get; } = Guid.NewGuid();
 
     public WireConnection(ISocket startSocket, ISocket endSocket, IValue value)
@@ -30,6 +30,6 @@ public class WireConnection : IWire
 
     private void TransferData(IValue value)
     {
-        EndSocket.ParentTerminal.UpdateInput(EndSocket,value);
+        EndSocket.ParentTerminal.UpdateInput(EndSocket, value);
     }
 }

@@ -18,7 +18,7 @@ public class Bootstrapper : BootstrapperBase
 
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
-        GetWindowManager().ShowDialogAsync(_container.GetInstance<MainViewModel>());
+        GetWindowManager().ShowDialogAsync(_container.GetInstance<BoardViewModel>());
     }
 
     protected override void Configure()
@@ -26,7 +26,7 @@ public class Bootstrapper : BootstrapperBase
         _container.Instance(_container);
         _container.Singleton<IWindowManager, WindowManager>();
         _container.Singleton<IEventAggregator, EventAggregator>();
-        _container.Singleton<MainViewModel>();
+        _container.Singleton<BoardViewModel>();
 
         BehaviorHelper.EventsAggregator = _container.GetInstance<IEventAggregator>();
         TerminalHelper.EventsAggregator = _container.GetInstance<IEventAggregator>();
