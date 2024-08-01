@@ -5,50 +5,47 @@ using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.Core.Terminals;
 
-public class FloatValueTerminal : IValueTerminal
+public class ValueTerminal<T> : IValueTerminal<T>
 {
     public string Label { get; }
     public List<ISocket> InputSockets { get; } = [];
     public List<ISocket> OutputSockets { get; } = [];
     public List<IWire> Connections { get; set; } = [];
     public bool RequireInputValue { get; } = true;
-    
-    public Guid Id { get; }
-    public IValueFunction Function { get; }
 
-    public FloatValueTerminal()
+    public Guid Id { get; }
+    public ITypedValueFunction<T> Function { get; }
+
+    public ValueTerminal()
     {
-        Function = new Functions.ValueOutputFunction();
-        Label = Function.Label;
+        Function = new TypedValueOutputFunction<T>();
+        Label = typeof(T).Name; //TODO: Perhaps a type name utility to return const strings
         Id = Guid.NewGuid();
         Initialize();
-
     }
 
     private void Initialize()
     {
         var socket = new Socket(SocketTypeEnum.Output, "", this);
-        var floatValue = new FloatValue(1.0f, "", socket.Id);
+        var value = new TypedValue<T>(nameof(T), socket.Id) { Value = default };
 
         OutputSockets.Add(socket);
-        UpdateInput(socket,floatValue);
+        UpdateInput(socket, value);
     }
 
     public void UpdateInput(ISocket socket, IValue newValue)
     {
-        if(newValue is FloatValue floatValue)
+        if (newValue is TypedValue<T> value)
         {
-            Function.SetValue(floatValue);
+            Function.SetValue(value);
             NotifyConnectors();
         }
     }
+
     public void NotifyConnectors()
     {
         foreach (var connectionWire in Connections)
-        {
-            if (connectionWire.StartSocket.ParentTerminal.Id == this.Id) //Only notify outbound connections
+            if (connectionWire.StartSocket.ParentTerminal.Id == Id) //Only notify outbound connections
                 connectionWire.Value = Function.Output;
-        }
     }
-    
 }

@@ -33,7 +33,7 @@ public class SimpleOutputTerminal : IOutputTerminal
     public SimpleOutputTerminal()
     {
         Id = Guid.NewGuid();
-        Output = new StringValue("0", "", new Guid());
+        Output = new TypedValue<string>("", new Guid()){Value = "0"};
 
         _events = TerminalHelper.EventsAggregator;
         _events.SubscribeOnBackgroundThread(this);

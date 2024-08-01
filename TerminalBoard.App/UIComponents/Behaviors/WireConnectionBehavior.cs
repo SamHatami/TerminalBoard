@@ -83,7 +83,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         }
     }
 
-    private HitTestResultBehavior CheckIfOverSocket(HitTestResult hit)
+    private HitTestResultBehavior IsInputSocket(HitTestResult hit)
     {
         if (hit.VisualHit is FrameworkElement element)
 
@@ -100,7 +100,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     {
         if (AssociatedObject.IsMouseCaptured)
         {
-            VisualTreeHelper.HitTest(_mainCanvas, null, CheckIfOverSocket,
+            VisualTreeHelper.HitTest(_mainCanvas, null, IsInputSocket,
                 new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(_mainCanvas), 1, 1)));
             AssociatedObject.ReleaseMouseCapture();
         }

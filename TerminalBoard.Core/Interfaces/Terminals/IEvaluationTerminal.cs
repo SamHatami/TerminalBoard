@@ -6,7 +6,4 @@ public interface IEvaluationTerminal : ITerminal
 {
     IEvaluationFunction EvaluationFunction { get; }
     void NotifyConnectors();
-    void SetFunctionInputs(List<IValue> inputs);
-
-
 }

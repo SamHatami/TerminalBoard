@@ -23,6 +23,22 @@
                 <behaviors1:CanvasPanZoomBehavior />
                 <behaviors1:ClearSelectionBehavior />
             </b:Interaction.Behaviors>
+            <ItemsControl ItemsSource="{Binding WireViewModels}" x:Name="Wires">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
+                            <b:Interaction.Behaviors>
+                                <behaviors1:SelectionBehavior />
+                            </b:Interaction.Behaviors>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             <ItemsControl ItemsSource="{Binding TerminalViewModels}" x:Name="Terminals">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -46,22 +62,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <ItemsControl ItemsSource="{Binding WireViewModels}" x:Name="Wires">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
-                            <b:Interaction.Behaviors>
-                                <behaviors1:SelectionBehavior />
-                            </b:Interaction.Behaviors>
-                        </ContentControl>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        
         </Canvas>
 
         <Canvas x:Name="ControlCanvas">

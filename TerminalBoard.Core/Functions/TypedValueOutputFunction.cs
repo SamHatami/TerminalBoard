@@ -2,14 +2,14 @@
 
 namespace TerminalBoard.Core.Functions;
 
-internal class ValueOutputFunction : IValueFunction
+internal class TypedValueOutputFunction<T> : ITypedValueFunction<T>
 {
-    public string Label { get; } = "Float";
+    public string Label { get; }
     public bool RequireValueInput { get; } = true;
 
-    private IValue _output;
+    private TypedValue<T> _output;
 
-    public IValue Output
+    public TypedValue<T> Output
     {
         get => _output;
         set
@@ -18,7 +18,7 @@ internal class ValueOutputFunction : IValueFunction
         }
     }
 
-    public void SetValue(IValue value)
+    public void SetValue(TypedValue<T> value)
     {
         if (value == null)
             return;

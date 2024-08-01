@@ -2,6 +2,7 @@
 using System.Windows;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
+using TerminalBoard.Core.Services;
 using TerminalBoard.Core.Terminals;
 
 namespace TerminalBoard.App;
@@ -24,6 +25,7 @@ public class Bootstrapper : BootstrapperBase
     protected override void Configure()
     {
         _container.Instance(_container);
+        _container.Singleton<WireService>();
         _container.Singleton<IWindowManager, WindowManager>();
         _container.Singleton<IEventAggregator, EventAggregator>();
         _container.Singleton<BoardViewModel>();

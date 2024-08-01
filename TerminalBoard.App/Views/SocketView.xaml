@@ -11,7 +11,7 @@
     <Border CornerRadius="3">
         <StackPanel Orientation="Horizontal" x:Name="SocketPanel"
                     extensions:StackPanelExtensions.ReverseChildren="{Binding Type}">
-            <Ellipse x:Name="Socket" Height="10" Width="10" Fill="LightGray">
+            <Ellipse x:Name="Socket" Height="10" Width="10" Fill="DarkGray">
                 <Ellipse.Style>
                     <Style TargetType="Ellipse">
                         <Style.Triggers>

@@ -2,10 +2,10 @@
 
 public interface IEvaluationFunction : IFunction
 {
-    List<IValue> Inputs { get; set; }
+    List<IValue> Inputs { get; }
     List<IValue> Outputs { get; }
 
-    void SetInputValue(IValue value, Guid socketId);
+    void SetInputValue(IValue newValue, IValue oldValue);
 
     void Evaluate();
 }

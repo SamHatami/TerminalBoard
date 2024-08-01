@@ -142,10 +142,10 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
             }
         }
 
-        if (Terminal is IValueTerminal floatValueTerminal)
+        if (Terminal is IValueTerminal<float> floatValueTerminal)
         {
             GetInputValue = true;
-            if(floatValueTerminal.Function.Output is FloatValue floatValue)
+            if(floatValueTerminal.Function.Output is TypedValue<float> floatValue)
                 InputValue = floatValue.Value.ToString("0.0", CultureInfo.CurrentCulture);
         }
 
@@ -182,11 +182,11 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     public void SetInputValue(string value) //TODO... usch
     {
-        if (Terminal is IValueTerminal floatValueTerminal && float.TryParse(value, out float floatValue)) 
+        if (Terminal is IValueTerminal<float> floatValueTerminal && float.TryParse(value, out float floatValue))  //TODO : detta fungerar inte generellt
         {
             foreach (var wire in Terminal.Connections)
             {
-                wire.Value = new FloatValue(Convert.ToSingle(value), "", Guid.NewGuid());
+                wire.Value = new TypedValue<float>("", Guid.NewGuid()){ Value=Convert.ToSingle(value)};
             }
         }
     }
@@ -246,7 +246,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
         if (Terminal != message.Terminal)
             return Task.CompletedTask;
 
-        OutputValue = message.Output.ValueObject.ToString();
+        OutputValue = message.Output.Value.ToString();
         return Task.CompletedTask;
     }
 }

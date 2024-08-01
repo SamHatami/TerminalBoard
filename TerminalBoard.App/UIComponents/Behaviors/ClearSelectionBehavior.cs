@@ -52,7 +52,7 @@ public class ClearSelectionBehavior : Behavior<UIElement>
 
     private HitTestResultBehavior CheckType(HitTestResult hit)
     {
-        if (hit.VisualHit is Canvas) _events.PublishOnBackgroundThreadAsync(new ClearSelectionEvent());
+        if (hit.VisualHit is Canvas) _events.PublishOnBackgroundThreadAsync(new ClearSelectionEvent(), new CancellationToken(true));
 
         return HitTestResultBehavior.Continue;
     }

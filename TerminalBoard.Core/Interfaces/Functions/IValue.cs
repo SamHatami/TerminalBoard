@@ -2,8 +2,13 @@
 {
     public interface IValue
     {   
-        object ValueObject { get; set; } //Generics?
+        object Value{ get; set; } //Generics?
         string Name { get; }
         Guid Id { get; }
+    }
+
+    public interface IValue<T> : IValue
+    {
+        new T Value { get; set; }
     }
 }

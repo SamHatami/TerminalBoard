@@ -6,6 +6,7 @@ using TerminalBoard.App.Views;
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Functions;
 using TerminalBoard.Core.Functions.Math;
+using TerminalBoard.Core.Services;
 using TerminalBoard.Core.Terminals;
 using TerminalBoard.Core.Wires;
 
@@ -20,6 +21,8 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
 {
     private readonly IEventAggregator _events;
+    private readonly WireService _wireService;
+    private readonly TerminalService _terminalService;
     private bool _grid = false;
 
     public BindableCollection<ITerminalViewModel> TerminalViewModels { get; set; }
@@ -37,9 +40,11 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         }
     }
 
-    public BoardViewModel(IEventAggregator events)
+    public BoardViewModel(IEventAggregator events, WireService wireService, TerminalService terminalService)
     {
         _events = events;
+        _wireService = wireService;
+        _terminalService = terminalService;
         _events.SubscribeOnBackgroundThread(this);
 
         TempInit();
@@ -63,7 +68,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void AddFloatTerminal()
     {
-        var floatTerminal = new FloatValueTerminal();
+        var floatTerminal = new ValueTerminal<float>();
         var terminalViewModel = new TerminalViewModel(_events, floatTerminal)
             { CanvasPositionY = 100, CanvasPositionX = 100 };
         TerminalViewModels.Add(terminalViewModel);
@@ -129,8 +134,10 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
         WireViewModels.Add(newWire);
 
+        _wireService.ConnectSockets(newWire.StartSocketViewModel.Socket, newWire.EndSocketViewModel.Socket);
+
         WireConnection newConnection = new WireConnection(newWire.StartSocketViewModel.Socket,
-            newWire.EndSocketViewModel.Socket, new FloatValue(0, "", Guid.NewGuid()));
+            newWire.EndSocketViewModel.Socket, new TypedValue<float>("", Guid.NewGuid()){Value = 1.0f});
 
         newWire.InputTerminal.Connections.Add(newConnection);
         newWire.OutputTerminal.Connections.Add(newConnection);

@@ -21,7 +21,7 @@ public class WireConnection : IWire
     }
     public Guid Id { get; } = Guid.NewGuid();
 
-    public WireConnection(ISocket startSocket, ISocket endSocket, IValue value)
+    public WireConnection(ISocket startSocket, ISocket endSocket, IValue value) //Type check of sockets happens in validator
     {
         _value = value;
         StartSocket = startSocket;

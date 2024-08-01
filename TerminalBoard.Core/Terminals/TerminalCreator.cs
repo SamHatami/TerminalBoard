@@ -10,7 +10,7 @@ public static class TerminalCreator
     {
         var function = FunctionFactory.CreateFunction(name);
 
-        var terminal = new FloatValueTerminal();
+        var terminal = new ValueTerminal<float>();
 
         return terminal;
     }
