@@ -5,9 +5,9 @@
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cal="http://www.caliburnproject.org"
-        xmlns:behaviors1="clr-namespace:TerminalBoard.App.UIComponents.Behaviors"
-        xmlns:viewModels1="clr-namespace:TerminalBoard.App.ViewModels"
-        d:DataContext="{d:DesignInstance Type=viewModels1:BoardViewModel}"
+        xmlns:behaviorsA="clr-namespace:TerminalBoard.App.UIComponents.Behaviors"
+        xmlns:viewModelsA="clr-namespace:TerminalBoard.App.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewModelsA:BoardViewModel}"
         mc:Ignorable="d"
         Title="BoardView" Height="450" Width="800" TextOptions.TextRenderingMode="Aliased">
     <b:Interaction.Triggers>
@@ -37,8 +37,8 @@
                 </ContextMenu>
             </Canvas.ContextMenu>
             <b:Interaction.Behaviors>
-                <behaviors1:CanvasPanZoomBehavior />
-                <behaviors1:ClearSelectionBehavior />
+                <behaviorsA:CanvasPanZoomBehavior />
+                <behaviorsA:CanvasSelectionBehavior />
             </b:Interaction.Behaviors>
 
             <ItemsControl ItemsSource="{Binding WireViewModels}" x:Name="Wires">
@@ -51,7 +51,7 @@
                     <DataTemplate>
                         <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
                             <b:Interaction.Behaviors>
-                                <behaviors1:SelectionBehavior />
+                                <behaviorsA:SelectionBehavior />
                             </b:Interaction.Behaviors>
                         </ContentControl>
                     </DataTemplate>
@@ -73,15 +73,16 @@
                     <DataTemplate>
                         <ContentControl cal:View.Model="{Binding}" IsHitTestVisible="True">
                             <b:Interaction.Behaviors>
-                                <behaviors1:DragOnCanvasBehavior />
-                                <behaviors1:SelectionBehavior />
+                                <behaviorsA:DragOnCanvasBehavior />
+                                <behaviorsA:SelectionBehavior />
                             </b:Interaction.Behaviors>
                         </ContentControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </Canvas>
 
+            <Rectangle x:Name="SelectionRectangle" Fill="DarkGray" Opacity="0.25" Stroke="DarkOrange" StrokeThickness="1"/>
+        </Canvas>
         <Canvas x:Name="ControlCanvas">
             <StackPanel Background="#2d2d2a">
                 <Button x:Name="Snap" Content="SNAP" Margin="5" />
@@ -91,5 +92,6 @@
                 <Button x:Name="Output" Content="OUTPUT" cal:Message.Attach="AddOutputTerminal()" Margin="5"/>
             </StackPanel>
         </Canvas>
+        
     </Grid>
 </Window>
