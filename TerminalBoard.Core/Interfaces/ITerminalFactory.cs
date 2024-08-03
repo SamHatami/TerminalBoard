@@ -3,7 +3,7 @@ using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.Core.Interfaces;
 
-public interface ITerminalCreator
+public interface ITerminalFactory
 {
     public ITerminal Instantiate(TerminalType terminalType);
 }

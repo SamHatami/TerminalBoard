@@ -99,7 +99,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
         if (AssociatedObject.IsMouseCaptured)
         {
             VisualTreeHelper.HitTest(_mainCanvas, null, IsInputSocket,
-                new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(_mainCanvas), 1, 1)));
+                new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(_mainCanvas), 2, 2)));
             AssociatedObject.ReleaseMouseCapture();
         }
 

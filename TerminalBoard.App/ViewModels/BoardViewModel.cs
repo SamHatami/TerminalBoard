@@ -1,15 +1,12 @@
 ﻿using Caliburn.Micro;
 using System.Windows.Input;
-using System.Windows.Navigation;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
-using TerminalBoard.App.Views;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Functions;
-using TerminalBoard.Core.Functions.Math;
 using TerminalBoard.Core.Services;
 using TerminalBoard.Core.Terminals;
 using TerminalBoard.Core.Wires;
+using TerminalBoard.Math.Operators;
 
 namespace TerminalBoard.App.ViewModels;
 
@@ -62,31 +59,39 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(_grid, 15, GridTypeEnum.Dots));
     }
 
-    public void AddTerminal() //Future arguments for type or just getting the type directly
+    public void AddTerminal(TerminalType terminalType) //Future arguments for type or just getting the type directly
     {
-        //TODO: Add terminalcreator
+        terminalType = TerminalType.Multiplication; 
+        var newTerminal = _terminalService.CreateTerminal(terminalType);
+
+        TerminalViewModels.Add(new TerminalViewModel(_events, newTerminal) { CanvasPositionY = 100, CanvasPositionX = 100 });
     }
 
     public void AddFloatTerminal()
     {
         var floatTerminal = new ValueTerminal<float>();
         var terminalViewModel = new TerminalViewModel(_events, floatTerminal)
-            { CanvasPositionY = 100, CanvasPositionX = 100 };
+        { CanvasPositionY = 100, CanvasPositionX = 100 };
         TerminalViewModels.Add(terminalViewModel);
     }
 
     public void AddMultiplyTerminal()
     {
-        var multiplier = new Multiplication();
-        var evaluationTerminal = new EvaluationTerminal(multiplier);
-        var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal) { CanvasPositionY = 100, CanvasPositionX = 100 }; ;
+        AddTerminal(TerminalType.Multiplication);
+        //var multiplier = new Multiplication();
+        //var evaluationTerminal = new EvaluationTerminal(multiplier);
+        //var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal)
+        //{ CanvasPositionY = 100, CanvasPositionX = 100 };
+        //;
 
-        TerminalViewModels.Add(terminalViewModel);
+        //TerminalViewModels.Add(terminalViewModel);
     }
 
     public void AddOutputTerminal()
     {
-        var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal()) { CanvasPositionY = 100, CanvasPositionX = 100 }; ;
+        var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal())
+        { CanvasPositionY = 100, CanvasPositionX = 100 };
+        ;
         TerminalViewModels.Add(terminalViewModel);
     }
 
@@ -108,10 +113,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         var selectedTerminal = TerminalViewModels.SingleOrDefault(t => t.Selected);
         if (selectedTerminal != null)
         {
-            foreach (var wire in selectedTerminal.WireViewModels)
-            {
-                WireViewModels.Remove(wire);
-            }
+            foreach (var wire in selectedTerminal.WireViewModels) WireViewModels.Remove(wire);
 
             TerminalViewModels.Remove(selectedTerminal);
 
@@ -134,12 +136,12 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         var start = message.Start;
         var end = message.End;
 
-        if(!WireConnectionValidator.Validate(start.Socket, end.Socket)) return Task.CompletedTask;
+        if (!WireConnectionValidator.Validate(start.Socket, end.Socket)) return Task.CompletedTask;
 
         //Create WireViewModel and add to Board
         IWireViewModel newWire = new WireViewModel(start, end, _events); //TODO meh
         WireViewModels.Add(newWire);
-        
+
         //Add to the SocketViewModels
         start.AddWire(newWire); //TODO use event after validation
         end.AddWire(newWire); //TODO use event after validation
@@ -148,8 +150,6 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
         //Connect sockets
         _wireService.ConnectSockets(newWire.StartSocketViewModel.Socket, newWire.EndSocketViewModel.Socket);
-     
-
 
         //TODO: Some type of refresh on the values from the connected wires
 
@@ -164,7 +164,6 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         var wireModel = wire.InputTerminal.Connections.SingleOrDefault(c => c.Id == wire.WireConnection.Id);
         wire.InputTerminal.Connections.Remove(wireModel);
         wire.OutputTerminal.Connections.Remove(wireModel);
-
 
         return Task.CompletedTask;
     }

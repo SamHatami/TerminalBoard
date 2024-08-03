@@ -30,7 +30,6 @@ public class EvaluationTerminal : IEvaluationTerminal
     public IEventAggregator Events { get; }
 
     public IEvaluationFunction EvaluationFunction { get; }
-
     public EvaluationTerminal(IEvaluationFunction evaluationFunction)
     {
         EvaluationFunction = evaluationFunction;

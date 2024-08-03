@@ -9,19 +9,19 @@ namespace TerminalBoard.Core.Services;
 
 public class TerminalService
 {
-    private readonly ITerminalCreator _creator;
+    private readonly ITerminalFactory _factory;
     private readonly IEventAggregator _events;
 
-    public TerminalService(ITerminalCreator creator) //the creator is App or module dependant
+    public TerminalService(ITerminalFactory factory) //the factory is App or module dependant
     {
-        _creator = creator;
+        _factory = factory;
         _events = TerminalHelper.EventsAggregator;
         _events.PublishOnBackgroundThreadAsync(this);
     }
 
-    private ITerminal CreateTerminal(TerminalType terminalType)
+    public ITerminal CreateTerminal(TerminalType terminalType)
     {
-        return _creator.Instantiate(terminalType);
+        return _factory.Instantiate(terminalType);
     }
 
     public void UpdateTerminal()

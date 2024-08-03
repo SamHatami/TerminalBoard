@@ -75,8 +75,8 @@ public class CanvasPanZoomBehavior : Behavior<UIElement>
         var newScaleX = _scaleTransform.ScaleX * zoomFactor;
         var newScaleY = _scaleTransform.ScaleY * zoomFactor;
 
-        _scaleTransform.ScaleX = Math.Clamp(newScaleX, 0.8, 1.3);
-        _scaleTransform.ScaleY = Math.Clamp(newScaleY, 0.8, 1.3);
+        _scaleTransform.ScaleX = System.Math.Clamp(newScaleX, 0.8, 1.3);
+        _scaleTransform.ScaleY = System.Math.Clamp(newScaleY, 0.8, 1.3);
     }
 
     private void OnCanvasMouseUp(object sender, MouseButtonEventArgs e)

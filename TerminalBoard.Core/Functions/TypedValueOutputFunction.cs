@@ -2,7 +2,7 @@
 
 namespace TerminalBoard.Core.Functions;
 
-internal class TypedValueOutputFunction<T> : ITypedValueFunction<T>
+public class TypedValueOutputFunction<T> : ITypedValueFunction<T>
 {
     public string Label { get; }
     public bool RequireValueInput { get; } = true;

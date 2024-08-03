@@ -21,7 +21,7 @@ public class WireService(): IHandle<TerminalRemovedEvent>
 
     }
 
-    public void TemrminalRemoved(ITerminal terminal)
+    public void TerminalRemoved(ITerminal terminal)
     {
         foreach (var connection in terminal.Connections)
         {
@@ -31,7 +31,7 @@ public class WireService(): IHandle<TerminalRemovedEvent>
 
     public Task HandleAsync(TerminalRemovedEvent message, CancellationToken cancellationToken)
     {
-        TemrminalRemoved(message.Terminal);
+        TerminalRemoved(message.Terminal);
 
         return Task.CompletedTask;
     }

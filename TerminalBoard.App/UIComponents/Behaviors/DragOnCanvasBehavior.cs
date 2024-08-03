@@ -75,9 +75,9 @@ public class DragOnCanvasBehavior : Behavior<UIElement>, IHandle<GridChangeEvent
 
             _terminal.CanvasPositionX =
                 _gridSnapping
-                    ? (int)Math.Round(newPosX / _gridSize) * _gridSize
+                    ? (int)System.Math.Round(newPosX / _gridSize) * _gridSize
                     : (int)newPosX; //TODO: Not the best to cast to int, fix later
-            _terminal.CanvasPositionY = _gridSnapping ? (int)Math.Round(newPosY / _gridSize) * _gridSize : (int)newPosY;
+            _terminal.CanvasPositionY = _gridSnapping ? (int)System.Math.Round(newPosY / _gridSize) * _gridSize : (int)newPosY;
         }
 
         e.Handled = true;

@@ -4,14 +4,35 @@ namespace TerminalBoard.Core.Functions;
 
 public static class FunctionFactory
 {
-    public static IFunction CreateFunction(string name)
+    private static Dictionary<string, Func<IFunction>?> _registeredFunctions = [];
+
+
+    /// <summary>
+    /// Returns new instance of function if it is registered
+    /// </summary>
+    /// <param name="functionName"></param>
+    /// <returns></returns>
+    public static IFunction? GetFunction(string functionName)
     {
-        switch (name)
-        {
-            case "Float": return new TypedValueOutputFunction<float>();
-            case "Int": return new TypedValueOutputFunction<int>();
-        }
+        if (_registeredFunctions.TryGetValue(functionName, out var registeredFunction)
+            && registeredFunction != null)
+            return registeredFunction();
 
         return null;
+    }
+    
+    public static void RegisterFunction<T>(string functionName) where T : IFunction, new()
+    {
+        if (_registeredFunctions.TryGetValue(functionName, out var registeredFunction))
+            return;
+
+        _registeredFunctions.Add(functionName, () => new T());
+    }   
+    public static void RegisterFunction(string functionName, Func<IFunction> function) 
+    {
+        if (_registeredFunctions.TryGetValue(functionName, out var registeredFunction))
+            return;
+
+        _registeredFunctions.Add(functionName, function);
     }
 }

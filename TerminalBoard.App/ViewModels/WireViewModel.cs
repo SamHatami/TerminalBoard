@@ -190,19 +190,19 @@ public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<Select
     private void SetMidControlPoint()
     {
         //Well...a bit overworked
-        var distanceX = Math.Abs((_upperControlPoint.X - _lowerControlPoint.X) / 2);
-        var distanceY = Math.Abs((_upperControlPoint.Y - _lowerControlPoint.Y) / 2);
+        var distanceX = System.Math.Abs((_upperControlPoint.X - _lowerControlPoint.X) / 2);
+        var distanceY = System.Math.Abs((_upperControlPoint.Y - _lowerControlPoint.Y) / 2);
 
-        var length = Math.Sqrt(distanceX * distanceX + distanceY * distanceY);
+        var length = System.Math.Sqrt(distanceX * distanceX + distanceY * distanceY);
 
         Vector directionalVector = new Vector(_upperControlPoint.X - _lowerControlPoint.X,
             _upperControlPoint.Y - _lowerControlPoint.Y);
 
-        var angle = Vector.AngleBetween(xAxis, directionalVector)*(Math.PI/180);
+        var angle = Vector.AngleBetween(xAxis, directionalVector)*(System.Math.PI/180);
         
         //midpoint behaves like a point on a circle
-        _midControlPoint.X = length * Math.Cos(angle) + _lowerControlPoint.X;
-        _midControlPoint.Y = length * Math.Sin(angle) + _lowerControlPoint.Y;
+        _midControlPoint.X = length * System.Math.Cos(angle) + _lowerControlPoint.X;
+        _midControlPoint.Y = length * System.Math.Sin(angle) + _lowerControlPoint.Y;
 
         MidControlPoint = _midControlPoint;
     }
