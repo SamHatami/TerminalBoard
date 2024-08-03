@@ -82,16 +82,17 @@
 
 
                     <ItemsControl x:Name="InputSockets" Grid.Column="0" ItemsSource="{Binding InputSocketsViewModels}"
-                              BorderThickness="0">
+                              BorderThickness="0" Margin="-15,0,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ContentControl cm:View.Model="{Binding}" />
+                                
+                                <ContentControl cm:View.Model="{Binding}"/>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
                     <ItemsControl x:Name="OutputSockets" Grid.Column="1" ItemsSource="{Binding OutputSocketViewModels}"
-                              BorderThickness="0">
+                              BorderThickness="0" Margin="0,0,-15,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <ContentControl cm:View.Model="{Binding}" IsHitTestVisible="True">

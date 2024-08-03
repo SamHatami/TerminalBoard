@@ -61,6 +61,7 @@ public class SelectionBehavior : Behavior<UIElement>
             selectable.Selected = true;
             _item = selectable;
             _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(selectable));
+            AssociatedObject.Focus();
         }
 
         return HitTestResultBehavior.Continue;

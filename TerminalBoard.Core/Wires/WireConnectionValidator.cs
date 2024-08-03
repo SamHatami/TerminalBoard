@@ -13,7 +13,7 @@ public static class WireConnectionValidator
         List<bool> validations = [];
 
         validations.Add(LoopValidation(fromSocket, toSocket));
-        validations.Add(DirectionValidation(fromSocket));
+        validations.Add(DirectionValidation(fromSocket, toSocket));
         validations.Add(TypeValidation(fromSocket, toSocket));
         validations.Add(InputOccupiedValidation(toSocket));
 
@@ -26,14 +26,18 @@ public static class WireConnectionValidator
         return toSocket.ParentTerminal == fromSocket.ParentTerminal ? false : true;
     }
 
-    private static bool DirectionValidation(ISocket fromSocket)
+    private static bool DirectionValidation(ISocket fromSocket, ISocket toSocket)
     {
-        return fromSocket.SocketType == SocketTypeEnum.Input ? false : true;
+        return fromSocket.SocketType != toSocket.SocketType? true : false;
     }
 
     private static bool TypeValidation(ISocket fromSocket, ISocket toSocket)
     {
+        //Outputerminal does not manipulate input and dont need type validation
+        if (toSocket.ParentTerminal is IOutputTerminal) return true; 
+        
         return fromSocket.ValueType == toSocket.ValueType ? true : false;
+
     }
 
     private static bool InputOccupiedValidation(ISocket toSocket)

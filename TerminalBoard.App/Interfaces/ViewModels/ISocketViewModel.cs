@@ -13,7 +13,8 @@ public interface ISocketViewModel
     double Y { get; set; }
     Guid Id { get; }
 
-    List<IWireViewModel> Wires { get; set; }
+    void AddWire(IWireViewModel wire);
+    List<IWireViewModel> Wires { get; }
     ITerminalViewModel ParentViewModel { get; }
     SocketTypeEnum Type { get; }
     

@@ -1,4 +1,6 @@
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace TerminalBoard.App.Views;
 
@@ -10,4 +12,10 @@ public partial class BoardView : Window
     {
         InitializeComponent();
     }
+
+    private void MainCanvas_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        MainCanvas.ContextMenu.IsOpen = true;
+    }
+
 }

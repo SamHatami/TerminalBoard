@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using System.Windows.Input;
+using System.Windows.Navigation;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.Views;
@@ -130,20 +131,24 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
     {
-        var newWire = message.Wire;
+        var start = message.Start;
+        var end = message.End;
 
+        if(!WireConnectionValidator.Validate(start.Socket, end.Socket)) return Task.CompletedTask;
+
+        //Create WireViewModel and add to Board
+        IWireViewModel newWire = new WireViewModel(start, end, _events); //TODO meh
         WireViewModels.Add(newWire);
+        
+        //Add to the SocketViewModels
+        start.AddWire(newWire); //TODO use event after validation
+        end.AddWire(newWire); //TODO use event after validation
+        start.ParentViewModel.AddWireViewModel(newWire);
+        end.ParentViewModel.AddWireViewModel(newWire);
 
+        //Connect sockets
         _wireService.ConnectSockets(newWire.StartSocketViewModel.Socket, newWire.EndSocketViewModel.Socket);
-
-        WireConnection newConnection = new WireConnection(newWire.StartSocketViewModel.Socket,
-            newWire.EndSocketViewModel.Socket, new TypedValue<float>("", Guid.NewGuid()){Value = 1.0f});
-
-        newWire.InputTerminal.Connections.Add(newConnection);
-        newWire.OutputTerminal.Connections.Add(newConnection);
-
-        TerminalViewModels.SingleOrDefault(T => T.Terminal == newWire.InputTerminal).WireViewModels.Add(newWire);
-        TerminalViewModels.SingleOrDefault(T => T.Terminal == newWire.OutputTerminal).WireViewModels.Add(newWire);
+     
 
 
         //TODO: Some type of refresh on the values from the connected wires

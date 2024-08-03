@@ -18,11 +18,29 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Grid>
-        <Canvas x:Name="MainCanvas" Background="#FF3A3A3A">
+        <Canvas x:Name="MainCanvas" Background="#FF3A3A3A" MouseRightButtonUp="MainCanvas_OnMouseRightButtonUp" Focusable="True">
+            <Canvas.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Math" IsCheckable="False">
+                        <MenuItem Header="Operators" IsCheckable ="False">
+                            <MenuItem Header="Multiplication" IsCheckable="False"/>
+                            <MenuItem Header="Division"/>
+                            <MenuItem Header="Addition"/>
+                            <MenuItem Header="Subtraction"/>
+                        </MenuItem>
+                        <MenuItem Header="Values">
+                            <MenuItem Header="Float"/>
+                            <MenuItem Header="Integer"/>
+                        </MenuItem>
+
+                    </MenuItem>
+                </ContextMenu>
+            </Canvas.ContextMenu>
             <b:Interaction.Behaviors>
                 <behaviors1:CanvasPanZoomBehavior />
                 <behaviors1:ClearSelectionBehavior />
             </b:Interaction.Behaviors>
+
             <ItemsControl ItemsSource="{Binding WireViewModels}" x:Name="Wires">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -62,7 +80,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        
         </Canvas>
 
         <Canvas x:Name="ControlCanvas">

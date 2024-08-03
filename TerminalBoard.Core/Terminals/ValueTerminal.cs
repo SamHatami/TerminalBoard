@@ -26,7 +26,7 @@ public class ValueTerminal<T> : IValueTerminal<T>
 
     private void Initialize()
     {
-        var socket = new Socket(SocketTypeEnum.Output, "", this);
+        var socket = new Socket(SocketTypeEnum.Output, "", this) {ValueType = typeof(T)};
         var value = new TypedValue<T>(nameof(T), socket.Id) { Value = default };
 
         OutputSockets.Add(socket);

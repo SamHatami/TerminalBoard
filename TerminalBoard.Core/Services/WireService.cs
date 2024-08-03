@@ -16,6 +16,7 @@ public class WireService(): IHandle<TerminalRemovedEvent>
             outputSocket, new TypedValue<object>("", Guid.NewGuid())); 
 
         inputSocket.ParentTerminal.Connections.Add(newConnection);
+      
         outputSocket.ParentTerminal.Connections.Add(newConnection);
 
     }

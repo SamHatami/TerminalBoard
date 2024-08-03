@@ -8,9 +8,7 @@ using System.Windows.Shapes;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
-using TerminalBoard.App.ViewModels;
 using TerminalBoard.Core.Enum;
-
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
@@ -29,7 +27,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
     {
         base.OnAttached();
 
-        if(BehaviorHelper.EventsAggregator != null)
+        if (BehaviorHelper.EventsAggregator != null)
         {
             _events = BehaviorHelper.EventsAggregator;
             _events.SubscribeOnBackgroundThread(this);
@@ -89,7 +87,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
 
             //TODO: Move to WireValidation?
             //add endsock if socketViewModel is an input and does not belong to the same terminal
-            if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input} socket &&
+            if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input } socket &&
                 socket.ParentViewModel != _startSocketViewModel.ParentViewModel)
                 _endSocketViewModel = socket;
 
@@ -105,18 +103,14 @@ internal class WireConnectionBehavior : Behavior<UIElement>
             AssociatedObject.ReleaseMouseCapture();
         }
 
-        //TODO: Create WireValidation, that will do all the checks and sends out events instead of this below
+        //WireValidation is done in the BoardViewModel
         if (_endSocketViewModel == null)
         {
             _mainCanvas.Children.Remove(_currentLine);
             return;
         }
 
-        IWireViewModel wire = new WireViewModel(_startSocketViewModel, _endSocketViewModel, _startSocketViewModel.Events); //TODO meh
-        _startSocketViewModel.Wires.Add(wire); //TODO use event after validation
-        _endSocketViewModel.Wires.Add(wire); //TODO use event after validation
-        _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(wire));
-
+        _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(_startSocketViewModel, _endSocketViewModel));
         _mainCanvas.Children.Remove(_currentLine);
     }
 

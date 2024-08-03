@@ -8,12 +8,14 @@
              mc:Ignorable="d" d:DataContext="{d:DesignInstance  viewModels:SocketViewModel}"
              xmlns:extensions="clr-namespace:TerminalBoard.App.Extensions"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
+    
     <Border CornerRadius="3">
         <StackPanel Orientation="Horizontal" x:Name="SocketPanel"
                     extensions:StackPanelExtensions.ReverseChildren="{Binding Type}">
-            <Ellipse x:Name="Socket" Height="10" Width="10" Fill="DarkGray">
-                <Ellipse.Style>
-                    <Style TargetType="Ellipse">
+            <Rectangle x:Name="Socket" Height="12" Width="10" Fill="DarkGray">
+                <Rectangle.Style>
+                    <Style TargetType="Rectangle">
+                    <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Stroke" Value="Orange" />
@@ -28,8 +30,9 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </Ellipse.Style>
-            </Ellipse>
+                </Rectangle.Style>
+            </Rectangle>
+ 
             <Label Content="{Binding Label}" IsHitTestVisible="False" />
         </StackPanel>
     </Border>

@@ -8,7 +8,7 @@ using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<TerminalRemovedEvent>
+public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<TerminalRemovedEvent>, IHandle<WireRemovedEvent>
 {
     #region Fields
 
@@ -42,7 +42,8 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
 
     public SocketTypeEnum Type { get; set; }
 
-    public List<IWireViewModel> Wires { get; set; } = [];
+    public List<IWireViewModel> Wires { get; } = [];
+
     private double _x;
     public double X
     {
@@ -51,7 +52,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
         {
             _x = value;
             NotifyOfPropertyChange(nameof(X));
-            NotifyWires();
+            if(Wires.Count > 0) NotifyWires();
         }
     }
 
@@ -63,7 +64,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
         {
             _y = value;
             NotifyOfPropertyChange(nameof(Y));
-            NotifyWires();
+            if (Wires.Count > 0) NotifyWires();
         }
     }
 
@@ -91,6 +92,13 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
         return Task.CompletedTask;
     }
 
+    public void AddWire(IWireViewModel wire)
+    {
+        if(Wires.Contains(wire)) return;
+
+        Wires.Add(wire);
+        IsConnected = true;
+    }
     public void SetRelativeDistances(Vector v)
     {
         _relativeDistanceToParentX = v.X;
@@ -104,7 +112,8 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
         _x = ParentViewModel.CanvasPositionX + _relativeDistanceToParentX;
         _y = ParentViewModel.CanvasPositionY + _relativeDistanceToParentY;
 
-        NotifyWires();
+        if (Wires.Count > 0)
+            NotifyWires();
     }
 
     private void NotifyWires()
@@ -113,4 +122,15 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
     }
 
     #endregion Methods
+
+    public Task HandleAsync(WireRemovedEvent message, CancellationToken cancellationToken)
+    {
+        if(Wires.Contains(message.Wire)) 
+            Wires.Remove(message.Wire);
+
+        if(Wires.Count == 0)
+            IsConnected = false;
+            
+        return Task.CompletedTask;
+    }
 }
