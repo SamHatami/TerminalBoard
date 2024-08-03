@@ -1,16 +1,17 @@
-﻿using TerminalBoard.Core.Interfaces.Functions;
+﻿using TerminalBoard.Core.Functions;
+using TerminalBoard.Core.Interfaces.Functions;
 
-namespace TerminalBoard.Core.Functions.Math;
+namespace TerminalBoard.Math.Operators;
 
-public class Multiplication : IEvaluationFunction
+public class Addition : IEvaluationFunction
 {
-    public string Label { get; } = "Multiply";
+    public string Label { get; } = "Divide";
     public List<IValue> Inputs => _functionValues.Inputs;
     public List<IValue> Outputs => _functionValues.Outputs;
 
     private readonly FunctionValueWrapper _functionValues = new();
 
-    public Multiplication()
+    public Addition()
     {
         Initalize();
     }
@@ -35,7 +36,9 @@ public class Multiplication : IEvaluationFunction
 
     public void Evaluate()
     {
-        var product = _functionValues.GetInput<float>(0).Value * _functionValues.GetInput<float>(1).Value;
+        if (_functionValues.GetInput<float>(1).Value == 0f) Outputs[0].Value = 0f;
+
+        var product = _functionValues.GetInput<float>(0).Value / _functionValues.GetInput<float>(1).Value;
         Outputs[0].Value = product;
     }
 }
