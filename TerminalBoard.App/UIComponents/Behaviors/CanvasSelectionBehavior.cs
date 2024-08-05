@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using TerminalBoard.App.Events;
 using TerminalBoard.App.Events.UIEvents;
+using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 
@@ -38,11 +39,42 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if(AssociatedObject.IsMouseCaptured)
+
+        if (AssociatedObject.IsMouseCaptured)
         {
+            
+            var hitRectangle = new RectangleGeometry()
+            {
+                Rect = new Rect(_startPoint,new Size(_selectionRectangle.ActualWidth,_selectionRectangle.ActualHeight))
+            };
+
+            var hitParameters = new GeometryHitTestParameters(hitRectangle);
+
+            VisualTreeHelper.HitTest(_mainCanvas, null, CheckSelection,hitParameters);
+
             AssociatedObject.ReleaseMouseCapture();
             ResetSelectionBox();
         }
+    }
+
+    private HitTestFilterBehavior FilterSelection(DependencyObject target)
+    {
+        var t = target;
+
+        return HitTestFilterBehavior.Continue;
+    }
+
+
+    private HitTestResultBehavior CheckSelection(HitTestResult result)
+    {
+        var hit = result.VisualHit;
+
+        if (result.VisualHit is Border border && border.DataContext is TerminalViewModel tvm)
+        {
+            var yes = tvm;
+        }
+
+        return HitTestResultBehavior.Continue;
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
@@ -53,6 +85,7 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
         {
             var currentMousePosition = e.GetPosition(_mainCanvas);
 
+            //only left to right expands selection box
             var width = currentMousePosition.X - _startPoint.X;
             var height = currentMousePosition.Y - _startPoint.Y;
 
@@ -62,7 +95,7 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
                 _selectionRectangle.Height = height;
             }
             
-            //meh
+            
         }
     }
 
@@ -81,6 +114,7 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
     {
         _startPoint = e.GetPosition(_mainCanvas);
 
+        //Check if mouse hits canvas only
         VisualTreeHelper.HitTest(_mainCanvas, null, CheckType,
             new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(_mainCanvas), 1, 1)));
 
