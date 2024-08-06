@@ -15,7 +15,7 @@ public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<Select
     private Vector xAxis = new Vector(1, 0);
 
     private bool _selected;
-
+    private bool _disposed;
     public bool Selected
     {
         get => _selected;
@@ -128,6 +128,7 @@ public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<Select
 
     private readonly IEventAggregator _events;
 
+
     public WireViewModel(ISocketViewModel startSocketViewModel, ISocketViewModel endSocketViewModel,
         IEventAggregator events)
     {
@@ -189,7 +190,7 @@ public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<Select
 
     private void SetMidControlPoint()
     {
-        //Well...a bit overworked
+        //TODO: extract to some helper class
         var distanceX = System.Math.Abs((_upperControlPoint.X - _lowerControlPoint.X) / 2);
         var distanceY = System.Math.Abs((_upperControlPoint.Y - _lowerControlPoint.Y) / 2);
 
@@ -226,5 +227,22 @@ public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<Select
         if (message.Item != this)
             Selected = false;
         return Task.CompletedTask;
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+                _events.Unsubscribe(this);
+
+            _disposed = true;
+        }
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+
     }
 }

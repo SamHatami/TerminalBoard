@@ -11,7 +11,7 @@ using TerminalBoard.Core.Interfaces.Terminals;
 namespace TerminalBoard.App.ViewModels;
 
 public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandle<CanvasZoomPanEvent>,
-    IHandle<SelectItemEvent>, IHandle<OutputUpdateEvent>
+    IHandle<SelectItemEvent>, IHandle<OutputUpdateEvent>, IDisposable
 {
     #region Fields
 
@@ -20,6 +20,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
     private double _canvasPositionX;
     private double _canvasPositionY;
 
+    private bool _disposed;
     #endregion Fields
 
     #region Properties
@@ -248,5 +249,23 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
         OutputValue = message.Output.Value.ToString();
         return Task.CompletedTask;
+    }
+
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if(disposing)
+                _events.Unsubscribe(this);
+
+            _disposed = true;
+        }
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+
     }
 }

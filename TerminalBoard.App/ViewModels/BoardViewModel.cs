@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Diagnostics;
+using Caliburn.Micro;
 using System.Windows.Input;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
@@ -16,11 +17,12 @@ namespace TerminalBoard.App.ViewModels;
 /// THe Main ViewModel for the board that holds all other viewModels and handles several major events.
 /// </summary>
 public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<RemoveConnectionEvent>,
-    IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>
+    IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>, IHandle<SelectionBoxEvent>
 {
     private readonly IEventAggregator _events;
     private readonly WireService _wireService;
     private readonly TerminalService _terminalService;
+    private List<ISelectable> _selectables = [];
     private bool _grid = false;
 
     public BindableCollection<ITerminalViewModel> TerminalViewModels { get; set; }
@@ -61,17 +63,23 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void AddTerminal(TerminalType terminalType) //Future arguments for type or just getting the type directly
     {
-        terminalType = TerminalType.Multiplication; 
+        terminalType = TerminalType.Multiplication;
         var newTerminal = _terminalService.CreateTerminal(terminalType);
+        var watch = Stopwatch.StartNew();
 
-        TerminalViewModels.Add(new TerminalViewModel(_events, newTerminal) { CanvasPositionY = 100, CanvasPositionX = 100 });
+        watch.Start();
+        TerminalViewModels.Add(new TerminalViewModel(_events, newTerminal)
+            { CanvasPositionY = 100, CanvasPositionX = 100 });
+        watch.Stop();
+
+        var s = watch.ElapsedMilliseconds;
     }
 
     public void AddFloatTerminal()
     {
         var floatTerminal = new ValueTerminal<float>();
         var terminalViewModel = new TerminalViewModel(_events, floatTerminal)
-        { CanvasPositionY = 100, CanvasPositionX = 100 };
+            { CanvasPositionY = 100, CanvasPositionX = 100 };
         TerminalViewModels.Add(terminalViewModel);
     }
 
@@ -90,7 +98,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     public void AddOutputTerminal()
     {
         var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal())
-        { CanvasPositionY = 100, CanvasPositionX = 100 };
+            { CanvasPositionY = 100, CanvasPositionX = 100 };
         ;
         TerminalViewModels.Add(terminalViewModel);
     }
@@ -104,31 +112,35 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         if (context.EventArgs is KeyEventArgs keysArgs && keysArgs.Key != Key.Delete)
             return;
 
-        RemoveSelectedTerminal();
-        RemoveSelectedWire();
+        RemoveSelectedTerminals();
+        RemoveSelectedWires();
     }
 
-    private void RemoveSelectedTerminal()
+    private void RemoveSelectedTerminals()
     {
-        var selectedTerminal = TerminalViewModels.SingleOrDefault(t => t.Selected);
-        if (selectedTerminal != null)
+        var selectedTerminals = TerminalViewModels.Where(t => t.Selected).ToArray();
+
+        foreach (var selectedTerminal in selectedTerminals)
         {
             foreach (var wire in selectedTerminal.WireViewModels) WireViewModels.Remove(wire);
-
-            TerminalViewModels.Remove(selectedTerminal);
-
+            selectedTerminal.Dispose(); //TODO Remove if undo is supported...
             _events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(selectedTerminal));
         }
+
+        TerminalViewModels.RemoveRange(selectedTerminals);
     }
 
-    private void RemoveSelectedWire()
+    private void RemoveSelectedWires()
     {
-        var selectedWire = WireViewModels.SingleOrDefault(w => w.Selected);
-        if (selectedWire != null)
+        var selectedWires = WireViewModels.Where(w => w.Selected);
+
+        foreach (var selectedWire in selectedWires)
         {
-            WireViewModels.Remove(selectedWire);
+            selectedWire.Dispose(); //TODO Remove if undo is supported...
             _events.PublishOnBackgroundThreadAsync(new WireRemovedEvent(selectedWire));
         }
+
+        WireViewModels.RemoveRange(selectedWires);
     }
 
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
@@ -170,11 +182,11 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public Task HandleAsync(SelectItemEvent message, CancellationToken cancellationToken)
     {
-        if (SelectedItem == null) return Task.CompletedTask;
+        if (_selectables.Contains(message.Item)) return Task.CompletedTask;
 
         ClearSelection();
 
-        SelectedItem = message.Item;
+        _selectables.Add(message.Item);
 
         return Task.CompletedTask;
     }
@@ -198,6 +210,24 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
             foreach (var terminal in TerminalViewModels)
                 terminal.Selected = false;
 
-        SelectedItem = null;
+        _selectables.Clear();
+    }
+
+    public Task HandleAsync(SelectionBoxEvent message, CancellationToken cancellationToken)
+    {
+        ClearSelection();
+        foreach (var terminal in message.TerminalViewModels)
+        {
+            terminal.Selected = true;
+            _selectables.Add(terminal);
+        }
+
+        foreach (var wire in message.WireViewModels)
+        {
+            wire.Selected = true;
+            _selectables.Add(wire);
+        }
+
+        return Task.CompletedTask;
     }
 }

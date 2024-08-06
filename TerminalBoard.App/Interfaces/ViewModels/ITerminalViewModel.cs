@@ -3,7 +3,7 @@ using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.App.Interfaces.ViewModels;
 
-public interface ITerminalViewModel : ISelectable
+public interface ITerminalViewModel : ISelectable, IDisposable
 {
     #region Properties
 

@@ -8,7 +8,7 @@ namespace TerminalBoard.App.Interfaces.ViewModels;
 /// <summary>
 /// Connecting slates by wire
 /// </summary>
-public interface IWireViewModel : ISelectable
+public interface IWireViewModel : ISelectable, IDisposable
 {
     public Point StartPoint { get; set; }
     public Point EndPoint { get; set; }

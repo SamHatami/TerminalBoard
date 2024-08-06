@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Diagnostics;
+using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +16,8 @@ namespace TerminalBoard.App.UIComponents.Behaviors;
 
 public class CanvasSelectionBehavior : Behavior<UIElement>
 {
+    private List<ITerminalViewModel> _terminals = [];
+    private List<IWireViewModel> _wires = [];
     private Rectangle _selectionRectangle;
     private Point _startPoint;
     private Canvas? _mainCanvas;
@@ -26,7 +29,7 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
         base.OnAttached();
 
         _events = BehaviorHelper.EventsAggregator;
-
+        
         if (AssociatedObject is Canvas canvas)
         {
             _mainCanvas = canvas;
@@ -42,36 +45,46 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
 
         if (AssociatedObject.IsMouseCaptured)
         {
-            
-            var hitRectangle = new RectangleGeometry()
-            {
-                Rect = new Rect(_startPoint,new Size(_selectionRectangle.ActualWidth,_selectionRectangle.ActualHeight))
-            };
 
-            var hitParameters = new GeometryHitTestParameters(hitRectangle);
+            CreateSelectionHitTest();
 
-            VisualTreeHelper.HitTest(_mainCanvas, null, CheckSelection,hitParameters);
+            _events.PublishOnBackgroundThreadAsync(new SelectionBoxEvent(_terminals, _wires));
 
             AssociatedObject.ReleaseMouseCapture();
             ResetSelectionBox();
         }
     }
 
-    private HitTestFilterBehavior FilterSelection(DependencyObject target)
+    private void CreateSelectionHitTest()
     {
-        var t = target;
+        var hitRectangle = new RectangleGeometry()
+        {
+            Rect = new Rect(_startPoint, new Size(_selectionRectangle.ActualWidth, _selectionRectangle.ActualHeight))
+        };
 
-        return HitTestFilterBehavior.Continue;
+        var hitParameters = new GeometryHitTestParameters(hitRectangle);
+
+        VisualTreeHelper.HitTest(_mainCanvas, null, CheckSelection, hitParameters);
     }
 
-
+    private HitTestFilterBehavior FilterSelection(DependencyObject target)
+    {
+        if(target is Canvas { Name: "MainCanvas" })
+            return HitTestFilterBehavior.Continue;
+        
+        return HitTestFilterBehavior.ContinueSkipSelf;
+    }
     private HitTestResultBehavior CheckSelection(HitTestResult result)
     {
-        var hit = result.VisualHit;
-
-        if (result.VisualHit is Border border && border.DataContext is TerminalViewModel tvm)
+        
+        if (result.VisualHit is Border { DataContext: TerminalViewModel tvm } && !_terminals.Contains(tvm))
         {
-            var yes = tvm;
+            _terminals.Add(tvm);
+        }
+
+        if (result.VisualHit is Path { DataContext: WireViewModel wvm } && !_wires.Contains(wvm))
+        {
+            _wires.Add(wvm);
         }
 
         return HitTestResultBehavior.Continue;
@@ -113,7 +126,8 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         _startPoint = e.GetPosition(_mainCanvas);
-
+        _terminals.Clear();
+        _wires.Clear();
         //Check if mouse hits canvas only
         VisualTreeHelper.HitTest(_mainCanvas, null, CheckType,
             new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(_mainCanvas), 1, 1)));

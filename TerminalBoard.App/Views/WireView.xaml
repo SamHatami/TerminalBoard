@@ -8,7 +8,7 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModels:WireViewModel}">
-    <Canvas>
+    <Border>
         <Path Stroke="DarkSeaGreen" StrokeThickness="3" x:Name="WireGeometry">
             <Path.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter">
@@ -53,5 +53,5 @@
                 </PathGeometry>
             </Path.Data>
         </Path>
-    </Canvas>
+    </Border>
 </UserControl>
