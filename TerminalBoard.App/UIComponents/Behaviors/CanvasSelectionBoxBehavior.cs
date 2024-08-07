@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using TerminalBoard.App.Events;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
@@ -14,7 +12,7 @@ using TerminalBoard.App.ViewModels;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
-public class CanvasSelectionBehavior : Behavior<UIElement>
+public class CanvasSelectionBoxBehavior : Behavior<UIElement>
 {
     private List<ITerminalViewModel> _terminals = [];
     private List<IWireViewModel> _wires = [];
@@ -29,7 +27,7 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
         base.OnAttached();
 
         _events = BehaviorHelper.EventsAggregator;
-        
+
         if (AssociatedObject is Canvas canvas)
         {
             _mainCanvas = canvas;
@@ -42,10 +40,8 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-
         if (AssociatedObject.IsMouseCaptured)
         {
-
             CreateSelectionHitTest();
 
             _events.PublishOnBackgroundThreadAsync(new SelectionBoxEvent(_terminals, _wires));
@@ -69,30 +65,25 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
 
     private HitTestFilterBehavior FilterSelection(DependencyObject target)
     {
-        if(target is Canvas { Name: "MainCanvas" })
+        if (target is Canvas { Name: "MainCanvas" })
             return HitTestFilterBehavior.Continue;
-        
+
         return HitTestFilterBehavior.ContinueSkipSelf;
     }
+
     private HitTestResultBehavior CheckSelection(HitTestResult result)
     {
-        
         if (result.VisualHit is Border { DataContext: TerminalViewModel tvm } && !_terminals.Contains(tvm))
-        {
             _terminals.Add(tvm);
-        }
 
-        if (result.VisualHit is Path { DataContext: WireViewModel wvm } && !_wires.Contains(wvm))
-        {
-            _wires.Add(wvm);
-        }
+        if (result.VisualHit is Path { DataContext: WireViewModel wvm } && !_wires.Contains(wvm)) _wires.Add(wvm);
 
         return HitTestResultBehavior.Continue;
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        if(_selectionRectangle == null) return;
+        if (_selectionRectangle == null) return;
 
         if (AssociatedObject.IsMouseCaptured)
         {
@@ -102,13 +93,11 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
             var width = currentMousePosition.X - _startPoint.X;
             var height = currentMousePosition.Y - _startPoint.Y;
 
-            if(width > 0 && height > 0)
+            if (width > 0 && height > 0)
             {
                 _selectionRectangle.Width = width;
                 _selectionRectangle.Height = height;
             }
-            
-            
         }
     }
 
@@ -131,7 +120,6 @@ public class CanvasSelectionBehavior : Behavior<UIElement>
         //Check if mouse hits canvas only
         VisualTreeHelper.HitTest(_mainCanvas, null, CheckType,
             new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(_mainCanvas), 1, 1)));
-
 
         e.Handled = false;
     }

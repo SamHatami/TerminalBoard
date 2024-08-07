@@ -83,13 +83,8 @@ internal class WireConnectionBehavior : Behavior<UIElement>
 
     private HitTestResultBehavior IsInputSocket(HitTestResult hit)
     {
-        if (hit.VisualHit is FrameworkElement element)
-
-            //TODO: Move to WireValidation?
-            //add endsock if socketViewModel is an input and does not belong to the same terminal
-            if (element.DataContext is ISocketViewModel { Type: SocketTypeEnum.Input } socket &&
-                socket.ParentViewModel != _startSocketViewModel.ParentViewModel)
-                _endSocketViewModel = socket;
+        if (hit.VisualHit is FrameworkElement {DataContext: ISocketViewModel socket})
+            _endSocketViewModel = socket;
 
         return HitTestResultBehavior.Continue;
     }
@@ -110,7 +105,12 @@ internal class WireConnectionBehavior : Behavior<UIElement>
             return;
         }
 
-        _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(_startSocketViewModel, _endSocketViewModel));
+        if(_startSocketViewModel.Type == SocketTypeEnum.Output)
+            _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(_startSocketViewModel, _endSocketViewModel));
+        else
+        {
+            _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(_endSocketViewModel,_startSocketViewModel));
+        }
         _mainCanvas.Children.Remove(_currentLine);
     }
 

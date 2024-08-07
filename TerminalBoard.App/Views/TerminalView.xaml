@@ -85,8 +85,11 @@
                               BorderThickness="0" Margin="-15,0,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                
-                                <ContentControl cm:View.Model="{Binding}"/>
+                                <ContentControl cm:View.Model="{Binding}">
+                                    <b:Interaction.Behaviors>
+                                        <behaviors:WireConnectionBehavior />
+                                    </b:Interaction.Behaviors>
+                                </ContentControl>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

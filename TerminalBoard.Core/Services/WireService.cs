@@ -16,9 +16,9 @@ public class WireService(): IHandle<TerminalRemovedEvent>
             outputSocket, new TypedValue<object>("", Guid.NewGuid())); 
 
         inputSocket.ParentTerminal.Connections.Add(newConnection);
-      
         outputSocket.ParentTerminal.Connections.Add(newConnection);
 
+        //TODO: Set connected inputSocket to connected
     }
 
     public void TerminalRemoved(ITerminal terminal)

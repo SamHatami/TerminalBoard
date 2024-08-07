@@ -38,7 +38,7 @@
             </Canvas.ContextMenu>
             <b:Interaction.Behaviors>
                 <behaviorsA:CanvasPanZoomBehavior />
-                <behaviorsA:CanvasSelectionBehavior />
+                <behaviorsA:CanvasSelectionBoxBehavior />
             </b:Interaction.Behaviors>
 
             <ItemsControl ItemsSource="{Binding WireViewModels}" x:Name="Wires">

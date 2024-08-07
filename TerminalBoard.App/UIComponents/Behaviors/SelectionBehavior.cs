@@ -1,14 +1,13 @@
 ﻿using Caliburn.Micro;
 using Microsoft.Xaml.Behaviors;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using TerminalBoard.App.Events;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.Core.Interfaces.Terminals;
-
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 
@@ -24,7 +23,6 @@ public class SelectionBehavior : Behavior<UIElement>
         base.OnAttached();
         _events = BehaviorHelper.EventsAggregator;
         AssociatedObject.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-        AssociatedObject.PreviewMouseLeftButtonUp += OnMouseButtonUp;
     }
 
     protected override void OnDetaching()
@@ -32,14 +30,6 @@ public class SelectionBehavior : Behavior<UIElement>
         base.OnDetaching();
 
         AssociatedObject.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
-        AssociatedObject.PreviewMouseLeftButtonUp -= OnMouseButtonUp;
-    }
-
-    private void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (_item == null) return;
-        _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(_item));
-        e.Handled = false;
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -49,9 +39,18 @@ public class SelectionBehavior : Behavior<UIElement>
         VisualTreeHelper.HitTest(AssociatedObject, null, CheckType,
             new GeometryHitTestParameters(new EllipseGeometry(e.GetPosition(AssociatedObject), 1, 1)));
 
+        _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(_item));
         AssociatedObject.ReleaseMouseCapture();
 
         e.Handled = false;
+    }
+
+    private HitTestFilterBehavior SelectionFilter(DependencyObject potentialHitTestTarget)
+    {
+        if (potentialHitTestTarget is ContentControl { DataContext: ISelectable selectable })
+            return HitTestFilterBehavior.ContinueSkipChildren;
+
+        return HitTestFilterBehavior.Continue;
     }
 
     private HitTestResultBehavior CheckType(HitTestResult hit)
@@ -62,6 +61,8 @@ public class SelectionBehavior : Behavior<UIElement>
             _item = selectable;
             _events.PublishOnBackgroundThreadAsync(new SelectItemEvent(selectable));
             AssociatedObject.Focus();
+
+            return HitTestResultBehavior.Stop;
         }
 
         return HitTestResultBehavior.Continue;

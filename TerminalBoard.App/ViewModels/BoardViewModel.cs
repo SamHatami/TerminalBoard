@@ -22,7 +22,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     private readonly IEventAggregator _events;
     private readonly WireService _wireService;
     private readonly TerminalService _terminalService;
-    private List<ISelectable> _selectables = [];
+    private readonly List<ISelectable> _selectables = [];
     private bool _grid = false;
 
     public BindableCollection<ITerminalViewModel> TerminalViewModels { get; set; }
@@ -119,6 +119,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     private void RemoveSelectedTerminals()
     {
         var selectedTerminals = TerminalViewModels.Where(t => t.Selected).ToArray();
+        TerminalViewModels.RemoveRange(selectedTerminals);
 
         foreach (var selectedTerminal in selectedTerminals)
         {
@@ -126,21 +127,18 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
             selectedTerminal.Dispose(); //TODO Remove if undo is supported...
             _events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(selectedTerminal));
         }
-
-        TerminalViewModels.RemoveRange(selectedTerminals);
     }
 
     private void RemoveSelectedWires()
     {
-        var selectedWires = WireViewModels.Where(w => w.Selected);
+        var selectedWires = WireViewModels.Where(w => w.Selected).ToArray();
+        WireViewModels.RemoveRange(selectedWires);
 
         foreach (var selectedWire in selectedWires)
         {
             selectedWire.Dispose(); //TODO Remove if undo is supported...
             _events.PublishOnBackgroundThreadAsync(new WireRemovedEvent(selectedWire));
         }
-
-        WireViewModels.RemoveRange(selectedWires);
     }
 
     public Task HandleAsync(AddConnectionEvent message, CancellationToken cancellationToken)
@@ -182,11 +180,9 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public Task HandleAsync(SelectItemEvent message, CancellationToken cancellationToken)
     {
-        if (_selectables.Contains(message.Item)) return Task.CompletedTask;
+        if (_selectables.Contains(message.Item) || message.Item == null) return Task.CompletedTask;
 
-        ClearSelection();
-
-        _selectables.Add(message.Item);
+        ClearAndSelect(message.Item);
 
         return Task.CompletedTask;
     }
@@ -198,17 +194,24 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         return Task.CompletedTask;
     }
 
+    private void ClearAndSelect(ISelectable item)
+    {
+        for (int i = 0; i < _selectables.Count; i++)
+        {
+            _selectables[i].Selected = false;
+        }
+        _selectables.Clear();
+        _selectables.Add(item);
+        item.Selected = true;
+    }
+
     private void ClearSelection()
     {
-        if (WireViewModels.Any(w => w.Selected))
-        {
-            var selected = WireViewModels.Single(w => w.Selected);
-            selected.Selected = false;
-        }
 
-        if (TerminalViewModels.Any(t => t.Selected))
-            foreach (var terminal in TerminalViewModels)
-                terminal.Selected = false;
+        for (int i = 0; i < _selectables.Count; i++)
+        {
+            _selectables[i].Selected = false;
+        }
 
         _selectables.Clear();
     }
@@ -218,12 +221,14 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         ClearSelection();
         foreach (var terminal in message.TerminalViewModels)
         {
+            if(_selectables.Contains(terminal)) continue;
             terminal.Selected = true;
             _selectables.Add(terminal);
         }
 
         foreach (var wire in message.WireViewModels)
         {
+            if(_selectables.Contains(wire)) continue;
             wire.Selected = true;
             _selectables.Add(wire);
         }

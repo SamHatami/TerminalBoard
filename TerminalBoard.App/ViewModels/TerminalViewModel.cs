@@ -10,8 +10,7 @@ using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 
-public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandle<CanvasZoomPanEvent>,
-    IHandle<SelectItemEvent>, IHandle<OutputUpdateEvent>, IDisposable
+public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandle<CanvasZoomPanEvent>, IHandle<OutputUpdateEvent>
 {
     #region Fields
 
@@ -215,20 +214,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
         return Task.CompletedTask;
     }
-
-    public Task HandleAsync(SelectItemEvent message, CancellationToken cancellationToken)
-    {
-        if (message.Item != this)
-            Selected = false;
-        return Task.CompletedTask;
-    }
-
-    public void Moved()
-    {
-
-    }
-
- 
+    
 
 
     private void NotifyWiresOfNewPosition()
