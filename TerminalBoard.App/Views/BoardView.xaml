@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:behaviorsA="clr-namespace:TerminalBoard.App.UIComponents.Behaviors"
+        xmlns:Custom="clr-namespace:TerminalBoard.App.UIComponents"
         xmlns:viewModelsA="clr-namespace:TerminalBoard.App.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewModelsA:BoardViewModel}"
         mc:Ignorable="d"
@@ -18,13 +19,14 @@
         </b:EventTrigger>
     </b:Interaction.Triggers>
     <Grid>
-        <Canvas x:Name="MainCanvas" Background="#FF3A3A3A" MouseRightButtonUp="MainCanvas_OnMouseRightButtonUp" Focusable="True">
+        <Custom:GridCanvas x:Name="BackgroundCanvas" Background="#FF3A3A3A" GridSpacing="{Binding GridSpacing }" ShowGrid="{Binding Grid}" GridColor="Black"/>
+        <Canvas x:Name="MainCanvas" Background="Transparent" MouseRightButtonUp="MainCanvas_OnMouseRightButtonUp" Focusable="True">
             <Canvas.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Math" IsCheckable="False">
                         <MenuItem Header="Operators" IsCheckable ="False">
                             <MenuItem Header="Multiplication" IsCheckable="False"/>
-                            <MenuItem Header="Division"/>
+                            <MenuItem Header="Division" cal:Message.Attach="[Event Click] = [Action CreateTerminal('Division')]"/>
                             <MenuItem Header="Addition"/>
                             <MenuItem Header="Subtraction"/>
                         </MenuItem>

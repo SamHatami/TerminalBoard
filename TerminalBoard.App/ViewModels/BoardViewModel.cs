@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using Caliburn.Micro;
 using System.Windows.Input;
 using TerminalBoard.App.Events.UIEvents;
@@ -24,6 +25,27 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     private readonly TerminalService _terminalService;
     private readonly List<ISelectable> _selectables = [];
     private bool _grid = false;
+    public bool Grid
+    {
+        get => _grid;
+        set
+        {
+            _grid = value;
+            NotifyOfPropertyChange(nameof(Grid));
+        }
+    }
+
+    private int _gridSpacing;
+
+    public int GridSpacing
+    {
+        get => _gridSpacing;
+        set
+        {
+            _gridSpacing = value;
+            NotifyOfPropertyChange(nameof(GridSpacing));
+        }
+    }
 
     public BindableCollection<ITerminalViewModel> TerminalViewModels { get; set; }
     public BindableCollection<IWireViewModel> WireViewModels { get; set; } = [];
@@ -58,7 +80,10 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     public void Snap()
     {
         _grid = !_grid;
-        _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(_grid, 15, GridTypeEnum.Dots));
+        Grid = _grid;
+        
+        GridSpacing = 15;
+        _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(_grid, _gridSpacing, GridTypeEnum.Dots));
     }
 
     public void AddTerminal(TerminalType terminalType) //Future arguments for type or just getting the type directly
@@ -93,6 +118,11 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         //;
 
         //TerminalViewModels.Add(terminalViewModel);
+    }
+
+    public void CreateTerminal(TerminalType terminal)
+    {
+        MessageBox.Show(terminal.ToString());
     }
 
     public void AddOutputTerminal()
@@ -198,6 +228,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     {
         for (int i = 0; i < _selectables.Count; i++)
         {
+            if (_selectables[i] == null) continue;
             _selectables[i].Selected = false;
         }
         _selectables.Clear();
