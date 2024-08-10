@@ -62,9 +62,14 @@ namespace TerminalBoard.App.UIComponents
 
         private static void OnShowGridChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is GridCanvas gridCanvas && e.Equals(true))
+            if (d is GridCanvas gridCanvas )
             {
-                gridCanvas.CreateGridImage();
+                if(gridCanvas.ShowGrid)
+                    gridCanvas.CreateGridImage();
+                else
+                {
+                    gridCanvas._gridImage.Source = null;
+                }
             }
         }
 
@@ -87,10 +92,10 @@ namespace TerminalBoard.App.UIComponents
         }
 
 
-        private void CreateGridImage()
+        private void CreateGridImage() //Inte riktigt min egen kod :)
         {
             int width = 2600;
-            int height = 2048;
+            int height = 2600;
 
             if (width <= 0 || height <= 0 || GridSpacing<=0 ) return;
 

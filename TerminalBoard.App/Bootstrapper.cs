@@ -60,10 +60,10 @@ public class Bootstrapper : BootstrapperBase
         TerminalFactory.RegisterTerminal(TerminalType.Multiplication, () => new EvaluationTerminal(FunctionFactory.GetFunction(FunctionNames.Multiplication) as IEvaluationFunction));
         TerminalFactory.RegisterTerminal(TerminalType.Division, () => new EvaluationTerminal(FunctionFactory.GetFunction(FunctionNames.Division) as IEvaluationFunction));
         TerminalFactory.RegisterTerminal(TerminalType.Subtraction, () => new EvaluationTerminal(FunctionFactory.GetFunction(FunctionNames.Subtraction) as IEvaluationFunction));
-        TerminalFactory.RegisterTerminal(TerminalType.Addition, () => new EvaluationTerminal(FunctionFactory.GetFunction(FunctionNames.Subtraction) as IEvaluationFunction));
+        TerminalFactory.RegisterTerminal(TerminalType.Addition, () => new EvaluationTerminal(FunctionFactory.GetFunction(FunctionNames.Addition) as IEvaluationFunction));
 
         TerminalFactory.RegisterTerminal(TerminalType.FloatValue, () => new ValueTerminal<float>());
-        TerminalFactory.RegisterTerminal(TerminalType.FloatValue, () => new ValueTerminal<int>());
+        TerminalFactory.RegisterTerminal(TerminalType.IntegerValue, () => new ValueTerminal<int>());
 
     }
 

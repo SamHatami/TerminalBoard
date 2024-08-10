@@ -145,7 +145,14 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
         if (Terminal is IValueTerminal<float> floatValueTerminal)
         {
             GetInputValue = true;
-            if(floatValueTerminal.Function.Output is TypedValue<float> floatValue)
+            if(floatValueTerminal.Function.Output is { } floatValue)
+                InputValue = floatValue.Value.ToString("0.0", CultureInfo.CurrentCulture);
+        }        
+        
+        if (Terminal is IValueTerminal<int> inttValueTerminal)
+        {
+            GetInputValue = true;
+            if(inttValueTerminal.Function.Output is { } floatValue)
                 InputValue = floatValue.Value.ToString("0.0", CultureInfo.CurrentCulture);
         }
 

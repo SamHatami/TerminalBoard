@@ -5,7 +5,7 @@ namespace TerminalBoard.Math.Operators;
 
 public class Subtraction : IEvaluationFunction
 {
-    public string Label { get; } = "Divide";
+    public string Label { get; } = "Subtract";
     public List<IValue> Inputs => _functionValues.Inputs;
     public List<IValue> Outputs => _functionValues.Outputs;
 

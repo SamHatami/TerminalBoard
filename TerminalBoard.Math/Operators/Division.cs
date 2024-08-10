@@ -3,7 +3,7 @@ using TerminalBoard.Core.Interfaces.Functions;
 
 namespace TerminalBoard.Math.Operators;
 
-public class Addition : IEvaluationFunction
+public class Division : IEvaluationFunction
 {
     public string Label { get; } = "Divide";
     public List<IValue> Inputs => _functionValues.Inputs;
@@ -11,7 +11,7 @@ public class Addition : IEvaluationFunction
 
     private readonly FunctionValueWrapper _functionValues = new();
 
-    public Addition()
+    public Division()
     {
         Initalize();
     }

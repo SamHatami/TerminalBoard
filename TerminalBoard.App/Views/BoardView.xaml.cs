@@ -12,10 +12,15 @@ public partial class BoardView : Window
     {
         InitializeComponent();
     }
-
     private void MainCanvas_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
-        MainCanvas.ContextMenu.IsOpen = true;
+        var canvas = sender as Canvas;
+        if (canvas?.ContextMenu != null)
+        {
+            canvas.ContextMenu.DataContext = canvas.Tag;
+            canvas.ContextMenu.IsOpen = true;
+            e.Handled = true;
+        }
     }
 
 }

@@ -88,7 +88,6 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void AddTerminal(TerminalType terminalType) //Future arguments for type or just getting the type directly
     {
-        terminalType = TerminalType.Multiplication;
         var newTerminal = _terminalService.CreateTerminal(terminalType);
         var watch = Stopwatch.StartNew();
 
@@ -120,9 +119,10 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         //TerminalViewModels.Add(terminalViewModel);
     }
 
-    public void CreateTerminal(TerminalType terminal)
+    public void CreateTerminal(string terminal)
     {
-        MessageBox.Show(terminal.ToString());
+        Enum.TryParse(terminal, out TerminalType newTerminal);
+        AddTerminal(newTerminal);
     }
 
     public void AddOutputTerminal()
