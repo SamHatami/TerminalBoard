@@ -1,6 +1,4 @@
-﻿using Caliburn.Micro;
-using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Events.TerminalEvents;
+﻿using System.Reflection;
 using TerminalBoard.Core.Interfaces;
 using TerminalBoard.Core.Interfaces.Terminals;
 using TerminalBoard.Core.Terminals;
@@ -9,27 +7,40 @@ namespace TerminalBoard.Core.Services;
 
 public class TerminalService
 {
-    private readonly ITerminalFactory _factory;
-    private readonly IEventAggregator _events;
+    //private readonly ILogger _logger;
 
-    public TerminalService(ITerminalFactory factory) //the factory is App or module dependant
+    private Dictionary<string, Func<ITerminal>> _terminalRegistry = new();
+
+    public TerminalService( /*ILogger logger*/)
     {
-        _factory = factory;
-        _events = TerminalHelper.EventsAggregator;
-        _events.PublishOnBackgroundThreadAsync(this);
+        //_logger = logger;
     }
 
-    public ITerminal CreateTerminal(TerminalType terminalType)
+    public void RegisterProviderMethods<T>(T providerInstance) where T : class, IProvider
     {
-        return _factory.Instantiate(terminalType);
+        var providerAttributes = typeof(T).GetCustomAttributes<TerminalProviderAttribute>();
+
+        //TODO: Handle multiple attributes
+        foreach (var method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Static))
+        {
+            // Create a terminal that wraps this method
+            var terminalId = ClassTerminalBase<T>.GetMethodTerminalId(method.Name);
+
+            if (_terminalRegistry.ContainsKey(terminalId))
+            {
+                //TODO log warning
+                continue;
+            }
+
+            _terminalRegistry[terminalId] = () => MethodTerminal<T>.Create(providerInstance, method, "");
+        }
     }
 
-    public void UpdateTerminal()
+    public ITerminal? GetTerminal(string terminalId)
     {
-    }
+        if (_terminalRegistry.TryGetValue(terminalId, out var terminal))
+            return terminal();
 
-    public void RemoveTerminal(ITerminal terminal)
-    {
-        _events.PublishOnBackgroundThreadAsync(new TerminalRemovedEvent(terminal), CancellationToken.None);
+        return null;
     }
 }

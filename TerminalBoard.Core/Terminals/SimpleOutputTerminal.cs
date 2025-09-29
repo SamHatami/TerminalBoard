@@ -10,6 +10,7 @@ namespace TerminalBoard.Core.Terminals;
 public class SimpleOutputTerminal : IOutputTerminal
 {
     public string Label { get; } = "Result";
+    public string TerminalDefinitionId { get; }
     public List<ISocket> InputSockets { get; } = [];
     public List<ISocket> OutputSockets { get; } = [];
     public List<IWire> Connections { get; set; } = [];
@@ -34,7 +35,7 @@ public class SimpleOutputTerminal : IOutputTerminal
     {
         Id = Guid.NewGuid();
         Output = new TypedValue<string>("", new Guid()){Value = "0"};
-
+        TerminalDefinitionId = $"SimpleOutputTerminal";
         _events = TerminalHelper.EventsAggregator;
         _events.SubscribeOnBackgroundThread(this);
         Initialize();

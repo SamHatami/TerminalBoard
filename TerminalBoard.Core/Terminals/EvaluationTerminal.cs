@@ -10,6 +10,7 @@ public class EvaluationTerminal : IEvaluationTerminal
     private Dictionary<ISocket, IValue> _values = [];
 
     public string Label { get; }
+    public string TerminalDefinitionId { get; }
     public List<ISocket> InputSockets { get; private set; } = [];
     public List<ISocket> OutputSockets { get; } = [];
 

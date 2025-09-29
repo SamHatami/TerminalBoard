@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro.Core" Version="4.0.230" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.9" />
   </ItemGroup>
 
 </Project>

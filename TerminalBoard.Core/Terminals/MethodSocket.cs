@@ -1,9 +1,8 @@
-﻿
-using TerminalBoard.Core.Enum;
+﻿using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Interfaces.Terminals;
 
-namespace TerminalBoard.Core;
-public class MethodSocket: ISocket
+namespace TerminalBoard.Core.Terminals;
+public class MethodSocket : ISocket
 {
     public Type ParameterType { get; set; }
     public bool IsOptional { get; }

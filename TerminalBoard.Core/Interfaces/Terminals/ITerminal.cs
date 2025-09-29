@@ -9,6 +9,7 @@ public interface ITerminal
 {
     #region Properties
     string Label { get; }
+    string TerminalDefinitionId { get; }
     List<ISocket> InputSockets { get; }
     List<ISocket> OutputSockets { get; }
     List<IWire> Connections { get; set; }

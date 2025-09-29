@@ -5,7 +5,6 @@ using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
 using TerminalBoard.Core.Terminals;
 using TerminalBoard.Core.Wires;
-using TerminalBoard.Math.Operators;
 
 namespace TerminalBoard.Test
 {

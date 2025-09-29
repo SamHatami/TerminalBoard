@@ -2,25 +2,29 @@
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Interfaces.Terminals;
 
-namespace TerminalBoard.Core;
+namespace TerminalBoard.Core.Terminals;
 
-public class MethodClassTerminal<T> : ClassTerminalBase<T> where T : class
+public class MethodTerminal<T> : ClassTerminalBase<T> where T : class
 {
     private readonly T _provider;
     private readonly MethodInfo _methodInfo;
     private readonly string _providerCategory;
 
-    private MethodClassTerminal(T provider, MethodInfo methodInfo, string providerCategory, string alternativeName = "")
+    private MethodTerminal(T provider, MethodInfo methodInfo, string providerCategory, string alternativeName = "")
     {
         _provider = provider;
         _methodInfo = methodInfo;
         _providerCategory = providerCategory;
+        Label = _methodInfo.Name;
+        TerminalDefinitionId = GetMethodTerminalId(methodInfo.Name);
+
+        ProviderCategory = providerCategory; //used for grouping in the UI
     }
 
-    public static MethodClassTerminal<T> Create(T provider, MethodInfo methodInfo, string providerCategory,
+    public static MethodTerminal<T> Create(T provider, MethodInfo methodInfo, string providerCategory,
         string alternativeName = "")
     {
-        var terminal = new MethodClassTerminal<T>(provider, methodInfo, providerCategory, alternativeName);
+        var terminal = new MethodTerminal<T>(provider, methodInfo, providerCategory, alternativeName);
         terminal.Initialize();
         return terminal;
     }
@@ -47,15 +51,21 @@ public class MethodClassTerminal<T> : ClassTerminalBase<T> where T : class
     private protected override void CreateInputs()
     {
         if (_methodInfo.GetParameters().Length == 0) return;
-        foreach (ParameterInfo parameter in _methodInfo.GetParameters())
+
+        foreach (var parameter in _methodInfo.GetParameters())
         {
-            InputSockets.Add(new MethodSocket(parameter.Name, parameter.ParameterType, false, SocketTypeEnum.Input));
+            var parameterName = parameter.Name ?? "Unknown";
+
+            InputSockets.Add(new MethodSocket(parameterName, parameter.ParameterType, false, SocketTypeEnum.Input));
         }
     }
 
     private protected override void CreateOutputs()
     {
-        OutputSockets.Add(new MethodSocket(_methodInfo.ReturnParameter.Name, _methodInfo.ReturnParameter.ParameterType, false,
-            SocketTypeEnum.Output));
+        var returnParameterName = _methodInfo.ReturnParameter.Name ?? "Unknown";
+
+        OutputSockets.Add(new MethodSocket(returnParameterName,
+                _methodInfo.ReturnParameter.ParameterType, false,
+                SocketTypeEnum.Output));
     }
 }

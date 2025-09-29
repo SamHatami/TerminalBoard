@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TerminalBoard.Core\TerminalBoard.Core.csproj" />
-    <ProjectReference Include="..\TerminalBoard.Math\TerminalBoard.Math.csproj" />
+    <ProjectReference Include="..\TerminalBoard.Math\TerminalBoard.Standard.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -86,9 +86,9 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(_grid, _gridSpacing, GridTypeEnum.Dots));
     }
 
-    public void AddTerminal(TerminalType terminalType) //Future arguments for type or just getting the type directly
+    public void AddTerminal(string terminalId) //Future arguments for type or just getting the type directly
     {
-        var newTerminal = _terminalService.CreateTerminal(terminalType);
+        var newTerminal = _terminalService.GetTerminal(terminalId);
         var watch = Stopwatch.StartNew();
 
         watch.Start();
@@ -109,7 +109,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void AddMultiplyTerminal()
     {
-        AddTerminal(TerminalType.Multiplication);
+        AddTerminal("BaseMath.Mul");
         //var multiplier = new Multiplication();
         //var evaluationTerminal = new EvaluationTerminal(multiplier);
         //var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal)
@@ -121,8 +121,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void CreateTerminal(string terminal)
     {
-        Enum.TryParse(terminal, out TerminalType newTerminal);
-        AddTerminal(newTerminal);
+        AddTerminal(terminal);
     }
 
     public void AddOutputTerminal()

@@ -8,6 +8,7 @@ namespace TerminalBoard.Core.Terminals;
 public class ValueTerminal<T> : IValueTerminal<T>
 {
     public string Label { get; }
+    public string TerminalDefinitionId { get; }
     public List<ISocket> InputSockets { get; } = [];
     public List<ISocket> OutputSockets { get; } = [];
     public List<IWire> Connections { get; set; } = [];
@@ -21,6 +22,7 @@ public class ValueTerminal<T> : IValueTerminal<T>
         Function = new TypedValueOutputFunction<T>();
         Label = typeof(T).Name; //TODO: Perhaps a type name utility to return const strings
         Id = Guid.NewGuid();
+        TerminalDefinitionId = $"ValueTerminal<{typeof(T).Name}>";
         Initialize();
     }
 
