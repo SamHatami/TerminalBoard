@@ -78,6 +78,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
         Events = events;
         Type = type;
         Socket = socket;
+        Label = socket.Name;
         Events.SubscribeOnBackgroundThread(this);
     }
 

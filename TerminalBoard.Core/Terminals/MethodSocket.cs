@@ -16,6 +16,7 @@ public class MethodSocket : ISocket
     {
         ParameterType = parameterType;
         IsOptional = isOptional;
+        Name = parameterName;
     }
 
 }
