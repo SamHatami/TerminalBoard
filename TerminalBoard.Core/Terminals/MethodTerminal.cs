@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Extensions;
 using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.Core.Terminals;
@@ -54,7 +55,7 @@ public class MethodTerminal<T> : ClassTerminalBase<T> where T : class
 
         foreach (var parameter in _methodInfo.GetParameters())
         {
-            var parameterName = parameter.Name ?? "Unknown";
+            var parameterName = parameter.ParameterType.GetAliasName() ?? "Unknown";
 
             InputSockets.Add(new MethodSocket(parameterName, parameter.ParameterType, false, SocketTypeEnum.Input));
         }
@@ -62,7 +63,7 @@ public class MethodTerminal<T> : ClassTerminalBase<T> where T : class
 
     private protected override void CreateOutputs()
     {
-        var returnParameterName = _methodInfo.ReturnParameter.Name ?? "Unknown";
+        var returnParameterName = _methodInfo.ReturnType.GetAliasName() ?? "Unknown";
 
         OutputSockets.Add(new MethodSocket(returnParameterName,
                 _methodInfo.ReturnParameter.ParameterType, false,

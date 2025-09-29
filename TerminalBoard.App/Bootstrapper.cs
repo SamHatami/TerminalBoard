@@ -42,7 +42,6 @@ public class Bootstrapper : BootstrapperBase
         TerminalHelper.EventsAggregator = _container.GetInstance<IEventAggregator>();
 
         _container.Singleton<WireService>();
-        _container.Singleton<TerminalFactory>();
         _container.Singleton<TerminalService>();
         _container.Singleton<BoardViewModel>();
 
