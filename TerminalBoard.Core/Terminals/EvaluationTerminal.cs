@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Functions;
 using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
 
@@ -30,6 +28,7 @@ public class EvaluationTerminal : IEvaluationTerminal
     public IEventAggregator Events { get; }
 
     public IEvaluationFunction EvaluationFunction { get; }
+
     public EvaluationTerminal(IEvaluationFunction evaluationFunction)
     {
         EvaluationFunction = evaluationFunction;
@@ -43,14 +42,14 @@ public class EvaluationTerminal : IEvaluationTerminal
     {
         foreach (var input in EvaluationFunction.Inputs)
         {
-            var newSocket = new Socket(SocketTypeEnum.Input, input.Name, this) { ValueType = input.Value.GetType() };
+            var newSocket = new Socket(SocketTypeEnum.Input, input.Name, this) { ParameterType = input.Value.GetType() };
             InputSockets.Add(newSocket); //TODO: cast?
             _values.Add(newSocket, input);
         }
 
         foreach (var output in EvaluationFunction.Outputs)
             OutputSockets.Add(new Socket(SocketTypeEnum.Output, output.Name, this)
-                { ValueType = output.Value.GetType() });
+            { ParameterType = output.Value.GetType() });
     }
 
     public void NotifyConnectors()

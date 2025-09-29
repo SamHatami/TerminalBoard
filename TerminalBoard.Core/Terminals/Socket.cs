@@ -6,9 +6,10 @@ namespace TerminalBoard.Core.Terminals;
 public class Socket(SocketTypeEnum socketType, string name, ITerminal parentTerminal) : ISocket
 {
     public SocketTypeEnum SocketType { get; } = socketType;
-    public Type ValueType { get; set; }
+    public Type ParameterType { get; set; }
     public bool IsConnected { get; }
     public ITerminal ParentTerminal { get; } = parentTerminal;
     public string Name { get; } = name;
     public Guid Id { get; } = Guid.NewGuid();
+    public bool IsOptional { get; }
 }

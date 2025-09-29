@@ -5,10 +5,9 @@ namespace TerminalBoard.Core.Interfaces.Terminals;
 /// <summary>
 /// Base interface for a Terminal which contains inputs and outputs.
 /// </summary>
-public interface ITerminal
+public interface ITerminal 
 {
     #region Properties
-
     string Label { get; }
     List<ISocket> InputSockets { get; }
     List<ISocket> OutputSockets { get; }

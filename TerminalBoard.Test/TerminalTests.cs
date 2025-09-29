@@ -1,11 +1,11 @@
 using Caliburn.Micro;
 using FluentAssertions;
-using TerminalBoard.Core.Events.TerminalEvents;
 using TerminalBoard.Core.Functions;
 using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
 using TerminalBoard.Core.Terminals;
 using TerminalBoard.Core.Wires;
+using TerminalBoard.Math.Operators;
 
 namespace TerminalBoard.Test
 {
@@ -15,109 +15,123 @@ namespace TerminalBoard.Test
         {
             TerminalHelper.EventsAggregator = new EventAggregator();
         }
+
         [Fact]
         public void FloatTerminalTest()
         {
-            
-           
-            ITerminal floatTerminal = new FloatValueTerminal();
+            ITerminal floatTerminal = new ValueTerminal<float>();
 
             IOutputTerminal outputTerminal = new SimpleOutputTerminal();
 
             WireConnection wire = new WireConnection(floatTerminal.OutputSockets[0], outputTerminal.InputSockets[0],
-                new FloatValue(10f, "", Guid.NewGuid()));
+                new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
 
             floatTerminal.Connections.Add(wire);
             outputTerminal.Connections.Add(wire);
 
-            floatTerminal.UpdateInput(floatTerminal.OutputSockets[0], new FloatValue(14f, "", Guid.NewGuid()));
+            floatTerminal.UpdateInput(floatTerminal.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 14f });
 
-            outputTerminal.Output.ValueObject.Should().Be(14f);
+            outputTerminal.Output.Value.Should().Be(14f);
         }
 
         [Fact]
         public void MultiplicationTerminalTest1()
         {
-            //Two Float-terminals into a evaluationterminal
-            IEvaluationFunction multiplication = new Multiplication();
+            // Two Float-terminals into an evaluation terminal
+            var multiplication = new Multiplication();
             IEvaluationTerminal multiplicationTerminal = new EvaluationTerminal(multiplication);
 
-            ITerminal floatTerminal1 = new FloatValueTerminal();
+            ITerminal floatTerminal1 = new ValueTerminal<float>();
 
-            WireConnection wire1 = new WireConnection(floatTerminal1.OutputSockets[0], multiplicationTerminal.InputSockets[0],
-                new FloatValue(0f, "", Guid.NewGuid()));
+            WireConnection wire1 = new WireConnection(
+                floatTerminal1.OutputSockets[0],
+                multiplicationTerminal.InputSockets[0],
+                new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
+            );
 
             floatTerminal1.Connections.Add(wire1);
             multiplicationTerminal.Connections.Add(wire1);
 
-            ITerminal floatTerminal2 = new FloatValueTerminal();
+            ITerminal floatTerminal2 = new ValueTerminal<float>();
 
-            WireConnection wire2 = new WireConnection(floatTerminal2.OutputSockets[0], multiplicationTerminal.InputSockets[1],
-                new FloatValue(0f, "", Guid.NewGuid()));
+            WireConnection wire2 = new WireConnection(
+                floatTerminal2.OutputSockets[0],
+                multiplicationTerminal.InputSockets[1],
+                new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
+            );
 
             floatTerminal2.Connections.Add(wire2);
             multiplicationTerminal.Connections.Add(wire2);
 
-            floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new FloatValue(10f, "", Guid.NewGuid()));
-            floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new FloatValue(5f, "", Guid.NewGuid()));
+            floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
+            floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
 
-            multiplicationTerminal.EvaluationFunction.Outputs[0].ValueObject.Should().Be(50f);
-
+            multiplicationTerminal.EvaluationFunction.Outputs[0].Value.Should().Be(50f);
         }
 
         [Fact]
         public void MultiplicationTerminalTest2()
         {
-            //two Float-terminals into one evaluationterminal
+            // Two Float-terminals into one evaluation terminal
             IEvaluationFunction multiplication = new Multiplication();
             IEvaluationTerminal multiplicationTerminal = new EvaluationTerminal(multiplication);
 
-            ITerminal floatTerminal1 = new FloatValueTerminal();
+            ITerminal floatTerminal1 = new ValueTerminal<float>();
 
-            WireConnection wire1 = new WireConnection(floatTerminal1.OutputSockets[0], multiplicationTerminal.InputSockets[0],
-                new FloatValue(0f, "", Guid.NewGuid()));
+            WireConnection wire1 = new WireConnection(
+                floatTerminal1.OutputSockets[0],
+                multiplicationTerminal.InputSockets[0],
+                new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
+            );
 
             floatTerminal1.Connections.Add(wire1);
             multiplicationTerminal.Connections.Add(wire1);
 
-            ITerminal floatTerminal2 = new FloatValueTerminal();
+            ITerminal floatTerminal2 = new ValueTerminal<float>();
 
-            WireConnection wire2 = new WireConnection(floatTerminal2.OutputSockets[0], multiplicationTerminal.InputSockets[1],
-                new FloatValue(0f, "", Guid.NewGuid()));
+            WireConnection wire2 = new WireConnection(
+                floatTerminal2.OutputSockets[0],
+                multiplicationTerminal.InputSockets[1],
+                new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
+            );
 
             floatTerminal2.Connections.Add(wire2);
             multiplicationTerminal.Connections.Add(wire2);
 
-            floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new FloatValue(10f, "", Guid.NewGuid()));
-            floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new FloatValue(5f, "", Guid.NewGuid()));
+            floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
+            floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
 
-            //one float and one evaluation into a second evaluationterminal
+            // One float and one evaluation into a second evaluation terminal
 
             IEvaluationFunction multiplication2 = new Multiplication();
             IEvaluationTerminal multiplicationTerminal2 = new EvaluationTerminal(multiplication2);
 
-            WireConnection wire3 = new WireConnection(multiplicationTerminal.OutputSockets[0],
-                multiplicationTerminal2.InputSockets[0], multiplicationTerminal.EvaluationFunction.Outputs[0]);
+            WireConnection wire3 = new WireConnection(
+                multiplicationTerminal.OutputSockets[0],
+                multiplicationTerminal2.InputSockets[0],
+                multiplicationTerminal.EvaluationFunction.Outputs[0]
+            );
 
             multiplicationTerminal.Connections.Add(wire3);
             multiplicationTerminal2.Connections.Add(wire3);
 
-            ITerminal floatTerminal3 = new FloatValueTerminal();
+            ITerminal floatTerminal3 = new ValueTerminal<float>();
 
-            WireConnection wire4 = new WireConnection(floatTerminal3.OutputSockets[0],
-                multiplicationTerminal2.InputSockets[1], new FloatValue(0f, "", Guid.NewGuid()));
+            WireConnection wire4 = new WireConnection(
+                floatTerminal3.OutputSockets[0],
+                multiplicationTerminal2.InputSockets[1],
+                new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
+            );
 
             floatTerminal3.Connections.Add(wire4);
             multiplicationTerminal2.Connections.Add(wire4);
 
-            floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new FloatValue(10f, "", Guid.NewGuid()));
-            floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new FloatValue(5f, "", Guid.NewGuid()));
-            floatTerminal3.UpdateInput(floatTerminal3.OutputSockets[0], new FloatValue(3f,"", Guid.NewGuid()));
+            floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
+            floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
+            floatTerminal3.UpdateInput(floatTerminal3.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 3f });
 
-            multiplicationTerminal.EvaluationFunction.Outputs[0].ValueObject.Should().Be(50f);
-            multiplicationTerminal2.EvaluationFunction.Outputs[0].ValueObject.Should().Be(150f);
-
+            multiplicationTerminal.EvaluationFunction.Outputs[0].Value.Should().Be(50f);
+            multiplicationTerminal2.EvaluationFunction.Outputs[0].Value.Should().Be(150f);
         }
-
     }
 }

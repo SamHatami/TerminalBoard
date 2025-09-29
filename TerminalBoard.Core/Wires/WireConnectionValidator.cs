@@ -36,7 +36,7 @@ public static class WireConnectionValidator
         //Outputerminal does not manipulate input and dont need type validation
         if (toSocket.ParentTerminal is IOutputTerminal) return true; 
         
-        return fromSocket.ValueType == toSocket.ValueType ? true : false;
+        return fromSocket.ParameterType == toSocket.ParameterType ? true : false;
 
     }
 
