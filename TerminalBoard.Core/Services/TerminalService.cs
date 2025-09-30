@@ -20,14 +20,23 @@ public class TerminalService
     {
         var providerAttributes = typeof(T).GetCustomAttributes<TerminalProviderAttribute>();
 
+
+        var methods = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly |
+                                           BindingFlags.Static);
+
         //TODO: Handle multiple attributes
         foreach (var method in typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Static))
         {
             // Create a terminal that wraps this method
+
             var terminalId = ClassTerminalBase<T>.GetMethodTerminalId(method.Name);
 
             if (_terminalRegistry.ContainsKey(terminalId))
             {
+                //Nah... if there is an method with several overloads then this will only take the first one
+                //we should build another way of identifying methods?
+                //Seperate class that holds original methods infos along side the overloads?
+
                 //TODO log warning
                 continue;
             }
@@ -43,4 +52,5 @@ public class TerminalService
 
         return null;
     }
+
 }

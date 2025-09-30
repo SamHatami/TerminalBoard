@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Extensions;
+using TerminalBoard.Core.Functions;
+using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
 
 namespace TerminalBoard.Core.Terminals;
@@ -38,6 +40,42 @@ public class MethodTerminal<T> : ClassTerminalBase<T> where T : class
 
     public override void Execute()
     {
+        if(_provider == null)
+            return;
+
+        var method = _provider.GetType().GetMethod(_methodInfo.Name);
+        if (method == null) return;
+
+        //Check if all mandatory inputs are connected
+        foreach (var input in InputSockets)
+        {
+            if (!input.IsConnected && !input.IsOptional)
+                // Mandatory input not connected, cannot execute
+                return;
+        }
+
+        var orderedSockets = InputSockets.Where(i => i.IsConnected).OrderBy(i => i.ParameterPosition);
+
+        var orderedParameterValues = GetValuesFromConnections(orderedSockets).Select(v => v.Value).ToArray();
+
+        method.Invoke(_provider, orderedParameterValues);
+
+        //get output connections and call updateInput on all of them
+
+        //in async methods, the next in the order still needs to wait for all the terminals before that its dependant on to finish
+    }
+
+    private IValue[] GetValuesFromConnections(IEnumerable<ISocket> sockets)
+    {
+        List<IValue> values = new();
+        foreach (var socket in sockets)
+        {
+            var value = Connections.FirstOrDefault(c => c.EndSocket.Id == socket.Id)?.Value;
+            if (value != null)
+                values.Add(value);
+        }
+
+        return values.ToArray();
     }
 
     private protected override bool ValidateInput(ISocket socket, object? value)
@@ -55,9 +93,7 @@ public class MethodTerminal<T> : ClassTerminalBase<T> where T : class
 
         foreach (var parameter in _methodInfo.GetParameters())
         {
-            var parameterName = parameter.ParameterType.GetAliasName() ?? "Unknown";
-
-            InputSockets.Add(new MethodSocket(parameterName, parameter.ParameterType, false, SocketTypeEnum.Input));
+            InputSockets.Add(new ParameterSocket(parameter, SocketTypeEnum.Input, this));
         }
     }
 
@@ -65,8 +101,8 @@ public class MethodTerminal<T> : ClassTerminalBase<T> where T : class
     {
         var returnParameterName = _methodInfo.ReturnType.GetAliasName() ?? "Unknown";
 
-        OutputSockets.Add(new MethodSocket(returnParameterName,
+        OutputSockets.Add(new ParameterSocket(returnParameterName,
                 _methodInfo.ReturnParameter.ParameterType, false,
-                SocketTypeEnum.Output));
+                SocketTypeEnum.Output, this));
     }
 }

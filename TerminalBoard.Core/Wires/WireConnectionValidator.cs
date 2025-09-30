@@ -10,18 +10,71 @@ public static class WireConnectionValidator
         if (fromSocket == null || toSocket == null)
             return false;
 
-        List<bool> validations = [];
-
-        validations.Add(LoopValidation(fromSocket, toSocket));
-        validations.Add(DirectionValidation(fromSocket, toSocket));
-        validations.Add(TypeValidation(fromSocket, toSocket));
-        validations.Add(InputOccupiedValidation(toSocket));
+        List<bool> validations =
+        [
+            CircularLoopValidation(fromSocket, toSocket),
+            SingleLoopValidation(fromSocket, toSocket),
+            DirectionValidation(fromSocket, toSocket),
+            TypeValidation(fromSocket, toSocket),
+            InputOccupiedValidation(toSocket),
+            SingleInputValidation(fromSocket, toSocket)
+        ];
 
         return validations.All(c => c);
         
     }
 
-    private static bool LoopValidation(ISocket fromSocket, ISocket toSocket)
+ //Do some graph sorting and check if there is any circularaity 
+
+
+    private static bool CircularLoopValidation(ISocket fromSocket, ISocket toSocket)
+    {
+        var fromTerminal = fromSocket.ParentTerminal;
+        var toTerminal = toSocket.ParentTerminal;
+
+        // If the terminals are the same, it's already a loop
+        if (fromTerminal == toTerminal)
+            return false;
+
+        // Start DFS from toTerminal, looking for fromTerminal
+        return !HasPathToTerminal(toTerminal, fromTerminal, new HashSet<Guid>());
+    }
+
+    private static bool HasPathToTerminal(ITerminal current, ITerminal target, HashSet<Guid> visited)
+    {
+        if (current == null || visited.Contains(current.Id))
+            return false;
+
+        if (current == target)
+            return true;
+
+        visited.Add(current.Id);
+
+        // Traverse all output connections from this terminal
+        foreach (var outputSocket in current.OutputSockets)
+        {
+            foreach (var wire in current.Connections)
+            {
+                if (wire.StartSocket == outputSocket)
+                {
+                    var nextTerminal = wire.EndSocket.ParentTerminal;
+                    if (HasPathToTerminal(nextTerminal, target, visited))
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    private static bool SingleInputValidation(ISocket fromSocket, ISocket toSocket)
+    {
+        if (toSocket.SocketType != SocketTypeEnum.Input)
+            return false;
+
+        return !toSocket.IsConnected;
+    }
+
+    private static bool SingleLoopValidation(ISocket fromSocket, ISocket toSocket)
     {
         return toSocket.ParentTerminal == fromSocket.ParentTerminal ? false : true;
     }

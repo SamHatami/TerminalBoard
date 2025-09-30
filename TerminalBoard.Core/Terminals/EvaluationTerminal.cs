@@ -26,6 +26,11 @@ public class EvaluationTerminal : IEvaluationTerminal
     }
 
     public Guid Id { get; }
+    public void Execute()
+    {
+        return;
+    }
+
     public IEventAggregator Events { get; }
 
     public IEvaluationFunction EvaluationFunction { get; }

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Extensions.Logging;
 using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
@@ -65,8 +66,8 @@ public class Bootstrapper : BootstrapperBase
 
     private void RegisterStandardProviders()
     {
-        _container.Singleton<IProvider,BaseMath>();
-        _container.Singleton<IProvider,VectorMath>();
+        _container.Singleton<BaseMath>();
+        _container.Singleton<VectorMath>();
 
         _container.GetInstance<TerminalService>().RegisterProviderMethods(_container.GetInstance<BaseMath>());
         _container.GetInstance<TerminalService>().RegisterProviderMethods(_container.GetInstance<VectorMath>());

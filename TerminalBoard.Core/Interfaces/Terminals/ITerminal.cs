@@ -17,6 +17,8 @@ public interface ITerminal
     void UpdateInput(ISocket socket, IValue newValue);
     Guid Id { get; }
 
+    void Execute();
+
     #endregion Properties
 
 }

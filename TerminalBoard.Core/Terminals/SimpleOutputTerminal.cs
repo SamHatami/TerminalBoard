@@ -26,15 +26,17 @@ public class SimpleOutputTerminal : IOutputTerminal
         _events.PublishOnBackgroundThreadAsync(new OutputUpdateEvent(Output, this));
     }
 
-    
-
-
     public Guid Id { get; }
+    public void Execute()
+    {
+
+        return;
+    }
 
     public SimpleOutputTerminal()
     {
         Id = Guid.NewGuid();
-        Output = new TypedValue<string>("", new Guid()){Value = "0"};
+        Output = new TypedValue<string>("", Guid.Empty){Value = "0"};
         TerminalDefinitionId = $"SimpleOutputTerminal";
         _events = TerminalHelper.EventsAggregator;
         _events.SubscribeOnBackgroundThread(this);
@@ -43,6 +45,6 @@ public class SimpleOutputTerminal : IOutputTerminal
 
     private void Initialize()
     {
-        InputSockets.Add(new Socket(SocketTypeEnum.Input, "", this));
+        InputSockets.Add(new Socket(SocketTypeEnum.Input, "", this){ParameterType = typeof(float)});
     }
 }

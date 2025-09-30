@@ -1,4 +1,5 @@
 ﻿using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Extensions;
 using TerminalBoard.Core.Functions;
 using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
@@ -15,12 +16,17 @@ public class ValueTerminal<T> : IValueTerminal<T>
     public bool RequireInputValue { get; } = true;
 
     public Guid Id { get; }
+    public void Execute()
+    {
+        return;
+    }
+
     public ITypedValueFunction<T> Function { get; }
 
     public ValueTerminal()
     {
         Function = new TypedValueOutputFunction<T>();
-        Label = typeof(T).Name; //TODO: Perhaps a type name utility to return const strings
+        Label = typeof(T).GetAliasName(); //TODO: Perhaps a type name utility to return const strings
         Id = Guid.NewGuid();
         TerminalDefinitionId = $"ValueTerminal<{typeof(T).Name}>";
         Initialize();

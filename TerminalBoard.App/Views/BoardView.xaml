@@ -36,7 +36,7 @@
             MouseRightButtonUp="MainCanvas_OnMouseRightButtonUp"
             Tag="{Binding ElementName=MainGrid, Path=DataContext}">
             <Canvas.ContextMenu>
-                <ContextMenu Name="ContextMenu">
+                <ContextMenu Name="ContextMenu"> <!-- This should be dynamically built, using itemsource and some styling on how the menu item should look like -->
                     <MenuItem Header="Math" IsCheckable="False">
                         <MenuItem Header="Operators" IsCheckable="False">
                             <MenuItem
@@ -50,6 +50,9 @@
                         <MenuItem Header="Values">
                             <MenuItem cal:Message.Attach="GetTerminal('FloatValue')" Header="Float" />
                             <MenuItem cal:Message.Attach="GetTerminal('IntegerValue')" Header="Integer" />
+                        </MenuItem>                        
+                        <MenuItem Header="Vault">
+                            <MenuItem cal:Message.Attach="GetTerminal('VaultService.SearchFiles')" Header="Search Files" />
                         </MenuItem>
                     </MenuItem>
                 </ContextMenu>
@@ -108,6 +111,12 @@
         </Canvas>
         <Canvas x:Name="ControlCanvas">
             <StackPanel Background="#2d2d2a">
+                
+                <Button
+                    x:Name="Run"
+                    Margin="5"
+                    Content="RUN" 
+                    Background="DarkOliveGreen"/>
                 <Button
                     x:Name="Snap"
                     Margin="5"

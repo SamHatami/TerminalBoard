@@ -6,11 +6,13 @@ public interface ISocket
 {
     SocketTypeEnum SocketType { get; }
     Type ParameterType { get; set; }
-    bool IsConnected { get; }
+    int ParameterPosition { get; set; }
+    bool IsConnected { get; set; }
     ITerminal ParentTerminal { get; }
     string Name { get; }
     Guid Id { get; }
-    
     public bool IsOptional { get; }
+
+
 
 }

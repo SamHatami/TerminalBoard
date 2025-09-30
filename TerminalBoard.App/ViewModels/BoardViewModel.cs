@@ -8,11 +8,9 @@ using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Services;
 using TerminalBoard.Core.Terminals;
 using TerminalBoard.Core.Wires;
-using TerminalBoard.Math.Operators;
 
 namespace TerminalBoard.App.ViewModels;
 
-//TODO: Probably need a shellView as conductor
 
 /// <summary>
 /// THe Main ViewModel for the board that holds all other viewModels and handles several major events.
@@ -86,7 +84,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         _events.PublishOnBackgroundThreadAsync(new GridChangeEvent(_grid, _gridSpacing, GridTypeEnum.Dots));
     }
 
-    public void AddTerminal(string terminalId) //Future arguments for type or just getting the type directly
+    public void GetTerminal(string terminalId) //Future arguments for type or just getting the type directly
     {
         var newTerminal = _terminalService.GetTerminal(terminalId);
         var watch = Stopwatch.StartNew();
@@ -99,6 +97,13 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         var s = watch.ElapsedMilliseconds;
     }
 
+    public void Run()
+    {
+        var graph = new TerminalGraph(TerminalViewModels.Select(t => t.Terminal).ToArray());
+
+        graph.ExecuteGraph();
+    }
+
     public void AddFloatTerminal()
     {
         var floatTerminal = new ValueTerminal<float>();
@@ -109,7 +114,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void AddMultiplyTerminal()
     {
-        AddTerminal("BaseMath.Mul");
+        GetTerminal("BaseMath.Mul");
         //var multiplier = new Multiplication();
         //var evaluationTerminal = new EvaluationTerminal(multiplier);
         //var terminalViewModel = new TerminalViewModel(_events, evaluationTerminal)
@@ -121,7 +126,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void CreateTerminal(string terminal)
     {
-        AddTerminal(terminal);
+        GetTerminal(terminal);
     }
 
     public void AddOutputTerminal()
