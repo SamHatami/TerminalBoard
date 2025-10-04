@@ -7,7 +7,7 @@ using System.Windows.Media;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.App.UIComponents.Helpers;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Terminals;
 
 namespace TerminalBoard.App.UIComponents.Behaviors;
 

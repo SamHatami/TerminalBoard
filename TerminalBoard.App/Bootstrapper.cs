@@ -6,10 +6,10 @@ using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Functions;
-using TerminalBoard.Core.Graph;
+using TerminalBoard.Core.Graphs.Helpers;
+using TerminalBoard.Core.Graphs.Services;
 using TerminalBoard.Core.Interfaces;
 using TerminalBoard.Core.Interfaces.Functions;
-using TerminalBoard.Core.Services;
 using TerminalBoard.Providers.Standard;
 
 namespace TerminalBoard.App;

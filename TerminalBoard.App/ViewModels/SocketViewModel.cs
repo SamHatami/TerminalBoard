@@ -4,7 +4,7 @@ using Caliburn.Micro;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Sockets;
 
 namespace TerminalBoard.App.ViewModels;
 

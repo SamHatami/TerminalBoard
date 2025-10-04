@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using TerminalBoard.Core;
-using TerminalBoard.Core.Graph.Terminals;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Graphs.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Terminals;
 
 namespace TerminalBoard.Test;
 

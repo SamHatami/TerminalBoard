@@ -1,6 +1,7 @@
 using System.Windows;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Wires;
 
 
 namespace TerminalBoard.App.Interfaces.ViewModels;

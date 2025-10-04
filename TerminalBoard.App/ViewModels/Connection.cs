@@ -1,5 +1,5 @@
 ﻿using TerminalBoard.App.Interfaces.ViewModels;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Terminals;
 
 namespace TerminalBoard.App.ViewModels;
 

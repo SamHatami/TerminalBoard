@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Sockets;
 
 
 namespace TerminalBoard.App.Interfaces.ViewModels;

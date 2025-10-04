@@ -2,8 +2,6 @@ using Caliburn.Micro;
 using FluentAssertions;
 using TerminalBoard.Core.Functions;
 using TerminalBoard.Core.Interfaces.Functions;
-using TerminalBoard.Core.Interfaces.Terminals;
-using TerminalBoard.Core.Wires;
 
 namespace TerminalBoard.Test
 {

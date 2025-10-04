@@ -5,10 +5,10 @@ using System.Windows.Input;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Graph;
-using TerminalBoard.Core.Graph.Terminals;
-using TerminalBoard.Core.Services;
-using TerminalBoard.Core.Wires;
+using TerminalBoard.Core.Graphs.Management;
+using TerminalBoard.Core.Graphs.Services;
+using TerminalBoard.Core.Graphs.Terminals;
+using TerminalBoard.Core.Graphs.Wires;
 
 namespace TerminalBoard.App.ViewModels;
 

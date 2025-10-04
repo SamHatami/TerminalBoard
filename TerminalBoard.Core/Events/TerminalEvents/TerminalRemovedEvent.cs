@@ -1,4 +1,4 @@
-﻿using TerminalBoard.Core.Interfaces.Terminals;
+﻿using TerminalBoard.Core.Interfaces.Graphs.Terminals;
 
 namespace TerminalBoard.Core.Events.TerminalEvents;
 

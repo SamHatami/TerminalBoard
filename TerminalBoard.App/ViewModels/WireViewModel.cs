@@ -5,7 +5,8 @@ using System.Windows.Input;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.Core.Enum;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Wires;
 using Vector = System.Windows.Vector;
 
 namespace TerminalBoard.App.ViewModels;

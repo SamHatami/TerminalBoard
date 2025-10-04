@@ -5,8 +5,8 @@ using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Events.TerminalEvents;
 using TerminalBoard.Core.Functions;
-using TerminalBoard.Core.Graph.Terminals;
-using TerminalBoard.Core.Interfaces.Terminals;
+using TerminalBoard.Core.Graphs.Terminals;
+using TerminalBoard.Core.Interfaces.Graphs.Terminals;
 
 
 namespace TerminalBoard.App.ViewModels;
