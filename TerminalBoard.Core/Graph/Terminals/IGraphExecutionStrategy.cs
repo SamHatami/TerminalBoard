@@ -1,4 +1,4 @@
-﻿namespace TerminalBoard.Core.Terminals
+﻿namespace TerminalBoard.Core.Graph.Terminals
 {
     public interface IGraphExecutionStrategy
     {

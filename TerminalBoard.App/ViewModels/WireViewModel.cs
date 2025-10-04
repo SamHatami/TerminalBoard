@@ -155,7 +155,7 @@ public class WireViewModel : PropertyChangedBase, IWireViewModel, IHandle<Select
     public void SetEndSocket(ISocketViewModel socketViewModel)
     {
         EndSocketViewModel = socketViewModel;
-        if (EndSocketViewModel.Type == SocketTypeEnum.Input)
+        if (EndSocketViewModel.Type == SocketDirection.Input)
             EndSocketViewModel.Socket.IsConnected = true; //Meh...
 
         SetEndPosition(socketViewModel);

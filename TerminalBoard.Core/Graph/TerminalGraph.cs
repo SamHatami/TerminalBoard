@@ -1,10 +1,11 @@
 ﻿using TerminalBoard.Core.Interfaces.Terminals;
 
-namespace TerminalBoard.Core.Terminals
+namespace TerminalBoard.Core.Graph
 {
     public class TerminalGraph
     {
         public List<ITerminal> Terminals { get; } = [];
+        public List<IWire> Wires { get; } = [];
 
         public TerminalGraph(ITerminal[] terminals)
         {
@@ -39,6 +40,7 @@ namespace TerminalBoard.Core.Terminals
         {
             foreach (var terminal in Terminals)
             {
+
                 terminal.Execute();
 
             }

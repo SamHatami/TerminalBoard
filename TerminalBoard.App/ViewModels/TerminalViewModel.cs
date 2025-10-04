@@ -5,6 +5,7 @@ using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Events.TerminalEvents;
 using TerminalBoard.Core.Functions;
+using TerminalBoard.Core.Graph.Terminals;
 using TerminalBoard.Core.Interfaces.Terminals;
 
 
@@ -35,7 +36,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
     public bool ShowFinalOutput { get; private set; }
 
     private string _inputValue;
-    public string InputValue 
+    public string? InputValue 
     {
         get => _inputValue;
         set
@@ -115,13 +116,13 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
         Width = 50;
         InputValue = String.Empty;
 
-        //TODO: Clean the crazyness below up 
+        //TODO: I don't think is needed anymore. Was used for testing and when the architecture was made for reactive behaviour.
 
         if(Terminal.InputSockets != null)
         {
             foreach (var inputSocket in Terminal.InputSockets)
             {
-                var socket = new SocketViewModel(this, _events, SocketTypeEnum.Input, inputSocket)
+                var socket = new SocketViewModel(this, _events, SocketDirection.Input, inputSocket)
                 {
                     Label = inputSocket.Name
                 };
@@ -133,7 +134,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
         {
             foreach (var outputSocket in Terminal.OutputSockets)
             {
-                var socket = new SocketViewModel(this, _events, SocketTypeEnum.Output, outputSocket)
+                var socket = new SocketViewModel(this, _events, SocketDirection.Output, outputSocket)
                 {
                     Label = outputSocket.Name
                 };
@@ -142,20 +143,19 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
             }
         }
 
-        if (Terminal is IValueTerminal<float> floatValueTerminal)
+        if (Terminal is ValueTerminal<float> floatValueTerminal)
         {
             GetInputValue = true;
-            if(floatValueTerminal.Function.Output is { } floatValue)
-                InputValue = floatValue.Value.ToString("0.0", CultureInfo.CurrentCulture);
+            if(floatValueTerminal.Value is { } floatValue)
+                InputValue = floatValue.ToString();
         }        
         
-        if (Terminal is IValueTerminal<int> inttValueTerminal)
+        if (Terminal is ValueTerminal<int> intValueTerminal)
         {
             GetInputValue = true;
-            if(inttValueTerminal.Function.Output is { } floatValue)
-                InputValue = floatValue.Value.ToString("0.0", CultureInfo.CurrentCulture);
+            if(intValueTerminal.Value is { } intValue)
+                InputValue = intValue.ToString();
         }
-
 
         if (Terminal is IOutputTerminal outputTerminal)
         {
@@ -189,7 +189,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
 
     public void SetInputValue(string value) //TODO... usch
     {
-        if (Terminal is IValueTerminal<float> floatValueTerminal && float.TryParse(value, out float floatValue))  //TODO : detta fungerar inte generellt
+        if (Terminal is ValueTerminal<float> floatValueTerminal && float.TryParse(value, out float floatValue))  //TODO : detta fungerar inte generellt
         {
             foreach (var wire in Terminal.Connections)
             {
@@ -197,12 +197,7 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
             }
         }
     }
-
-    public void somethign()
-    {
-
-    }
-
+    
     public void AddWireViewModel(IWireViewModel wire)
     {
         WireViewModels.Add(wire);

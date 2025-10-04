@@ -1,6 +1,6 @@
 ﻿namespace TerminalBoard.Core.Enum;
 
-public enum SocketTypeEnum
+public enum SocketDirection
 {
     Input,
     Output

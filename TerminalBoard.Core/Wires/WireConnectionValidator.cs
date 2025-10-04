@@ -68,7 +68,7 @@ public static class WireConnectionValidator
     }
     private static bool SingleInputValidation(ISocket fromSocket, ISocket toSocket)
     {
-        if (toSocket.SocketType != SocketTypeEnum.Input)
+        if (toSocket.Direction != SocketDirection.Input)
             return false;
 
         return !toSocket.IsConnected;
@@ -81,7 +81,7 @@ public static class WireConnectionValidator
 
     private static bool DirectionValidation(ISocket fromSocket, ISocket toSocket)
     {
-        return fromSocket.SocketType != toSocket.SocketType? true : false;
+        return fromSocket.Direction != toSocket.Direction? true : false;
     }
 
     private static bool TypeValidation(ISocket fromSocket, ISocket toSocket)
@@ -89,7 +89,7 @@ public static class WireConnectionValidator
         //Outputerminal does not manipulate input and dont need type validation
         if (toSocket.ParentTerminal is IOutputTerminal) return true; 
         
-        return fromSocket.ParameterType == toSocket.ParameterType ? true : false;
+        return fromSocket.DataType == toSocket.DataType ? true : false;
 
     }
 

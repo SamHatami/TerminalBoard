@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using TerminalBoard.Core;
+using TerminalBoard.Core.Graph.Terminals;
 using TerminalBoard.Core.Interfaces.Terminals;
-using TerminalBoard.Core.Terminals;
 
 namespace TerminalBoard.Test;
 
@@ -24,7 +24,7 @@ public class ClassReaderTest
         foreach (var method in vaultServiceType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
         {
             // Create a terminal that wraps this method
-            var terminal = MethodTerminal<VaultService>.Create(vaultService, method, "");
+            var terminal = ProviderOperationTerminal.Create(vaultService, method, "");
             terminals.Add(terminal);
         }
     }

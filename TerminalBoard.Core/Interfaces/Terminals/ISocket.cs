@@ -4,15 +4,17 @@ namespace TerminalBoard.Core.Interfaces.Terminals;
 
 public interface ISocket
 {
-    SocketTypeEnum SocketType { get; }
-    Type ParameterType { get; set; }
-    int ParameterPosition { get; set; }
-    bool IsConnected { get; set; }
-    ITerminal ParentTerminal { get; }
     string Name { get; }
     Guid Id { get; }
+    SocketDirection Direction { get; }
+    Type DataType { get; set; }
+    public int SocketPosition { get; set; }
+
+    bool IsConnected { get; set; }
     public bool IsOptional { get; }
+    
+    ITerminal ParentTerminal { get; }
 
-
+    List<IWire> ConnectedWires { get; }
 
 }

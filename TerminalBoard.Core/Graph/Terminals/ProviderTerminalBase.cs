@@ -1,33 +1,28 @@
 ﻿using System.Reflection;
-using TerminalBoard.Core.Interfaces;
-using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Interfaces.Terminals;
 
-namespace TerminalBoard.Core.Terminals;
+namespace TerminalBoard.Core.Graph.Terminals;
 
 //Used along side reflection to build up the terminals based on a class's methods
-public abstract class ClassTerminalBase<T> : ITerminal
+public abstract class ProviderTerminalBase : IProviderTerminal 
 {
     private readonly MethodInfo _methodInfo;
-    public T Provider { get; }
     public string Label { get; set; }
-    public string ProviderCategory { get; protected init; }
-    public string TerminalDefinitionId { get; protected init; }
+    public object ProviderInstance { get; set; }
+    public string ProviderCategory { get; set; }
+    public string TerminalDefinitionId { get; set; }
     public List<ISocket> InputSockets { get; } = [];
     public List<ISocket> OutputSockets { get; } = [];
     public List<IWire> Connections { get; set; } = [];
 
-    public void UpdateInput(ISocket socket, IValue newValue)
+    public static string GetMethodTerminalId(string methodName, object providerInstance) 
     {
-    }
-
-    public static string GetMethodTerminalId(string methodName) 
-    {
-        return $"{typeof(T).Name}.{methodName}";
+        var type = providerInstance.GetType();
+        return $"{type.Name}.{methodName}";
     }
 
     public Guid Id { get; }
-    public abstract void Execute();
+    public abstract TerminalExcecutionResult Execute();
 
     private protected abstract bool ValidateInput(ISocket socket, object? value);
     private protected abstract void CreateInputs();

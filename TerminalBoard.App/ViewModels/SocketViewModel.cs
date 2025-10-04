@@ -40,7 +40,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
 
     public ITerminalViewModel ParentViewModel { get; set; }
 
-    public SocketTypeEnum Type { get; set; }
+    public SocketDirection Type { get; set; }
 
     public List<IWireViewModel> Wires { get; } = [];
 
@@ -72,7 +72,7 @@ public class SocketViewModel : PropertyChangedBase, ISocketViewModel, IHandle<Te
 
     #region Constructors
 
-    public SocketViewModel(ITerminalViewModel parent, IEventAggregator events, SocketTypeEnum type, ISocket socket)
+    public SocketViewModel(ITerminalViewModel parent, IEventAggregator events, SocketDirection type, ISocket socket)
     {
         ParentViewModel = parent;
         Events = events;

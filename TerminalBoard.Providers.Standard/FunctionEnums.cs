@@ -1,4 +1,4 @@
-﻿namespace TerminalBoard.Math;
+﻿namespace TerminalBoard.Providers.Standard;
 
 public static class FunctionNames
 {

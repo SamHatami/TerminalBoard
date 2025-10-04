@@ -6,10 +6,10 @@ using TerminalBoard.App.UIComponents.Helpers;
 using TerminalBoard.App.ViewModels;
 using TerminalBoard.Core.Enum;
 using TerminalBoard.Core.Functions;
+using TerminalBoard.Core.Graph;
 using TerminalBoard.Core.Interfaces;
 using TerminalBoard.Core.Interfaces.Functions;
 using TerminalBoard.Core.Services;
-using TerminalBoard.Core.Terminals;
 using TerminalBoard.Providers.Standard;
 
 namespace TerminalBoard.App;
@@ -60,7 +60,7 @@ public class Bootstrapper : BootstrapperBase
 
     private void RegisterExternalProviders()
     {
-        _container.Singleton<IProvider, VaultService>();
+        _container.Singleton<VaultService>();
         _container.GetInstance<TerminalService>().RegisterProviderMethods(_container.GetInstance<VaultService>());
     }
 

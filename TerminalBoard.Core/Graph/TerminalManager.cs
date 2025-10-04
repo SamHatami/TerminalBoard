@@ -1,6 +1,6 @@
 ﻿using TerminalBoard.Core.Interfaces.Terminals;
 
-namespace TerminalBoard.Core.Terminals
+namespace TerminalBoard.Core.Graph
 {
     //Creates and manages terminals
     public class TerminalManager

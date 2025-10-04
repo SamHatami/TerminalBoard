@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 
-namespace TerminalBoard.Core.Terminals;
+namespace TerminalBoard.Core.Graph;
 
 public static class TerminalHelper
 {

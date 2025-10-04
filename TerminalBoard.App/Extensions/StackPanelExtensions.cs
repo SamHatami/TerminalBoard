@@ -12,28 +12,28 @@ internal class StackPanelExtensions
     public static readonly DependencyProperty ReverseChildrenProperty =
         DependencyProperty.RegisterAttached(
             "ReverseChildren",
-            typeof(SocketTypeEnum),
+            typeof(SocketDirection),
             typeof(StackPanelExtensions),
-            new PropertyMetadata(SocketTypeEnum.Input, OnReverseChildrenChanged));
+            new PropertyMetadata(SocketDirection.Input, OnReverseChildrenChanged));
 
-    public static SocketTypeEnum GetReverseChildren(DependencyObject obj)
+    public static SocketDirection GetReverseChildren(DependencyObject obj)
     {
-        return (SocketTypeEnum)obj.GetValue(ReverseChildrenProperty);
+        return (SocketDirection)obj.GetValue(ReverseChildrenProperty);
     }
 
-    public static void SetReverseChildren(DependencyObject obj, SocketTypeEnum value)
+    public static void SetReverseChildren(DependencyObject obj, SocketDirection value)
     {
         obj.SetValue(ReverseChildrenProperty, value);
     }
 
     private static void OnReverseChildrenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is StackPanel stackPanel && e.NewValue is SocketTypeEnum type) ReverseChildren(stackPanel, type);
+        if (d is StackPanel stackPanel && e.NewValue is SocketDirection type) ReverseChildren(stackPanel, type);
     }
 
-    private static void ReverseChildren(StackPanel stackPanel, SocketTypeEnum type)
+    private static void ReverseChildren(StackPanel stackPanel, SocketDirection type)
     {
-        if (type == SocketTypeEnum.Output) //Reverse if it's an output socketViewModel
+        if (type == SocketDirection.Output) //Reverse if it's an output socketViewModel
         {
             var children = stackPanel.Children.Cast<UIElement>().ToList();
             children.Reverse();

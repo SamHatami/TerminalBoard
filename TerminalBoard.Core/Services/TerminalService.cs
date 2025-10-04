@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
+using TerminalBoard.Core.Graph.Terminals;
 using TerminalBoard.Core.Interfaces;
 using TerminalBoard.Core.Interfaces.Terminals;
-using TerminalBoard.Core.Terminals;
 
 namespace TerminalBoard.Core.Services;
 
-public class TerminalService
+public class  TerminalService
 {
     //private readonly ILogger _logger;
 
@@ -29,7 +29,7 @@ public class TerminalService
         {
             // Create a terminal that wraps this method
 
-            var terminalId = ClassTerminalBase<T>.GetMethodTerminalId(method.Name);
+            var terminalId = ProviderTerminalBase.GetMethodTerminalId(method.Name, providerInstance);
 
             if (_terminalRegistry.ContainsKey(terminalId))
             {
@@ -41,7 +41,7 @@ public class TerminalService
                 continue;
             }
 
-            _terminalRegistry[terminalId] = () => MethodTerminal<T>.Create(providerInstance, method, "");
+            _terminalRegistry[terminalId] = () => ProviderOperationTerminal.Create(providerInstance, method, "");
         }
     }
 

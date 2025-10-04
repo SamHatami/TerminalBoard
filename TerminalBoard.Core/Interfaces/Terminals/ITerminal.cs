@@ -1,4 +1,5 @@
-﻿using TerminalBoard.Core.Interfaces.Functions;
+﻿using TerminalBoard.Core.Graph;
+using TerminalBoard.Core.Interfaces.Functions;
 
 namespace TerminalBoard.Core.Interfaces.Terminals;
 
@@ -7,18 +8,14 @@ namespace TerminalBoard.Core.Interfaces.Terminals;
 /// </summary>
 public interface ITerminal 
 {
-    #region Properties
+    Guid Id { get; }
     string Label { get; }
     string TerminalDefinitionId { get; }
     List<ISocket> InputSockets { get; }
     List<ISocket> OutputSockets { get; }
     List<IWire> Connections { get; set; }
     
-    void UpdateInput(ISocket socket, IValue newValue);
-    Guid Id { get; }
-
-    void Execute();
-
-    #endregion Properties
+    TerminalExcecutionResult Execute();
+    
 
 }

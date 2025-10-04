@@ -16,7 +16,7 @@ public interface ISocketViewModel
     void AddWire(IWireViewModel wire);
     List<IWireViewModel> Wires { get; }
     ITerminalViewModel ParentViewModel { get; }
-    SocketTypeEnum Type { get; }
+    SocketDirection Type { get; }
     
     ISocket Socket { get; }
     IEventAggregator Events { get; }

@@ -105,7 +105,7 @@ internal class WireConnectionBehavior : Behavior<UIElement>
             return;
         }
 
-        if(_startSocketViewModel.Type == SocketTypeEnum.Output)
+        if(_startSocketViewModel.Type == SocketDirection.Output)
             _events.PublishOnBackgroundThreadAsync(new AddConnectionEvent(_startSocketViewModel, _endSocketViewModel));
         else
         {

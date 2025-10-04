@@ -5,8 +5,9 @@ using System.Windows.Input;
 using TerminalBoard.App.Events.UIEvents;
 using TerminalBoard.App.Interfaces.ViewModels;
 using TerminalBoard.Core.Enum;
+using TerminalBoard.Core.Graph;
+using TerminalBoard.Core.Graph.Terminals;
 using TerminalBoard.Core.Services;
-using TerminalBoard.Core.Terminals;
 using TerminalBoard.Core.Wires;
 
 namespace TerminalBoard.App.ViewModels;
@@ -131,7 +132,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void AddOutputTerminal()
     {
-        var terminalViewModel = new TerminalViewModel(_events, new SimpleOutputTerminal())
+        var terminalViewModel = new TerminalViewModel(_events, new OutputValueTerminal())
             { CanvasPositionY = 100, CanvasPositionX = 100 };
         ;
         TerminalViewModels.Add(terminalViewModel);
