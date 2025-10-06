@@ -130,9 +130,9 @@ public class TerminalViewModel : PropertyChangedBase, ITerminalViewModel, IHandl
             }
         }
 
-        if(Operator.OutputSockets != null)
+        if(Operator.Outputs != null)
         {
-            foreach (var outputSocket in Operator.OutputSockets)
+            foreach (var outputSocket in Operator.Outputs)
             {
                 var socket = new SocketViewModel(this, _events, DataPortDirection.Output, outputSocket)
                 {

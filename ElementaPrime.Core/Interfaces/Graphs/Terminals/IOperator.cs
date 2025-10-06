@@ -13,7 +13,7 @@ public interface IOperator
     string Label { get; }
     string TerminalDefinitionId { get; }
     List<IDataPort> InputSockets { get; }
-    List<IDataPort> OutputSockets { get; }
+    List<IDataPort> Outputs { get; }
     List<IConduit> Connections { get; set; }
     
     OperationResult Execute();

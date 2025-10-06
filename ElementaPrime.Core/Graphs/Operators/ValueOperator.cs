@@ -16,7 +16,7 @@ public class ValueOperator<T> : IValueOperator<T>
     public string Label { get; }
     public string TerminalDefinitionId { get; }
     public List<IDataPort> InputSockets { get; } = []; //None for Value Terminals, since they only produce an output
-    public List<IDataPort> OutputSockets { get; } = [];
+    public List<IDataPort> Outputs { get; } = [];
     public List<IConduit> Connections { get; set; } = [];
     public bool RequireInputValue { get; } = true;
     public Guid Id { get; }
@@ -36,7 +36,7 @@ public class ValueOperator<T> : IValueOperator<T>
         var socket = new ValueDataPort(DataPortDirection.Output, "hej", this,typeof(T));
         var value = new TypedValue<T>(nameof(T), socket.Id) { Value = default };
 
-        OutputSockets.Add(socket);
+        Outputs.Add(socket);
         UpdateInput(socket, value);
     }
 

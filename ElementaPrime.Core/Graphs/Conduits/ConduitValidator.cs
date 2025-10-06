@@ -52,7 +52,7 @@ public static class ConduitValidator
         visited.Add(current.Id);
 
         // Traverse all output connections from this terminal
-        foreach (var outputSocket in current.OutputSockets)
+        foreach (var outputSocket in current.Outputs)
         {
             foreach (var wire in current.Connections)
             {

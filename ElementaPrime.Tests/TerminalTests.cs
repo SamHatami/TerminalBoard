@@ -22,13 +22,13 @@ namespace ElementaPrime.Tests
     //
     //         IOutputTerminal outputTerminal = new SimpleOutputTerminal();
     //
-    //         WireConnection wire = new WireConnection(floatTerminal.OutputSockets[0], outputTerminal.InputSockets[0],
+    //         WireConnection wire = new WireConnection(floatTerminal.Outputs[0], outputTerminal.InputSockets[0],
     //             new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
     //
     //         floatTerminal.Connections.Add(wire);
     //         outputTerminal.Connections.Add(wire);
     //
-    //         floatTerminal.UpdateInput(floatTerminal.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 14f });
+    //         floatTerminal.UpdateInput(floatTerminal.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 14f });
     //
     //         outputTerminal.Output.Value.Should().Be(14f);
     //     }
@@ -43,7 +43,7 @@ namespace ElementaPrime.Tests
     //         ITerminal floatTerminal1 = new ValueTerminal<float>();
     //
     //         WireConnection wire1 = new WireConnection(
-    //             floatTerminal1.OutputSockets[0],
+    //             floatTerminal1.Outputs[0],
     //             multiplicationTerminal.InputSockets[0],
     //             new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
     //         );
@@ -54,7 +54,7 @@ namespace ElementaPrime.Tests
     //         ITerminal floatTerminal2 = new ValueTerminal<float>();
     //
     //         WireConnection wire2 = new WireConnection(
-    //             floatTerminal2.OutputSockets[0],
+    //             floatTerminal2.Outputs[0],
     //             multiplicationTerminal.InputSockets[1],
     //             new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
     //         );
@@ -62,8 +62,8 @@ namespace ElementaPrime.Tests
     //         floatTerminal2.Connections.Add(wire2);
     //         multiplicationTerminal.Connections.Add(wire2);
     //
-    //         floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
-    //         floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
+    //         floatTerminal1.UpdateInput(floatTerminal1.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
+    //         floatTerminal2.UpdateInput(floatTerminal2.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
     //
     //         multiplicationTerminal.EvaluationFunction.Outputs[0].Value.Should().Be(50f);
     //     }
@@ -78,7 +78,7 @@ namespace ElementaPrime.Tests
     //         ITerminal floatTerminal1 = new ValueTerminal<float>();
     //
     //         WireConnection wire1 = new WireConnection(
-    //             floatTerminal1.OutputSockets[0],
+    //             floatTerminal1.Outputs[0],
     //             multiplicationTerminal.InputSockets[0],
     //             new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
     //         );
@@ -89,7 +89,7 @@ namespace ElementaPrime.Tests
     //         ITerminal floatTerminal2 = new ValueTerminal<float>();
     //
     //         WireConnection wire2 = new WireConnection(
-    //             floatTerminal2.OutputSockets[0],
+    //             floatTerminal2.Outputs[0],
     //             multiplicationTerminal.InputSockets[1],
     //             new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
     //         );
@@ -97,8 +97,8 @@ namespace ElementaPrime.Tests
     //         floatTerminal2.Connections.Add(wire2);
     //         multiplicationTerminal.Connections.Add(wire2);
     //
-    //         floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
-    //         floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
+    //         floatTerminal1.UpdateInput(floatTerminal1.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
+    //         floatTerminal2.UpdateInput(floatTerminal2.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
     //
     //         // One float and one evaluation into a second evaluation terminal
     //
@@ -106,7 +106,7 @@ namespace ElementaPrime.Tests
     //         IEvaluationTerminal multiplicationTerminal2 = new EvaluationTerminal(multiplication2);
     //
     //         WireConnection wire3 = new WireConnection(
-    //             multiplicationTerminal.OutputSockets[0],
+    //             multiplicationTerminal.Outputs[0],
     //             multiplicationTerminal2.InputSockets[0],
     //             multiplicationTerminal.EvaluationFunction.Outputs[0]
     //         );
@@ -117,7 +117,7 @@ namespace ElementaPrime.Tests
     //         ITerminal floatTerminal3 = new ValueTerminal<float>();
     //
     //         WireConnection wire4 = new WireConnection(
-    //             floatTerminal3.OutputSockets[0],
+    //             floatTerminal3.Outputs[0],
     //             multiplicationTerminal2.InputSockets[1],
     //             new TypedValue<float>("", Guid.NewGuid()) { Value = 0f }
     //         );
@@ -125,9 +125,9 @@ namespace ElementaPrime.Tests
     //         floatTerminal3.Connections.Add(wire4);
     //         multiplicationTerminal2.Connections.Add(wire4);
     //
-    //         floatTerminal1.UpdateInput(floatTerminal1.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
-    //         floatTerminal2.UpdateInput(floatTerminal2.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
-    //         floatTerminal3.UpdateInput(floatTerminal3.OutputSockets[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 3f });
+    //         floatTerminal1.UpdateInput(floatTerminal1.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 10f });
+    //         floatTerminal2.UpdateInput(floatTerminal2.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 5f });
+    //         floatTerminal3.UpdateInput(floatTerminal3.Outputs[0], new TypedValue<float>("", Guid.NewGuid()) { Value = 3f });
     //
     //         multiplicationTerminal.EvaluationFunction.Outputs[0].Value.Should().Be(50f);
     //         multiplicationTerminal2.EvaluationFunction.Outputs[0].Value.Should().Be(150f);

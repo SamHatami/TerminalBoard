@@ -15,7 +15,7 @@ public abstract class ProviderOperatorBase : IProviderOperator
     public string ProviderCategory { get; set; }
     public string TerminalDefinitionId { get; set; }
     public List<IDataPort> InputSockets { get; } = [];
-    public List<IDataPort> OutputSockets { get; } = [];
+    public List<IDataPort> Outputs { get; } = [];
     public List<IConduit> Connections { get; set; } = [];
 
     public static string GetMethodTerminalId(string methodName, object providerInstance) 

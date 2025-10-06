@@ -79,7 +79,7 @@ namespace ElementaPrime.Core.Graphs.Management
             //{
             //    var terminal = terminalsWithNoIncomingEdges.Dequeue();
             //    sorted.Add(terminal);
-            //    foreach (var outputSocket in terminal.OutputSockets)
+            //    foreach (var outputSocket in terminal.Outputs)
             //    {
             //        foreach (var wire in outputSocket.Connections.ToList())
             //        {

@@ -17,7 +17,7 @@ public class OutputValueOperator : IOutputOperator
     public string Label { get; } = "Result";
     public string TerminalDefinitionId { get; }
     public List<IDataPort> InputSockets { get; } = [];
-    public List<IDataPort> OutputSockets { get; } = [];
+    public List<IDataPort> Outputs { get; } = [];
     public OperationResult Execute() => OperationResult.NotApplicable;
     public List<IConduit> Connections { get; set; } = [];
     public bool ShowFinalOutputValue { get; } = true;

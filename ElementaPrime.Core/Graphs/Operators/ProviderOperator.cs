@@ -6,6 +6,9 @@ using ElementaPrime.Core.Interfaces.Functions;
 using ElementaPrime.Core.Interfaces.Graphs.Sockets;
 using ElementaPrime.Core.Interfaces.Graphs.Terminals;
 using ElementaPrime.Core.Extensions;
+using ElementaPrime.Core.Functions;
+using ElementaPrime.Core.Graphs.Helpers;
+using ElementaPrime.Core.Interfaces.Graphs.Wires;
 
 namespace ElementaPrime.Core.Graphs.Operators;
 
@@ -38,20 +41,7 @@ public class ProviderOperator : ProviderOperatorBase
         CreateInputs();
         CreateOutputs();
     }
-
-    private IValue[] GetValuesFromConnections(IEnumerable<IDataPort> sockets)
-    {
-        List<IValue> values = new();
-        foreach (var socket in sockets)
-        {
-            var value = Connections.FirstOrDefault(c => c.End.Id == socket.Id)?.Value;
-            if (value != null)
-                values.Add(value);
-        }
-
-        return values.ToArray();
-    }
-
+    
     public override OperationResult Execute()
     {
         var method = ProviderInstance.GetType().GetMethod(_methodInfo.Name);
@@ -68,11 +58,24 @@ public class ProviderOperator : ProviderOperatorBase
 
         var orderedParameterValues = GetValuesFromConnections(orderedSockets).Select(v => v.Value).ToArray();
 
-        method.Invoke(ProviderInstance, orderedParameterValues);
+        var result = method.Invoke(ProviderInstance, orderedParameterValues);
 
+        if (result == null && _methodInfo.ReturnType == null)
+            return OperationResult.Success;
+
+
+        var outConduits = GetOutGoingConduits();
+        var returnParameterValue = new ReturnValue() { Value = result };
+
+        //set the values into the outgoing conduits
+        foreach (var conduit in outConduits)
+        {
+            conduit.Value = returnParameterValue;
+        }
+        //add the return into the outgoing conduit
         //get output connections and call updateInput on all of them
 
-        //in async methods, the next in the order still needs to wait for all the terminals before that its dependant on to finish
+            //in async methods, the next in the order still needs to wait for all the terminals before that its dependant on to finish
 
         return OperationResult.Success;
     }
@@ -100,8 +103,31 @@ public class ProviderOperator : ProviderOperatorBase
     {
         var returnParameterName = _methodInfo.ReturnType.GetAliasName() ?? "Unknown";
 
-        OutputSockets.Add(new ParameterDataPort(returnParameterName,
+        Outputs.Add(new ParameterDataPort(returnParameterName,
             _methodInfo.ReturnParameter.ParameterType, false,
             DataPortDirection.Output, this));
+    }
+
+    private IValue[] GetValuesFromConnections(IEnumerable<IDataPort> sockets)
+    {
+        List<IValue> values = new();
+        foreach (var socket in sockets)
+        {
+            var value = Connections.FirstOrDefault(c => c.End.Id == socket.Id)?.Value;
+            if (value != null)
+                values.Add(value);
+        }
+
+        return values.ToArray();
+    }
+
+    private IConduit[] GetOutGoingConduits()
+    {
+        //Should only have one output 
+
+        if (Outputs.Count is 0 or > 2)
+            return [];
+
+        return Connections.Where(c => c.Start == Outputs[0]).ToArray();
     }
 }
