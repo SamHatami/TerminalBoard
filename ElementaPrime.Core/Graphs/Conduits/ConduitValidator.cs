@@ -28,7 +28,7 @@ public static class ConduitValidator
  //Do some graph sorting and check if there is any circularaity 
 
 
-    private static bool CircularLoopValidation(IDataPort fromDataPort, IDataPort toDataPort)
+    private static bool CircularLoopValidation(IDataPort fromDataPort, IDataPort toDataPort) //This might not be accurate if recursions in graphs are allowed...
     {
         var fromTerminal = fromDataPort.ParentOperator;
         var toTerminal = toDataPort.ParentOperator;

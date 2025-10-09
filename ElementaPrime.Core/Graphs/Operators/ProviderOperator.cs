@@ -16,22 +16,23 @@ public class ProviderOperator : ProviderOperatorBase
 {
     private readonly MethodInfo _methodInfo;
     private readonly string _providerCategory;
+    private readonly OperatorId _id;
 
-    private ProviderOperator(object provider, MethodInfo methodInfo, string providerCategory,
+    private ProviderOperator(object provider, MethodInfo methodInfo, string providerCategory, OperatorId id,
         string alternativeName = "")
     {
         ProviderInstance = provider;
         ProviderCategory = providerCategory; //used for grouping in the UI
         _methodInfo = methodInfo;
         _providerCategory = providerCategory;
+        _id = id;
         Label = _methodInfo.Name; //Get the name of the method from the attribute
-        TerminalDefinitionId = GetMethodTerminalId(methodInfo.Name, provider);
     }
 
-    public static IProviderOperator Create(object provider, MethodInfo methodInfo, string providerCategory,
+    public static IProviderOperator Create(object provider, MethodInfo methodInfo, string providerCategory, OperatorId id,
         string alternativeName = "")
     {
-        var terminal = new ProviderOperator(provider, methodInfo, providerCategory, alternativeName);
+        var terminal = new ProviderOperator(provider, methodInfo, providerCategory,id, alternativeName);
         terminal.Initialize();
         return terminal;
     }
@@ -44,8 +45,6 @@ public class ProviderOperator : ProviderOperatorBase
     
     public override OperationResult Execute()
     {
-        var method = ProviderInstance.GetType().GetMethod(_methodInfo.Name);
-        if (method == null) return OperationResult.Failed;
 
         //Check if all mandatory inputs are connected
         foreach (var input in InputSockets)
@@ -58,7 +57,7 @@ public class ProviderOperator : ProviderOperatorBase
 
         var orderedParameterValues = GetValuesFromConnections(orderedSockets).Select(v => v.Value).ToArray();
 
-        var result = method.Invoke(ProviderInstance, orderedParameterValues);
+        var result = _methodInfo.Invoke(ProviderInstance, orderedParameterValues);
 
         if (result == null && _methodInfo.ReturnType == null)
             return OperationResult.Success;

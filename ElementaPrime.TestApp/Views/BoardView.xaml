@@ -40,19 +40,19 @@
                     <MenuItem Header="Math" IsCheckable="False">
                         <MenuItem Header="Operators" IsCheckable="False">
                             <MenuItem
-                                cal:Message.Attach="GetTerminal('BaseMath.Mul')"
+                                cal:Message.Attach="GetProviderOperator('BaseMath.Mul')"
                                 Header="Multiplication"
                                 IsCheckable="False" />
-                            <MenuItem cal:Message.Attach="GetTerminal('Division')" Header="Division" />
-                            <MenuItem cal:Message.Attach="GetTerminal('Addition')" Header="Addition" />
-                            <MenuItem cal:Message.Attach="GetTerminal('Subtraction')" Header="Subtraction" />
+                            <MenuItem cal:Message.Attach="GetProviderOperator('Division')" Header="Division" />
+                            <MenuItem cal:Message.Attach="GetProviderOperator('Addition')" Header="Addition" />
+                            <MenuItem cal:Message.Attach="GetProviderOperator('Subtraction')" Header="Subtraction" />
                         </MenuItem>
                         <MenuItem Header="Values">
-                            <MenuItem cal:Message.Attach="GetTerminal('FloatValue')" Header="Float" />
-                            <MenuItem cal:Message.Attach="GetTerminal('IntegerValue')" Header="Integer" />
+                            <MenuItem cal:Message.Attach="GetProviderOperator('FloatValue')" Header="Float" />
+                            <MenuItem cal:Message.Attach="GetProviderOperator('IntegerValue')" Header="Integer" />
                         </MenuItem>                        
                         <MenuItem Header="Vault">
-                            <MenuItem cal:Message.Attach="GetTerminal('VaultService.SearchFiles')" Header="Search Files" />
+                            <MenuItem cal:Message.Attach="GetProviderOperator('VaultService.SearchFiles')" Header="Search Files" />
                         </MenuItem>
                     </MenuItem>
                 </ContextMenu>

@@ -20,8 +20,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
     IHandle<SelectItemEvent>, IHandle<ClearSelectionEvent>, IHandle<SelectionBoxEvent>
 {
     private readonly IEventAggregator _events;
-    private readonly ConduitManager _conduitManager;
-    private readonly OperatorManager _operatorManager;
+    private readonly GraphManager _graphManager;
     private readonly List<ISelectable> _selectables = [];
     private bool _grid = false;
     public bool Grid
@@ -61,11 +60,11 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         }
     }
 
-    public BoardViewModel(IEventAggregator events, ConduitManager conduitManager, OperatorManager operatorManager)
+    public BoardViewModel(IEventAggregator events, GraphManager graphManager)
     {
         _events = events;
-        _conduitManager = conduitManager;
-        _operatorManager = operatorManager;
+        _graphManager = graphManager;
+
         _events.SubscribeOnBackgroundThread(this);
 
         TempInit();
@@ -87,22 +86,20 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
 
     public void GetTerminal(string terminalId) //Future arguments for type or just getting the type directly
     {
-        var newTerminal = _operatorManager.GetTerminal(terminalId);
-        var watch = Stopwatch.StartNew();
+        //var newTerminal = _graphManager.GetProviderOperator(terminalId);
+        //var watch = Stopwatch.StartNew();
 
-        watch.Start();
-        TerminalViewModels.Add(new TerminalViewModel(_events, newTerminal)
-            { CanvasPositionY = 100, CanvasPositionX = 100 });
-        watch.Stop();
+        //watch.Start();
+        //TerminalViewModels.Add(new TerminalViewModel(_events, newTerminal)
+        //    { CanvasPositionY = 100, CanvasPositionX = 100 });
+        //watch.Stop();
 
-        var s = watch.ElapsedMilliseconds;
+        //var s = watch.ElapsedMilliseconds;
     }
 
     public void Run()
     {
-        var graph = new TerminalGraph(TerminalViewModels.Select(t => t.Operator).ToArray());
-
-        graph.ExecuteGraph();
+        _graphManager.ExecuteGraph(); //Very basic implementation for now
     }
 
     public void AddFloatTerminal()
@@ -194,7 +191,7 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         end.ParentViewModel.AddWireViewModel(newWire);
 
         //Connect sockets
-        _conduitManager.ConnectSockets(newWire.StartSocketViewModel.DataPort, newWire.EndSocketViewModel.DataPort);
+        _graphManager.ConnectSockets(newWire.StartSocketViewModel.DataPort, newWire.EndSocketViewModel.DataPort);
 
         //TODO: Some type of refresh on the values from the connected wires
 

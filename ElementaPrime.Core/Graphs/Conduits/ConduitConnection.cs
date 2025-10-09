@@ -5,7 +5,7 @@ using ElementaPrime.Core.Interfaces.Graphs.Wires;
 namespace ElementaPrime.Core.Graphs.Conduits;
 
 //Wires hold the value of the terminals that are connected to it
-public class ConduitConnection : IConduit
+internal class ConduitConnection : IConduit
 {
     public IDataPort Start { get; set; }
     public IDataPort End { get; set; }
@@ -23,6 +23,8 @@ public class ConduitConnection : IConduit
         _value = value;
         Start = startDataPort;
         End = endDataPort;
+
+        Start.IsConnected = End.IsConnected = true;
     }
 
     //This should probably not be here at all, no logic in this class, maybe extensions?

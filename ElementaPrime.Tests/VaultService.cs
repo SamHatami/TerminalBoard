@@ -1,13 +1,16 @@
 ﻿
 
 //Test class for trying out reflection, kindly created by Claude. 
+
+using ElementaPrime.Core.Interfaces;
+
 namespace ElementaPrime.Tests
 {
     /// <summary>
     /// Comprehensive VaultService class for testing .NET reflection
     /// Simulates Autodesk Vault API operations with various method signatures
     /// </summary>
-    public class VaultService
+    public class VaultService: IProvider
     {
         private readonly string _serverUrl;
         private readonly string _vault;

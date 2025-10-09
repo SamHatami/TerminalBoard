@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro.Core" Version="4.0.230" />
+    <PackageReference Include="Caliburn.Micro" Version="5.0.258" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.9" />
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+	    <_Parameter1>ElementaPrime.Tests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>

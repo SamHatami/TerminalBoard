@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElementaPrime.Core\ElementaPrime.Core.csproj" />
+    <ProjectReference Include="..\ElementaPrime.Providers.Standard\ElementaPrime.Providers.Standard.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -15,7 +15,7 @@ public class ValueOperator<T> : IValueOperator<T>
     public T Value { get; set; }
     public string Label { get; }
     public string TerminalDefinitionId { get; }
-    public List<IDataPort> InputSockets { get; } = []; //None for Value Terminals, since they only produce an output
+    public List<IDataPort> InputSockets { get; } = []; //None for Value Operators, since they only produce an output
     public List<IDataPort> Outputs { get; } = [];
     public List<IConduit> Connections { get; set; } = [];
     public bool RequireInputValue { get; } = true;

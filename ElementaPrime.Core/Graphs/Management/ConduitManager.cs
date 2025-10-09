@@ -2,12 +2,15 @@
 using ElementaPrime.Core.Events.TerminalEvents;
 using ElementaPrime.Core.Functions;
 using ElementaPrime.Core.Graphs.Conduits;
+using ElementaPrime.Core.Interfaces;
+using ElementaPrime.Core.Interfaces.Functions;
 using ElementaPrime.Core.Interfaces.Graphs.Sockets;
 using ElementaPrime.Core.Interfaces.Graphs.Terminals;
+using ElementaPrime.Core.Interfaces.Graphs.Wires;
 
 namespace ElementaPrime.Core.Graphs.Management;
 
-public class ConduitManager(): IHandle<TerminalRemovedEvent>
+internal class ConduitManager(): IHandle<TerminalRemovedEvent>, IConduitManager
 {
     public void ConnectSockets(IDataPort inputDataPort, IDataPort outputDataPort)
     {
@@ -18,7 +21,6 @@ public class ConduitManager(): IHandle<TerminalRemovedEvent>
         inputDataPort.ParentOperator.Connections.Add(newConnection);
         outputDataPort.ParentOperator.Connections.Add(newConnection);
 
-        //TODO: Set connected inputSocket to connected
     }
 
     public void TerminalRemoved(IOperator @operator)
@@ -34,5 +36,10 @@ public class ConduitManager(): IHandle<TerminalRemovedEvent>
         TerminalRemoved(message.Operator);
 
         return Task.CompletedTask;
+    }
+
+    public IConduit CreateConnection(IDataPort input, IDataPort output, IValue value)
+    {
+        return new ConduitConnection(input, output, value);
     }
 }
