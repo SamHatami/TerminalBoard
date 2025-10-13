@@ -68,6 +68,9 @@ public class BoardViewModel : Screen, IHandle<AddConnectionEvent>, IHandle<Remov
         _events.SubscribeOnBackgroundThread(this);
 
         TempInit();
+
+
+        //TODO: Get the OperatorInfo collection and use it as itemsource for something in the UI to test out
     }
 
     private void TempInit()
